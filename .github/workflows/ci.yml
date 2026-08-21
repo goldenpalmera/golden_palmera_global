@@ -26,7 +26,7 @@ jobs:
         runs-on: 
             ubuntu-latest 
         
-        steps: 
+pm2 st        steps: 
             - name: Checkout Repository 
               uses: actions/checkout@v4 
             
