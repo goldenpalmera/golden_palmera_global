@@ -28,11 +28,17 @@ export const PRODUCT_QUERY = defineQuery(`
     name,
     botanicalName,
     "slug": slug.current,
+    category,
     shortDescription,
     description,
     image,
     gallery,
     origin,
+    processing,
+    grade,
+    minimumOrder,
+    availability,
+    certifications,
     forms,
     packaging,
     applications,
@@ -119,12 +125,32 @@ export const SERVICES_QUERY = defineQuery(`
   *[
     _type == "service"
   ]
-  | order(order asc, title asc) {
+  | order(order asc, number asc) {
     _id,
     title,
+    number,
+    category,
     "slug": slug.current,
-    summary,
     description,
+    items,
+    image,
+    featured,
+    order
+  }
+`);
+
+export const RELATED_PRODUCTS_QUERY = defineQuery(`
+  *[
+    _type == "product" &&
+    defined(slug.current) &&
+    slug.current != $slug
+  ]
+  | order(featured desc, order asc, name asc)[0...4] {
+    _id,
+    name,
+    botanicalName,
+    "slug": slug.current,
+    shortDescription,
     image,
     featured
   }
