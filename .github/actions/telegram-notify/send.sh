@@ -68,7 +68,7 @@ EOF
 curl \
     --silent \
     --show-error \
-    --fail \
+    --fail-with-body \
     --retry 3 \
     --retry-delay 5 \
     --retry-all-errors \

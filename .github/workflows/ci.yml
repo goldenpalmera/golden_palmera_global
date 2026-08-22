@@ -26,7 +26,7 @@ jobs:
         runs-on: 
             ubuntu-latest 
         
-pm2 st        steps: 
+        steps: 
             - name: Checkout Repository 
               uses: actions/checkout@v4 
             
@@ -64,7 +64,7 @@ pm2 st        steps:
             
     notify: 
         needs: build 
-        if: always() 
+        if: always()
 
         uses: ./.github/workflows/notifications.yml 
         with: 
