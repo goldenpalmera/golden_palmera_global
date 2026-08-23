@@ -2,7 +2,7 @@ name: Continuous Integration
 on: 
   pull_request: 
     branches: 
-      - staging 
+      - stagging 
       - develop 
       - deploy
       - main 
@@ -10,7 +10,7 @@ on:
   push: 
     branches: 
       - 'feature/**' 
-      - staging 
+      - stagging 
       - develop 
       - deploy
       - main
