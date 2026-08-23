@@ -1,31 +1,34 @@
-const articles = [
-  {
-    slug: "african-agricultural-commodities-global-markets",
-    category: "Market Insights",
-    date: "August 2026",
-    title: "African Agricultural Commodities and the Global Market",
-    excerpt:
-      "Understanding the opportunities, challenges, and changing dynamics shaping Africa's agricultural commodity trade.",
-  },
-  {
-    slug: "hibiscus-export-market",
-    category: "Commodity Insights",
-    date: "August 2026",
-    title: "Understanding the Global Hibiscus Export Market",
-    excerpt:
-      "An overview of hibiscus sourcing, quality considerations, applications, and international market opportunities.",
-  },
-  {
-    slug: "building-resilient-agricultural-supply-chains",
-    category: "Supply Chain",
-    date: "August 2026",
-    title: "Building More Resilient Agricultural Supply Chains",
-    excerpt:
-      "Why traceability, aggregation, quality control, and strong supplier relationships matter in agricultural exports.",
-  },
-];
+import { client } from "@/sanity/lib/client";
+import { blogPostsQuery } from "@/sanity/lib/queries";
 
-export default function BlogPage() {
+type BlogPost = {
+  _id: string;
+  title: string;
+  slug: {
+    current: string;
+  };
+  excerpt: string;
+  author?: string;
+  category?: string;
+  publishedAt?: string;
+};
+
+async function getBlogPosts(): Promise<BlogPost[]> {
+  return client.fetch(blogPostsQuery);
+}
+
+function formatDate(date?: string) {
+  if (!date) return "";
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    year: "numeric",
+  }).format(new Date(date));
+}
+
+export default async function BlogPage() {
+  const articles = await getBlogPosts();
+
   return (
     <main className="bg-[#f7f6f1] text-[#182018]">
       {/* Hero */}
@@ -55,42 +58,50 @@ export default function BlogPage() {
       {/* Articles */}
       <section className="px-6 pb-28 md:px-12 lg:px-20">
         <div className="mx-auto max-w-7xl">
-          <div className="grid gap-6 lg:grid-cols-3">
-            {articles.map((article) => (
-              <article
-                key={article.slug}
-                className="group flex flex-col rounded-3xl border border-[#ddd9cc] bg-white p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-medium uppercase tracking-[0.18em] text-[#a07a3d]">
-                    {article.category}
-                  </span>
-
-                  <span className="text-xs text-[#858b85]">
-                    {article.date}
-                  </span>
-                </div>
-
-                <h2 className="mt-10 text-2xl font-semibold leading-tight transition-colors group-hover:text-[#a07a3d]">
-                  {article.title}
-                </h2>
-
-                <p className="mt-5 flex-1 leading-7 text-[#687068]">
-                  {article.excerpt}
-                </p>
-
-                <a
-                  href={`/blog/${article.slug}`}
-                  className="mt-8 inline-flex items-center text-sm font-semibold"
+          {articles.length === 0 ? (
+            <div className="rounded-3xl border border-[#ddd9cc] bg-white p-12 text-center">
+              <p className="text-lg text-[#687068]">
+                New insights are coming soon.
+              </p>
+            </div>
+          ) : (
+            <div className="grid gap-6 lg:grid-cols-3">
+              {articles.map((article) => (
+                <article
+                  key={article._id}
+                  className="group flex flex-col rounded-3xl border border-[#ddd9cc] bg-white p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl"
                 >
-                  Read article
-                  <span className="ml-2 transition-transform duration-300 group-hover:translate-x-1">
-                    →
-                  </span>
-                </a>
-              </article>
-            ))}
-          </div>
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="text-xs font-medium uppercase tracking-[0.18em] text-[#a07a3d]">
+                      {article.category || "GPG Insights"}
+                    </span>
+
+                    <span className="text-xs text-[#858b85]">
+                      {formatDate(article.publishedAt)}
+                    </span>
+                  </div>
+
+                  <h2 className="mt-10 text-2xl font-semibold leading-tight transition-colors group-hover:text-[#a07a3d]">
+                    {article.title}
+                  </h2>
+
+                  <p className="mt-5 flex-1 leading-7 text-[#687068]">
+                    {article.excerpt}
+                  </p>
+
+                  <a
+                    href={`/blogs/${article.slug.current}`}
+                    className="mt-8 inline-flex items-center text-sm font-semibold"
+                  >
+                    Read article
+                    <span className="ml-2 transition-transform duration-300 group-hover:translate-x-1">
+                      →
+                    </span>
+                  </a>
+                </article>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
