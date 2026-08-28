@@ -2,8 +2,8 @@ name: Continuous Integration
 on: 
   pull_request: 
     branches: 
-      - develop
       - staging 
+      - develop 
       - deploy
       - main 
 
