@@ -10,7 +10,7 @@ export const blogPost = defineType({
       name: "title",
       title: "Article Title",
       type: "string",
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) => Rule.required().max(120),
     }),
 
     defineField({
@@ -29,6 +29,7 @@ export const blogPost = defineType({
       title: "Excerpt",
       type: "text",
       rows: 3,
+      validation: (Rule) => Rule.max(300),
     }),
 
     defineField({
@@ -43,13 +44,15 @@ export const blogPost = defineType({
     defineField({
       name: "author",
       title: "Author",
-      type: "string",
+      type: "reference",
+      to: [{ type: "author" }],
     }),
 
     defineField({
       name: "publishedAt",
       title: "Published Date",
       type: "datetime",
+      validation: (Rule) => Rule.required(),
     }),
 
     defineField({
@@ -91,6 +94,7 @@ export const blogPost = defineType({
           },
         },
       ],
+      validation: (Rule) => Rule.required(),
     }),
 
     defineField({

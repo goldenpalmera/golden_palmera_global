@@ -7,8 +7,24 @@ export const service = defineType({
 
   fields: [
     defineField({
+      name: "number",
+      title: "Service Number",
+      type: "string",
+      description: "Example: 01, 02, 03",
+      validation: (Rule) => Rule.required(),
+    }),
+
+    defineField({
+      name: "category",
+      title: "Category",
+      type: "string",
+      description: "Example: SOURCE, PROCESS, TRADE",
+      validation: (Rule) => Rule.required(),
+    }),
+
+    defineField({
       name: "title",
-      title: "Service Name",
+      title: "Service Title",
       type: "string",
       validation: (Rule) => Rule.required(),
     }),
@@ -19,27 +35,33 @@ export const service = defineType({
       type: "slug",
       options: {
         source: "title",
+        maxLength: 96,
       },
       validation: (Rule) => Rule.required(),
     }),
 
     defineField({
-      name: "summary",
-      title: "Summary",
+      name: "description",
+      title: "Description",
       type: "text",
-      rows: 3,
+      rows: 5,
+      validation: (Rule) => Rule.required(),
     }),
 
     defineField({
-      name: "description",
-      title: "Description",
+      name: "items",
+      title: "Service Items",
       type: "array",
-      of: [{ type: "block" }],
+      of: [
+        {
+          type: "string",
+        },
+      ],
     }),
 
     defineField({
       name: "image",
-      title: "Image",
+      title: "Service Image",
       type: "image",
       options: {
         hotspot: true,
@@ -48,7 +70,7 @@ export const service = defineType({
 
     defineField({
       name: "featured",
-      title: "Featured",
+      title: "Featured Service",
       type: "boolean",
       initialValue: false,
     }),
@@ -57,12 +79,14 @@ export const service = defineType({
       name: "order",
       title: "Display Order",
       type: "number",
+      description: "Controls the order services appear on the website.",
     }),
   ],
 
   preview: {
     select: {
       title: "title",
+      subtitle: "category",
       media: "image",
     },
   },
