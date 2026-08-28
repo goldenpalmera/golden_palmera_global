@@ -1,163 +1,557 @@
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { PortableText } from "@portabletext/react";
 
-const articles = {
-  "african-agricultural-commodities-global-markets": {
-    category: "Market Insights",
-    date: "August 2026",
-    title: "African Agricultural Commodities and the Global Market",
-    intro:
-      "Africa's agricultural sector presents significant opportunities for global commodity markets, supported by diverse climates, productive agricultural regions, and growing international demand.",
-    sections: [
-      {
-        heading: "A growing opportunity",
-        body: "Agricultural commodities remain an important part of international trade. Across Africa, producers and supply-chain businesses are increasingly connecting local production with regional and international markets.",
-      },
-      {
-        heading: "The importance of quality",
-        body: "For exporters, market access depends on more than availability. Consistent quality, proper handling, traceability, packaging, documentation, and reliable logistics all contribute to successful international trade.",
-      },
-      {
-        heading: "From origin to destination",
-        body: "Building efficient agricultural supply chains requires strong relationships with farmers, cooperatives, aggregators, processors, logistics providers, inspection partners, and international buyers.",
-      },
-    ],
-  },
+import { client } from "@/sanity/lib/client";
+import {
+  POST_QUERY,
+  RELATED_BLOG_POSTS_QUERY,
+  RECENT_BLOG_POSTS_QUERY,
+} from "@/sanity/lib/queries";
+import { urlFor } from "@/sanity/lib/image";
 
-  "hibiscus-export-market": {
-    category: "Commodity Insights",
-    date: "August 2026",
-    title: "Understanding the Global Hibiscus Export Market",
-    intro:
-      "Hibiscus sabdariffa is an important agricultural commodity with applications across food, beverage, botanical, and ingredient markets.",
-    sections: [
-      {
-        heading: "Understanding the commodity",
-        body: "Hibiscus is valued in several international markets and its commercial potential depends heavily on quality, cleanliness, moisture management, sorting, storage, and appropriate packaging.",
-      },
-      {
-        heading: "Quality begins at source",
-        body: "Effective sourcing systems help exporters maintain consistency by working closely with farmers, suppliers, and aggregation networks.",
-      },
-      {
-        heading: "Connecting African supply with global demand",
-        body: "Well-organised supply chains can help transform agricultural production into dependable export opportunities while creating stronger connections between producers and international buyers.",
-      },
-    ],
-  },
-
-  "building-resilient-agricultural-supply-chains": {
-    category: "Supply Chain",
-    date: "August 2026",
-    title: "Building More Resilient Agricultural Supply Chains",
-    intro:
-      "Reliable agricultural exports depend on supply chains that can maintain quality, visibility, and consistency from origin to destination.",
-    sections: [
-      {
-        heading: "Why resilience matters",
-        body: "Agricultural supply chains face seasonal production cycles, changing market conditions, logistics challenges, and evolving international requirements.",
-      },
-      {
-        heading: "Aggregation and traceability",
-        body: "Strong aggregation systems can improve consistency while traceability helps businesses understand where commodities originate and how they move through the supply chain.",
-      },
-      {
-        heading: "Long-term relationships",
-        body: "Sustainable agricultural trade is built through dependable relationships with farmers, cooperatives, suppliers, processors, logistics partners, and buyers.",
-      },
-    ],
-  },
+type Params = {
+  slug: string;
 };
 
-type PageProps = {
-  params: Promise<{
-    slug: string;
-  }>;
+type BlogPost = {
+  _id: string;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  coverImage?: unknown;
+
+  author?: {
+    _id?: string;
+    name?: string;
+    role?: string;
+    bio?: string;
+    image?: unknown;
+  };
+
+  publishedAt?: string;
+  category?: string;
+  tags?: string[];
+  body?: unknown[];
+  featured?: boolean;
+
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    keywords?: string[];
+    ogImage?: unknown;
+  };
 };
 
-export async function generateStaticParams() {
-  return Object.keys(articles).map((slug) => ({
-    slug,
-  }));
+type RelatedPost = {
+  _id: string;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  coverImage?: unknown;
+  category?: string;
+  publishedAt?: string;
+  author?: {
+    name?: string;
+  };
+};
+
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  "https://goldenpalmeraglobal.com";
+
+async function getPost(slug: string): Promise<BlogPost | null> {
+  return client.fetch(
+    POST_QUERY,
+    { slug },
+    {
+      next: {
+        revalidate: 60,
+      },
+    },
+  );
 }
 
-export async function generateMetadata({ params }: PageProps) {
+function formatDate(date?: string) {
+  if (!date) return "";
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(date));
+}
+
+function calculateReadingTime(body?: unknown[]) {
+  if (!body?.length) return 1;
+
+  const text = body
+    .map((block: any) => {
+      if (block?._type !== "block") return "";
+
+      return (
+        block.children
+          ?.map((child: any) => child.text || "")
+          .join(" ") || ""
+      );
+    })
+    .join(" ");
+
+  const words = text.trim().split(/\s+/).filter(Boolean).length;
+
+  return Math.max(1, Math.ceil(words / 200));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<Params>;
+}): Promise<Metadata> {
   const { slug } = await params;
-  const article = articles[slug as keyof typeof articles];
+
+  const article = await getPost(slug);
 
   if (!article) {
-    return {};
+    return {
+      title: "Article Not Found | Golden Palmera Global",
+    };
   }
 
+  const title =
+    article.seo?.metaTitle ||
+    article.seoTitle ||
+    `${article.title} | Golden Palmera Global`;
+
+  const description =
+    article.seo?.metaDescription ||
+    article.seoDescription ||
+    article.excerpt ||
+    "";
+
+  const ogImage = article.seo?.ogImage || article.coverImage;
+
+  const imageUrl = ogImage
+    ? urlFor(ogImage).width(1200).height(630).fit("crop").url()
+    : undefined;
+
   return {
-    title: `${article.title} | Golden Palmera Global`,
-    description: article.intro,
+    title: `${title} | Golden Palmera Global`,
+    description,
+    authors: article.author
+      ? [{ name: article.author }]
+      : undefined,
+
+    keywords: article.seo?.keywords,
+
+    alternates: {
+      canonical: `${SITE_URL}/blog/${article.slug}`,
+    },
+
+    openGraph: {
+      title,
+      description,
+      url: `${SITE_URL}/blog/${article.slug}`,
+      type: "article",
+      siteName: "Golden Palmera Global",
+      publishedTime: article.publishedAt,
+      authors: article.author?.name
+        ? [article.author.name]
+        : undefined,
+
+      images: imageUrl
+        ? [
+            {
+              url: imageUrl,
+              width: 1200,
+              height: 630,
+              alt: article.title,
+            },
+          ]
+        : undefined,
+    },
+
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+
+      images: imageUrl ? [imageUrl] : undefined,
+    },
   };
 }
 
-export default async function ArticlePage({ params }: PageProps) {
+export async function generateStaticParams() {
+  const posts = await client.fetch<{ slug: string }[]>(`
+    *[
+      _type == "post"
+      && defined(slug.current)
+      && defined(publishedAt)
+      && publishedAt <= now()
+    ] {
+      "slug": slug.current
+    }
+  `);
+
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
+}
+
+export default async function BlogArticlePage({
+  params,
+}: {
+  params: Promise<Params>;
+}) {
   const { slug } = await params;
-  const article = articles[slug as keyof typeof articles];
+
+  const article = await getPost(slug);
 
   if (!article) {
     notFound();
   }
 
+  const readingTime = calculateReadingTime(article.body);
+
+  let relatedArticles: RelatedPost[] = [];
+
+  if (article.category || article.tags?.length) {
+    relatedArticles = await client.fetch(
+      RELATED_BLOG_POSTS_QUERY,
+      {
+        slug: article.slug,
+        category: article.category,
+        tags: article.tags || [],
+      },
+      {
+        next: {
+          revalidate: 60,
+        },
+      },
+    );
+  }
+
+  if (relatedArticles.length < 3) {
+    const fallback = await client.fetch(
+      RECENT_BLOG_POSTS_QUERY,
+      {
+        slug: article.slug,
+        category: article.category,
+        tags: article.tags || [],
+      },
+      {
+        next: {
+          revalidate: 60,
+        },
+      },
+    );
+
+    const existingIds = new Set(
+      relatedArticles.map((item) => item._id),
+    );
+
+    for (const article of fallback) {
+      if (
+        relatedArticles.length >= 3 ||
+        existingIds.has(article._id)
+      ) {
+        continue;
+      }
+
+      relatedArticles.push(article);
+      existingIds.add(article._id);
+    }
+  }
+
+  relatedArticles = relatedArticles.slice(0, 3);
+
+  const articleImage = article.coverImage
+    ? urlFor(article.coverImage)
+        .width(1400)
+        .height(800)
+        .fit("crop")
+        .auto("format")
+        .url()
+    : null;
+
+  const ogImage = article.seo?.ogImage || article.coverImage;
+
+  const ogImageUrl = ogImage
+    ? urlFor(ogImage)
+        .width(1200)
+        .height(630)
+        .fit("crop")
+        .url()
+    : undefined;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+
+    headline: article.title,
+
+    description: article.excerpt,
+
+    image: ogImageUrl
+      ? [ogImageUrl]
+      : undefined,
+
+    datePublished: article.publishedAt,
+
+    dateModified: article.publishedAt,
+
+    author: {
+      "@type": "Person",
+      name:
+        article.author?.name ||
+        "Golden Palmera Global",
+    },
+
+    publisher: {
+      "@type": "Organization",
+      name: "Golden Palmera Global",
+      url: SITE_URL,
+    },
+
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${SITE_URL}/blog/${article.slug}`,
+    },
+  };
+
   return (
     <main className="bg-[#f7f6f1] text-[#182018]">
-      <article>
-        {/* Article Hero */}
-        <section className="px-6 pb-20 pt-32 md:px-12 lg:px-20">
-          <div className="mx-auto max-w-4xl">
-            <div className="flex flex-wrap items-center gap-4 text-xs uppercase tracking-[0.18em]">
-              <span className="text-[#a07a3d]">{article.category}</span>
-              <span className="text-[#9a9f99]">•</span>
-              <span className="text-[#737a73]">{article.date}</span>
+      {/* Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd),
+        }}
+      />
+
+      {/* Hero */}
+      <section className="px-6 pb-16 pt-32 md:px-12 lg:px-20">
+        <div className="mx-auto max-w-5xl">
+          <Link
+            href="/blog"
+            className="inline-flex items-center text-sm font-medium text-[#6d756d] transition-colors hover:text-[#a07a3d]"
+          >
+            ← Back to Insights
+          </Link>
+
+          <div className="mt-16">
+            <div className="flex flex-wrap items-center gap-4 text-xs uppercase tracking-[0.2em]">
+              <span className="text-[#a07a3d]">
+                {article.category || "GPG Insights"}
+              </span>
+
+              <span className="h-1 w-1 rounded-full bg-[#b8b4a8]" />
+
+              <span className="text-[#858b85]">
+                {formatDate(article.publishedAt)}
+              </span>
+
+              <span className="h-1 w-1 rounded-full bg-[#b8b4a8]" />
+
+              <span className="text-[#858b85]">
+                {readingTime} min read
+              </span>
             </div>
 
-            <h1 className="mt-8 text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl">
+            <h1 className="mt-8 max-w-5xl text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl">
               {article.title}
             </h1>
 
-            <p className="mt-8 text-xl leading-9 text-[#626962]">
-              {article.intro}
-            </p>
-          </div>
-        </section>
-
-        {/* Content */}
-        <section className="border-t border-[#dedbd0] px-6 py-20 md:px-12 lg:px-20">
-          <div className="mx-auto max-w-3xl">
-            {article.sections.map((section) => (
-              <section key={section.heading} className="mb-16">
-                <h2 className="text-3xl font-semibold">
-                  {section.heading}
-                </h2>
-
-                <p className="mt-6 text-lg leading-9 text-[#626962]">
-                  {section.body}
-                </p>
-              </section>
-            ))}
-
-            <div className="mt-20 rounded-3xl bg-[#182018] p-8 text-white md:p-12">
-              <p className="text-sm uppercase tracking-[0.2em] text-[#d2b477]">
-                Golden Palmera Global
+            {article.excerpt && (
+              <p className="mt-8 max-w-3xl text-xl leading-9 text-[#687068]">
+                {article.excerpt}
               </p>
+            )}
 
-              <h2 className="mt-5 text-3xl font-semibold">
-                Connecting African agricultural supply with global markets.
-              </h2>
+            {article.author?.name && (
+              <div className="mt-10 flex items-center gap-4">
+                {article.author.image ? (
+                  <div className="relative h-12 w-12 overflow-hidden rounded-full">
+                    <Image
+                      src={urlFor(article.author.image)
+                        .width(100)
+                        .height(100)
+                        .fit("crop")
+                        .url()}
+                      alt={article.author.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                ) : null}
 
-              <a
-                href="/contact"
-                className="mt-8 inline-flex rounded-full bg-[#d2b477] px-6 py-3 font-semibold text-[#182018]"
-              >
-                Contact GPG
-              </a>
+                <div>
+                  <p className="text-sm font-semibold">
+                    {article.author.name}
+                  </p>
+
+                  {article.author.role && (
+                    <p className="mt-1 text-xs text-[#858b85]">
+                      {article.author.role}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Cover image */}
+      {articleImage && (
+        <section className="px-6 pb-20 md:px-12 lg:px-20">
+          <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem]">
+            <div className="relative aspect-[16/8]">
+              <Image
+                src={articleImage}
+                alt={article.title}
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover"
+              />
             </div>
           </div>
         </section>
+      )}
+
+      {/* Article */}
+      <article className="border-y border-[#ddd9cc] bg-white px-6 py-20 md:px-12 lg:px-20">
+        <div className="mx-auto max-w-3xl">
+          {article.body && (
+            <div className="prose prose-lg max-w-none prose-headings:text-[#182018] prose-p:text-[#5f675f] prose-p:leading-9 prose-a:text-[#a07a3d]">
+              <PortableText value={article.body as any} />
+            </div>
+          )}
+        </div>
       </article>
+
+      {/* Tags */}
+      {article.tags?.length ? (
+        <section className="bg-white px-6 pb-12 md:px-12 lg:px-20">
+          <div className="mx-auto max-w-3xl">
+            <div className="flex flex-wrap gap-2">
+              {article.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full bg-[#f7f6f1] px-4 py-2 text-xs font-medium text-[#687068]"
+                >
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {/* Related Articles */}
+      {relatedArticles.length > 0 && (
+        <section className="px-6 py-24 md:px-12 lg:px-20">
+          <div className="mx-auto max-w-7xl">
+            <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
+              <div>
+                <p className="text-sm uppercase tracking-[0.25em] text-[#a07a3d]">
+                  Continue reading
+                </p>
+
+                <h2 className="mt-4 text-4xl font-semibold tracking-tight">
+                  More from GPG Insights
+                </h2>
+              </div>
+
+              <Link
+                href="/blog"
+                className="text-sm font-semibold transition-colors hover:text-[#a07a3d]"
+              >
+                View all insights →
+              </Link>
+            </div>
+
+            <div className="mt-12 grid gap-6 md:grid-cols-3">
+              {relatedArticles.map((related) => (
+                <Link
+                  key={related._id}
+                  href={`/blog/${related.slug}`}
+                  className="group overflow-hidden rounded-3xl border border-[#ddd9cc] bg-white transition-all duration-500 hover:-translate-y-2 hover:shadow-xl"
+                >
+                  {related.coverImage && (
+                    <div className="relative aspect-[3/2] overflow-hidden">
+                      <Image
+                        src={urlFor(related.coverImage)
+                          .width(700)
+                          .height(460)
+                          .fit("crop")
+                          .auto("format")
+                          .url()}
+                        alt={related.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                    </div>
+                  )}
+
+                  <div className="p-7">
+                    <span className="text-xs uppercase tracking-[0.18em] text-[#a07a3d]">
+                      {related.category || "GPG Insights"}
+                    </span>
+
+                    <h3 className="mt-6 text-2xl font-semibold leading-tight transition-colors group-hover:text-[#a07a3d]">
+                      {related.title}
+                    </h3>
+
+                    {related.excerpt && (
+                      <p className="mt-4 leading-7 text-[#687068]">
+                        {related.excerpt}
+                      </p>
+                    )}
+
+                    <div className="mt-7 text-sm font-semibold">
+                      Read article
+                      <span className="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-1">
+                        →
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* CTA */}
+      <section className="bg-[#182018] px-6 py-24 text-white md:px-12 lg:px-20">
+        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-10 md:flex-row md:items-end">
+          <div className="max-w-2xl">
+            <p className="text-sm uppercase tracking-[0.25em] text-[#d2b477]">
+              Work with GPG
+            </p>
+
+            <h2 className="mt-5 text-4xl font-semibold">
+              Building stronger agricultural trade together.
+            </h2>
+
+            <p className="mt-5 leading-7 text-white/60">
+              Connect with Golden Palmera Global for sourcing, export,
+              commodity supply, and international trade opportunities.
+            </p>
+          </div>
+
+          <Link
+            href="/contact"
+            className="inline-flex rounded-full bg-[#d2b477] px-7 py-4 font-semibold text-[#182018] transition-transform duration-300 hover:-translate-y-1"
+          >
+            Talk to GPG
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }

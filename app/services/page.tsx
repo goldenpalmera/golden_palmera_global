@@ -1,117 +1,72 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 
 import ServiceCard from "@/components/services/ServicesCard";
 import ServicesHero from "@/components/services/ServicesHero";
 import ServicesProcess from "@/components/services/ServicesProcess";
+import { buildMetadata } from "@/sanity/lib/seo";
+import { client } from "@/sanity/lib/client";
+import { SERVICES_QUERY, SERVICES_SEO_QUERY } from "@/sanity/lib/queries";
+import next from "next";
+import { revalidatePath } from "next/cache";
+import { ServicesSeoData } from "@/sanity/lib/types";
 
-const services = [
-  {
-    number: "01",
-    category: "SOURCE",
-    title: "Agricultural Sourcing & Procurement",
-    description:
-      "We source agricultural commodities through relationships with farmers, cooperatives and trusted suppliers, creating dependable channels between producers and markets.",
-    items: [
-      "Farmer and cooperative sourcing",
-      "Commodity aggregation",
-      "Supplier coordination",
-      "Supply planning",
-    ],
-  },
-  {
-    number: "02",
-    category: "PROCESS",
-    title: "Processing & Value Addition",
-    description:
-      "We prepare agricultural commodities for demanding markets through appropriate processing, grading, preservation and value-added handling.",
-    items: [
-      "Cleaning and grading",
-      "Processing and refinement",
-      "Preservation",
-      "Export preparation",
-    ],
-  },
-  {
-    number: "03",
-    category: "TRADE",
-    title: "Export & International Trade",
-    description:
-      "We coordinate the requirements involved in moving agricultural products from origin to international buyers and distribution channels.",
-    items: [
-      "Export documentation",
-      "Shipment coordination",
-      "International logistics",
-      "Trade compliance",
-    ],
-  },
-  {
-    number: "04",
-    category: "QUALITY",
-    title: "Quality Control & Inspection",
-    description:
-      "Quality is central to our operation. We support the assessment and preparation of commodities against applicable buyer and market requirements.",
-    items: [
-      "Quality assessment",
-      "Pre-shipment inspection",
-      "Standards verification",
-      "Batch consistency",
-    ],
-  },
-  {
-    number: "05",
-    category: "PACKAGING",
-    title: "Packaging & Branding",
-    description:
-      "We help transform agricultural commodities into professionally presented, market-ready products suitable for local and international distribution.",
-    items: [
-      "Export-ready packaging",
-      "Product presentation",
-      "Branding support",
-      "Market-specific preparation",
-    ],
-  },
-  {
-    number: "06",
-    category: "ADVISORY",
-    title: "Agribusiness Advisory & Training",
-    description:
-      "We support farmers, cooperatives and agribusiness stakeholders with practical knowledge around production quality, standards and export readiness.",
-    items: [
-      "Farmer support",
-      "Cooperative development",
-      "Quality standards",
-      "Export readiness",
-    ],
-  },
-  {
-    number: "07",
-    category: "SUPPLY CHAIN",
-    title: "Supply Chain & Logistics Coordination",
-    description:
-      "We coordinate the movement and handling of commodities across collection, storage, preparation and distribution stages.",
-    items: [
-      "Collection coordination",
-      "Storage planning",
-      "Inventory coordination",
-      "Distribution planning",
-    ],
-  },
-  {
-    number: "08",
-    category: "PARTNERSHIPS",
-    title: "Strategic Partnerships",
-    description:
-      "We build relationships with local and international organizations to strengthen our supply networks, capabilities and access to global markets.",
-    items: [
-      "Joint ventures",
-      "International partnerships",
-      "Supplier networks",
-      "Market expansion",
-    ],
-  },
-];
+type Service = {
+  _id: string;
+  number: string;
+  category: string;
+  title: string;
+  slug?: string;
+  description?: string;
+  items?: string[];
+  image?: unknown;
+  featured?: boolean;
+  order?: number
+};
 
-export default function ServicesPage() {
+async function getService(): Promise<Service[]> {
+  return client.fetch(
+    SERVICES_QUERY,
+    {},
+    {
+      next: {
+        revalidate: 60,
+      },
+    }
+  );
+}
+
+async function getServicesPage() {
+  return client.fetch<ServicesSeoData | null>(
+    SERVICES_SEO_QUERY,
+    {},
+    {
+      next: {
+        revalidate: 60,
+      },
+    }
+  );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getServicesPage();
+
+  return buildMetadata({
+    seo: page?.seo,
+
+    fallbackTitle:
+      "Services | Golden Palmera Global",
+
+    fallbackDescription:
+      page?.intro ||
+      "Golden Palmera Global provides sourcing, processing, packaging, quality control, and export services for agricultural commodities.",
+
+    canonical: "/services",
+  });
+}
+
+export default async function ServicesPage() {
+  const services = await getService();
   return (
     <main className="bg-[#f8f6f0] text-[#171717]">
       <ServicesHero />
@@ -148,11 +103,30 @@ export default function ServicesPage() {
             </span>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            {services.map((service) => (
-              <ServiceCard key={service.number} {...service} />
-            ))}
-          </div>
+          {services.length > 0 ? (
+            <div className="grid gap-4 md:grid-cols-2">
+              {services.map((service) => (
+                <ServiceCard 
+                  key={service._id} 
+                  number={service.number} 
+                  category={service.category}
+                  title={service.title}
+                  description={service.description ?? ""}
+                  items={service.items ?? []}
+                />
+              ))}
+            </div>
+            ) : (
+            <div className="rounded-3xl border border-[#173f2b]/10 bg-white px-8 py-16 text-center">
+              <p className="text-lg font-semibold text-[#173f2b]">
+                Our services are being prepared.
+              </p>
+
+              <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-slate-600">
+                Details about our services will be updated shortly.
+              </p>
+            </div>
+          )}
         </div>
       </section>
 
