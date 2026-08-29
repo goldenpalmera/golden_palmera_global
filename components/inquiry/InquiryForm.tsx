@@ -2,9 +2,8 @@
 
 import {
   useState,
-  type FormEvent,
+  type SubmitEvent,
 } from "react";
-
 
 type InquiryType =
   | "product"
@@ -80,40 +79,113 @@ export default function InquiryForm({
   const copy = formCopy[type];
 
   async function handleSubmit(
-    event: FormEvent<HTMLFormElement>
+    event: SubmitEvent<HTMLFormElement>
   ) {
     event.preventDefault();
+
+    if (state.status === "submitting") {
+      return;
+    }
 
     setState({
       status: "submitting",
     });
 
-    const form =
-      event.currentTarget;
+    const form = event.currentTarget;
+    const formData = new FormData(form);
 
-    const formData =
-      new FormData(form);
+    const payload = {
+      type,
 
-    // const result =
-    //   await submitInquiry(formData);
+      name: formData.get("name"),
+      email: formData.get("email"),
+      phone: formData.get("phone"),
+      company: formData.get("company"),
+      country: formData.get("country"),
+      subject: formData.get("subject"),
 
-    // if (result.success) {
-    //   form.reset();
+      product: formData.get("product"),
+      quantity: formData.get("quantity"),
+      packaging: formData.get("packaging"),
+      destination: formData.get("destination"),
 
-    //   setState({
-    //     status: "success",
-    //     message: result.message,
-    //     reference: result.reference,
-    //   });
+      organizationType:
+        formData.get("organizationType"),
 
-    //   return;
-    // }
+      market: formData.get("market"),
 
-    // setState({
-    //   status: "error",
-    //   message: result.message,
-    //   errors: result.errors,
-    // });
+      companyWebsite:
+        formData.get("companyWebsite"),
+
+      partnershipFocus:
+        formData.get("partnershipFocus"),
+
+      message: formData.get("message"),
+
+      website: formData.get("website"),
+    };
+
+    try {
+      const response = await fetch(
+        "/api/quote",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const contentType = response.headers.get(
+        "content-type"
+      );
+
+      if (!contentType?.includes("application/json")) {
+        throw new Error(
+          `Server returned ${response.status} instead of JSON.`
+        );
+      }
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        setState({
+          status: "error",
+          message:
+            result.message ||
+            "Unable to submit your enquiry.",
+          errors: result.fields,
+        });
+
+        return;
+      }
+
+      setState({
+        status: "success",
+        message:
+          result.message ||
+          "Your enquiry has been received.",
+        reference:
+          result.reference,
+      });
+
+      form.reset();
+    } catch (error) {
+      console.error(
+        "Inquiry submission failed:",
+        error
+      );
+
+      setState({
+        status: "error",
+        message:
+          "Unable to submit your enquiry right now. Please try again.",
+      });
+    }
   }
 
   if (state.status === "success") {
@@ -151,11 +223,11 @@ export default function InquiryForm({
         <div>
           <button
             type="button"
-            onClick={() =>
+            onClick={() => {
               setState({
                 status: "idle",
-              })
-            }
+              });
+            }}
             className="mt-10 border-b border-[#173f2b]/30 pb-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#173f2b]"
           >
             Send another enquiry
@@ -165,8 +237,7 @@ export default function InquiryForm({
     );
   }
 
-  const error = (field: string) =>
-    state.errors?.[field]?.[0];
+  const error = (field: string) => state.errors?.[field]?.[0];
 
   return (
     <form
@@ -280,8 +351,8 @@ export default function InquiryForm({
                 type === "partnership"
                   ? "Partnership opportunity"
                   : type === "export_buyer"
-                  ? "Commodity requirement"
-                  : "How can we help?"
+                    ? "Commodity requirement"
+                    : "How can we help?"
               }
             />
           )}
@@ -407,8 +478,8 @@ export default function InquiryForm({
               type === "export_buyer"
                 ? "Tell us about your commodity requirements, specifications and any other important details..."
                 : type === "partnership"
-                ? "Tell us about your organisation, the opportunity and what you would like to explore with us..."
-                : "Tell us how we can help..."
+                  ? "Tell us about your organisation, the opportunity and what you would like to explore with us..."
+                  : "Tell us how we can help..."
             }
           />
 

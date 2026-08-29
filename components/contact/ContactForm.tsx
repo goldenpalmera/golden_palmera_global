@@ -19,7 +19,9 @@ export default function ContactForm() {
     const data = {
       name: String(formData.get("name") || ""),
       email: String(formData.get("email") || ""),
+      phone: String(formData.get("phone") || ""),
       company: String(formData.get("company") || ""),
+      country: String(formData.get("country") || ""),
       message: String(formData.get("message") || ""),
     };
 
@@ -141,6 +143,25 @@ export default function ContactForm() {
 
         <div>
           <label
+            htmlFor="phone"
+            className="mb-3 block text-xs uppercase tracking-[0.2em] text-black/45"
+          >
+            Phone
+          </label>
+
+          <input
+            id="phone"
+            name="phone"
+            type="phone"
+            required
+            disabled={isSubmitting}
+            className="w-full border-b border-black/20 bg-transparent py-3 outline-none transition-colors placeholder:text-black/20 focus:border-[#8c6d35] disabled:opacity-50"
+            placeholder="phone/WhatsApp number"
+          />
+        </div>
+
+        <div>
+          <label
             htmlFor="company"
             className="mb-3 block text-xs uppercase tracking-[0.2em] text-black/45"
           >
@@ -154,6 +175,24 @@ export default function ContactForm() {
             disabled={isSubmitting}
             className="w-full border-b border-black/20 bg-transparent py-3 outline-none transition-colors placeholder:text-black/20 focus:border-[#8c6d35] disabled:opacity-50"
             placeholder="Company name"
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="country"
+            className="mb-3 block text-xs uppercase tracking-[0.2em] text-black/45"
+          >
+            Country
+          </label>
+
+          <input
+            id="country"
+            name="country"
+            type="text"
+            disabled={isSubmitting}
+            className="w-full border-b border-black/20 bg-transparent py-3 outline-none transition-colors placeholder:text-black/20 focus:border-[#8c6d35] disabled:opacity-50"
+            placeholder="E.g China, USA, Germany .."
           />
         </div>
 
@@ -184,21 +223,21 @@ export default function ContactForm() {
 
         {/**Honeypot */}
         <div
-  aria-hidden="true"
-  className="absolute left-[-9999px] h-0 overflow-hidden"
->
-  <label htmlFor="website">
-    Website
-  </label>
+          aria-hidden="true"
+          className="absolute left-[-9999px] h-0 overflow-hidden"
+        >
+          <label htmlFor="website">
+            Website
+          </label>
 
-  <input
-    id="website"
-    name="website"
-    type="text"
-    tabIndex={-1}
-    autoComplete="off"
-  />
-</div>
+          <input
+            id="website"
+            name="website"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+          />
+        </div>
 
         <button
           type="submit"
