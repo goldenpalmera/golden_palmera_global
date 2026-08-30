@@ -1,5 +1,7 @@
 import { client } from "@/sanity/lib/client";
 import { blogPostsQuery } from "@/sanity/lib/queries";
+import { buildMetadata } from "@/sanity/lib/seo";
+import { Metadata } from "next";
 
 type BlogPost = {
   _id: string;
@@ -15,6 +17,16 @@ type BlogPost = {
 
 async function getBlogPosts(): Promise<BlogPost[]> {
   return client.fetch(blogPostsQuery);
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return buildMetadata({
+    fallbackTitle:
+      "GPG Insights | Golden Palmera Global",
+    fallbackDescription:
+      "Perspectives on agricultural commodities, African supply chains, sustainability, export markets, and international trade.",
+    canonical: "/blog",
+  });
 }
 
 function formatDate(date?: string) {

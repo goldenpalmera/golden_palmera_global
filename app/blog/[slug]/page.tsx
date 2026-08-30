@@ -1,3 +1,5 @@
+import { buildMetadata } from "@/sanity/lib/seo";
+import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -111,21 +113,27 @@ export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
-}) {
+}): Promise<Metadata> {
   const { slug } = await params;
   const article = getArticle(slug);
 
   if (!article) {
-    return {
-      title: "Article Not Found | Golden Palmera Global",
-    };
+    return buildMetadata({
+      fallbackTitle:
+        "Article Not Found | Golden Palmera Global",
+      fallbackDescription:
+        "The requested GPG Insights article could not be found.",
+    });
   }
 
-  return {
-    title: `${article.title} | Golden Palmera Global`,
-    description: article.excerpt,
-  };
+  return buildMetadata({
+    fallbackTitle:
+      `${article.title} | Golden Palmera Global`,
+    fallbackDescription: article.excerpt,
+    canonical: `/blog/${article.slug}`,
+  });
 }
+
 
 export default async function BlogArticlePage({
   params,

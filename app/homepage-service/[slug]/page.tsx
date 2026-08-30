@@ -100,7 +100,7 @@ export default async function ServicePage({
       <section className="bg-white px-6 py-20 md:px-12 lg:px-20">
         <article className="prose prose-lg mx-auto max-w-4xl">
           {service.description && (
-            <PortableText value={service.description as any} />
+            <PortableText value={service.description} />
           )}
         </article>
       </section>

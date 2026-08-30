@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { Commodity, HomeService, Approach } from "@/sanity/lib/types";
+import Link from "next/link";
 
 type HomeHeroProps = {
   commodities: Commodity[];
@@ -59,14 +60,14 @@ export default function HomeHero({
 
       {/* NAVIGATION */}
       <header className="nav relative z-10">
-        <a href="/" className="brand">
+        <Link href="/" className="brand">
           <span className="brand-mark">GP</span>
 
           <span>
             <strong>GOLDEN PALMERA</strong>
             <small>GLOBAL</small>
           </span>
-        </a>
+        </Link>
 
         <nav className="nav-links">
           <a href="#about">About</a>
@@ -184,7 +185,7 @@ export default function HomeHero({
           </div>
 
           <h2>
-            Nature's resources.
+            Nature&apos;s resources.
             <br />
             Prepared for the world.
           </h2>
@@ -255,11 +256,11 @@ export default function HomeHero({
         {services.length > 0 ? (
           <div className="service-list">
             {services.map((service) => (
-              <a href={`/services/${service.slug}`}
+              <Link href={`/services/${service.slug}`}
                 className="service-row"
                 key={service._id}
               >
-              // <article className="service-row" key={service.number}>
+      
                 <span className="service-number">{service.number}</span>
 
                 <h3>{service.title}</h3>
@@ -267,8 +268,7 @@ export default function HomeHero({
                 <p>{service.shortDescription}</p>
 
                 <span className="service-arrow">↗</span>
-              // </article>
-              </a>
+              </Link>
             ))}
           </div>
         ):(
@@ -288,54 +288,52 @@ export default function HomeHero({
       <section className="supply section">
         {/* Keep your existing supply chain layout here */}
         <div className="supply-content">
-                  <div className="section-label">04 — OUR APPROACH</div>
+          <div className="section-label">04 — OUR APPROACH</div>
+            <h2>
+              Connecting <br />
+              <span>origin to destination.</span>
+            </h2>
         
-                  <h2>
-                    Connecting
-                    <br />
-                    <span>origin to destination.</span>
-                  </h2>
+            <p>
+              We believe global agricultural trade starts with strong local
+              relationships. Our approach combines responsible sourcing,
+              quality-focused operations and international market access.
+            </p>
+        </div>
         
-                  <p>
-                    We believe global agricultural trade starts with strong local
-                    relationships. Our approach combines responsible sourcing,
-                    quality-focused operations and international market access.
-                  </p>
-                </div>
-        
-                {approaches.length > 0 ? (
-    <div className="supply-path">
-      {approaches.map((item, index) => (
-        <Link
-          key={item._id}
-          href={`/approach/${item.slug}`}
-          className="path-step"
-        >
-          <span>
-            {item.number ||
-              String(index + 1).padStart(2, "0")}
-          </span>
+        {approaches.length > 0 ? (
+          <div className="supply-path">
+            {approaches.map((item, index) => (
+              <Link
+                key={item._id}
+                href={`/approach/${item.slug}`}
+                className="path-step"
+              >
+                <span>
+                  {item.number ||
+                    String(index + 1).padStart(2, "0")}
+                </span>
 
-          <strong>{item.title}</strong>
+                <strong>{item.title}</strong>
 
-          {index < approaches.length - 1 && (
-            <i>→</i>
-          )}
-        </Link>
-      ))}
-    </div>
-  ) : (
-    <div className="rounded-3xl border border-[#ddd9cc] bg-white p-12 text-center">
-      <p className="text-lg font-medium">
-        Our approach is being prepared.
-      </p>
+                {index < approaches.length - 1 && (
+                  <i>→</i>
+                )}
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-3xl border border-[#ddd9cc] bg-white p-12 text-center">
+            <p className="text-lg font-medium">
+              Our approach is being prepared.
+            </p>
 
-      <p className="mx-auto mt-3 max-w-xl leading-7 text-[#687068]">
-        More information about how we work will be
-        available shortly.
-      </p>
-    </div>
-  )}
+            <p className="mx-auto mt-3 max-w-xl leading-7 text-[#687068]">
+              More information about how we work will be
+              available shortly.
+            </p>
+          </div>
+        )}
       </section>
 
       {/* CTA */}
@@ -346,10 +344,10 @@ export default function HomeHero({
         </div>
 
         <div className="contact-content">
-          <div className="section-label">05 — LET'S CONNECT</div>
+          <div className="section-label">05 — LET&apos;S CONNECT</div>
 
           <h2>
-            Let's take your
+            Let&spos;s take your
             <br />
             <em>commodity further.</em>
           </h2>

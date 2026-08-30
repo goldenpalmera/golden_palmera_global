@@ -9,7 +9,8 @@ import { client } from "../../sanity/lib/client";
 import { PRODUCTS_QUERY, PRODUCTS_SEO_QUERY } from "../../sanity/lib/queries";
 import { urlFor } from "../../sanity/lib/image";
 import { buildMetadata } from "@/sanity/lib/seo";
-import { ProductsSeoData } from "../../sanity/lib/types"
+import type { ProductsSeoData } from "../../sanity/lib/types"
+import { Metadata } from "next";
 
 type Product = {
   _id: string;
