@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { buildMetadata } from "@/sanity/lib/seo";
+import type { SeoData } from "@/sanity/lib/types";
 
 import { client } from "@/sanity/lib/client";
 import { compliancePageQuery } from "@/sanity/lib/queries";
-import { urlFor } from "@/sanity/lib/image";
 
 type ComplianceArea = {
   number: string;
@@ -11,14 +11,6 @@ type ComplianceArea = {
   text: string;
 };
 
-type SEO = {
-  metaTitle?: string;
-  metaDescription?: string;
-  keywords?: string[];
-  noIndex?: boolean;
-  canonicalUrl?: string;
-  ogImage?: unknown;
-};
 
 type CompliancePageData = {
   title?: string;
@@ -33,7 +25,7 @@ type CompliancePageData = {
   commitmentTitle?: string;
   commitmentText?: string;
 
-  seo?: SEO;
+  seo?: SeoData;
 };
 
 async function getCompliancePage() {
@@ -45,61 +37,13 @@ async function getCompliancePage() {
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getCompliancePage();
 
-  const title =
-    page?.seo?.metaTitle ||
-    page?.heroTitle ||
-    "Compliance | Golden Palmera Global";
-
-  const description =
-    page?.seo?.metaDescription ||
-    page?.heroDescription ||
-    "Golden Palmera Global's approach to quality assurance, traceability, export documentation, responsible sourcing, and international trade standards.";
-
-  const ogImage = page?.seo?.ogImage
-    ? urlFor(page.seo.ogImage)
-        .width(1200)
-        .height(630)
-        .fit("crop")
-        .url()
-    : undefined;
-
-  return {
-    title,
-    description,
-    keywords: page?.seo?.keywords,
-
-    alternates: {
-      canonical:
-        page?.seo?.canonicalUrl ||
-        "/compliance",
-    },
-
-    robots: page?.seo?.noIndex
-      ? {
-          index: false,
-          follow: true,
-        }
-      : {
-          index: true,
-          follow: true,
-        },
-
-    openGraph: {
-      title,
-      description,
-      url: page?.seo?.canonicalUrl || "/compliance",
-      siteName: "Golden Palmera Global",
-      type: "website",
-      ...(ogImage ? { images: [ogImage] } : {}),
-    },
-
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      ...(ogImage ? { images: [ogImage] } : {}),
-    },
-  };
+  return buildMetadata({
+    seo: page?.seo,
+    fallbackTitle: page?.heroTitle || "Compliance | Golden Palmera Global",
+    fallbackDescription: page?.heroDescription ||
+      "Golden Palmera Global's approach to quality assurance, traceability, export documentation, responsible sourcing, and international trade standards.",
+    canonical: page?.seo?.canonicalUrl || "/compliance",
+  })
 }
 
 export default async function CompliancePage() {
