@@ -3,82 +3,66 @@ import Footer from "../components/Footer";
 import PageHero from "../components/PageHero";
 import Link from "next/link";
 
-const products = [
-  {
-    number: "01",
-    name: "Palm Oil",
-    botanical: "Elaeis guineensis",
-    description:
-      "A versatile agricultural commodity supplied for food, manufacturing, and industrial applications.",
-    color: "from-amber-700 via-orange-500 to-yellow-400",
-    accent: "PO",
-  },
-  {
-    number: "02",
-    name: "Charcoal",
-    botanical: "Premium African Charcoal",
-    description:
-      "Carefully sourced charcoal suitable for international wholesale and commercial distribution.",
-    color: "from-slate-950 via-slate-700 to-slate-400",
-    accent: "CH",
-  },
-  {
-    number: "03",
-    name: "Hibiscus",
-    botanical: "Hibiscus sabdariffa",
-    description:
-      "Dried hibiscus sourced for beverage, botanical, food, and international trading applications.",
-    color: "from-red-950 via-red-700 to-rose-500",
-    accent: "HB",
-  },
-  {
-    number: "04",
-    name: "Sesame Seed",
-    botanical: "Sesamum indicum",
-    description:
-      "Quality sesame seed prepared for food manufacturers, processors, and international commodity buyers.",
-    color: "from-stone-700 via-amber-700 to-yellow-200",
-    accent: "SS",
-  },
-  {
-    number: "05",
-    name: "Dried Ginger",
-    botanical: "Zingiber officinale",
-    description:
-      "Dried ginger with applications across food, beverage, spice, processing, and natural product industries.",
-    color: "from-orange-950 via-orange-700 to-amber-400",
-    accent: "DG",
-  },
-  {
-    number: "06",
-    name: "Cashew Nut",
-    botanical: "Anacardium occidentale",
-    description:
-      "African cashew sourced through established agricultural supply networks for international markets.",
-    color: "from-yellow-900 via-amber-600 to-orange-300",
-    accent: "CN",
-  },
-  {
-    number: "07",
-    name: "Shea Butter",
-    botanical: "Vitellaria paradoxa",
-    description:
-      "Natural shea butter supplied for cosmetic, personal care, food, and manufacturing applications.",
-    color: "from-stone-800 via-stone-500 to-amber-200",
-    accent: "SB",
-  },
-  {
-    number: "08",
-    name: "Bitter Kola",
-    botanical: "Garcinia kola",
-    description:
-      "Traditionally valued African botanical product sourced for international trade and distribution.",
-    color: "from-green-950 via-green-800 to-lime-500",
-    accent: "BK",
-  },
-];
+import { client } from "../../sanity/lib/client";
+import { PRODUCTS_QUERY, PRODUCTS_SEO_QUERY } from "../../sanity/lib/queries";
+import { urlFor } from "../../sanity/lib/image";
+import { buildMetadata } from "@/sanity/lib/seo";
+import type { ProductsSeoData } from "../../sanity/lib/types"
+import { Metadata } from "next";
 
-export default function ProductsPage() {
+type Product = {
+  _id: string;
+  name: string;
+  botanicalName?: string;
+  slug?: string;
+  shortDescription?: string;
+  image?: unknown;
+  origin?: string;
+  forms?: string[];
+  packaging?: string[];
+  applications?: string[];
+  featured?: boolean;
+};
+
+async function getProducts(): Promise<Product[]> {
+  return client.fetch(PRODUCTS_QUERY, {}, { next: { revalidate: 60 } });
+}
+
+async function getProductsPage() {
+  return client.fetch<ProductsSeoData | null>(
+    PRODUCTS_SEO_QUERY,
+    {},
+    {
+      next: {
+        revalidate: 60,
+      },
+    }
+  );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getProductsPage();
+
+  return buildMetadata({
+    seo: page?.seo,
+
+    fallbackTitle:
+      "Our Commodities | Golden Palmera Global",
+
+    fallbackDescription:
+      page?.heroDescription ||
+      "Quality agricultural commodities sourced from Africa for local and international markets.",
+
+    canonical: "/products",
+  });
+}
+
+export default async function ProductsPage() {
+  const [products, page] = await Promise.all([
+    getProducts(),
+    getProductsPage(),
+  ])
+  
   return (
     <>
       <Navbar />

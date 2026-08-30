@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { client } from "@/sanity/lib/client";
 import { 
   commoditiesQuery, 
-  featuredProductsQuery, 
   homeServicesQuery, 
   approachesQuery,
   homePageQuery,
@@ -15,16 +14,6 @@ import type {
 } from "@/sanity/lib/types";
 
 import HomeHero from "@/components/home/HomeHero";
-
-type Product = {
-  _id: string;
-  name: string;
-  slug: string;
-  scientificName?: string;
-  description: string;
-  symbol?: string;
-  image?: unknown;
-};
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await client.fetch<HomePageData | null>(
@@ -94,12 +83,6 @@ async function getCommodities() {
   return client.fetch<Commodity[]>(commoditiesQuery);
 }
 
-async function getProducts() {
-  return client.fetch<Product[]>(
-    featuredProductsQuery
-  );
-}
-
 async function getServices() {
   return client.fetch<HomeService[]>(
     homeServicesQuery
@@ -118,7 +101,6 @@ export default async function HomePage() {
     getServices(),
     getApproaches(),
   ]);
-  const products = await getProducts();
 
   return (
     <main className="site-shell">

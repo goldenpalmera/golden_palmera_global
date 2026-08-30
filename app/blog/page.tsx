@@ -1,8 +1,9 @@
 import Link from "next/link";
 
 import { client } from "@/sanity/lib/client";
-
-const PAGE_SIZE = 9;
+import { blogPostsQuery } from "@/sanity/lib/queries";
+import { buildMetadata } from "@/sanity/lib/seo";
+import { Metadata } from "next";
 
 type BlogPost = {
   _id: string;
@@ -76,6 +77,16 @@ async function getBlogPosts(page: number, search?: string) {
     total: number;
   }>(query, {
     search: search?.trim() || "",
+  });
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return buildMetadata({
+    fallbackTitle:
+      "GPG Insights | Golden Palmera Global",
+    fallbackDescription:
+      "Perspectives on agricultural commodities, African supply chains, sustainability, export markets, and international trade.",
+    canonical: "/blog",
   });
 }
 

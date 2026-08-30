@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
-import Image from "next/image";
+import { buildMetadata } from "@/sanity/lib/seo";
+import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PortableText } from "@portabletext/react";
@@ -107,97 +107,29 @@ function calculateReadingTime(body?: unknown[]) {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<Params>;
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
 
   const article = await getPost(slug);
 
   if (!article) {
-    return {
-      title: "Article Not Found | Golden Palmera Global",
-    };
+    return buildMetadata({
+      fallbackTitle:
+        "Article Not Found | Golden Palmera Global",
+      fallbackDescription:
+        "The requested GPG Insights article could not be found.",
+    });
   }
 
-  const title =
-    article.seo?.metaTitle ||
-    article.seoTitle ||
-    `${article.title} | Golden Palmera Global`;
-
-  const description =
-    article.seo?.metaDescription ||
-    article.seoDescription ||
-    article.excerpt ||
-    "";
-
-  const ogImage = article.seo?.ogImage || article.coverImage;
-
-  const imageUrl = ogImage
-    ? urlFor(ogImage).width(1200).height(630).fit("crop").url()
-    : undefined;
-
-  return {
-    title: `${title} | Golden Palmera Global`,
-    description,
-    authors: article.author
-      ? [{ name: article.author }]
-      : undefined,
-
-    keywords: article.seo?.keywords,
-
-    alternates: {
-      canonical: `${SITE_URL}/blog/${article.slug}`,
-    },
-
-    openGraph: {
-      title,
-      description,
-      url: `${SITE_URL}/blog/${article.slug}`,
-      type: "article",
-      siteName: "Golden Palmera Global",
-      publishedTime: article.publishedAt,
-      authors: article.author?.name
-        ? [article.author.name]
-        : undefined,
-
-      images: imageUrl
-        ? [
-            {
-              url: imageUrl,
-              width: 1200,
-              height: 630,
-              alt: article.title,
-            },
-          ]
-        : undefined,
-    },
-
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-
-      images: imageUrl ? [imageUrl] : undefined,
-    },
-  };
+  return buildMetadata({
+    fallbackTitle:
+      `${article.title} | Golden Palmera Global`,
+    fallbackDescription: article.excerpt,
+    canonical: `/blog/${article.slug}`,
+  });
 }
 
-export async function generateStaticParams() {
-  const posts = await client.fetch<{ slug: string }[]>(`
-    *[
-      _type == "post"
-      && defined(slug.current)
-      && defined(publishedAt)
-      && publishedAt <= now()
-    ] {
-      "slug": slug.current
-    }
-  `);
-
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
-}
 
 export default async function BlogArticlePage({
   params,

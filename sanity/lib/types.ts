@@ -1,3 +1,5 @@
+import { PortableTextBlock } from "next-sanity";
+
 export type ComplianceArea = {
   number: string;
   title: string;
@@ -59,15 +61,15 @@ export type Commodity = {
   };
 };
 
-type HomeProduct = {
-  _id: string;
-  name: string;
-  slug: string;
-  scientificName?: string;
-  description: string;
-  symbol?: string;
-  image?: unknown;
-};
+// type HomeProduct = {
+//   _id: string;
+//   name: string;
+//   slug: string;
+//   scientificName?: string;
+//   description: string;
+//   symbol?: string;
+//   image?: unknown;
+// };
 
 export type HomeService = {
   _id: string;
@@ -92,6 +94,7 @@ export type SeoData = {
   metaDescription?: string;
   keywords?: string[];
   noIndex?: boolean;
+  canonicalUrl?: string;
   ogImage?: {
     asset?: {
       url?: string;
@@ -211,4 +214,13 @@ export type Inquiry = {
     changedAt: string;
     changedBy?: string;
   }[];
+};
+
+export type ApproachPage = {
+  title: string;
+  slug: string;
+  number: string;
+  shortDescription?: string;
+  description?: PortableTextBlock[];
+  seo?: SeoData
 };
