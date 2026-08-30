@@ -5,7 +5,6 @@ import {
   type SubmitEvent,
 } from "react";
 
-
 type QuoteFormProps = {
   product?: string;
 };
@@ -33,162 +32,104 @@ export default function QuoteForm({
   product = "",
 }: QuoteFormProps) {
   const [submitted, setSubmitted] = useState(false);
-
   const [loading, setLoading] = useState(false);
-
-  const [reference, setReference] =
-    useState("");
-
-  const [state, setState] =
-    useState<FormState>({
-      status: "idle",
-    });
-
-  async function handleSubmit(
-  event: SubmitEvent<HTMLFormElement>
-) {
-  event.preventDefault();
-
-  if (loading) {
-    return;
-  }
-
-  setLoading(true);
-
-  setState({
-    status: "submitting",
+  const [state, setState] = useState<FormState>({
+    status: "idle",
   });
 
-  const form =
-    event.currentTarget;
+  async function handleSubmit( event: SubmitEvent<HTMLFormElement> ) {
+    event.preventDefault();
 
-  const formData =
-    new FormData(form);
-
-  const payload = {
-    type: "product",
-
-    name: formData.get("name"),
-
-    company: formData.get("company"),
-
-    email: formData.get("email"),
-
-    phone: formData.get("phone"),
-
-    country: formData.get("country"),
-
-    product: formData.get("product"),
-
-    quantity: formData.get("quantity"),
-
-    packaging: formData.get("packaging"),
-
-    destination: formData.get("destination"),
-
-    message: formData.get("message"),
-
-    website: formData.get("website"),
-  };
-
-  try {
-    const response =
-      await fetch("/api/quote", {
-        method: "POST",
-
-        headers: {
-          "Content-Type":
-            "application/json",
-        },
-
-        body: JSON.stringify(
-          payload
-        ),
-      });
-
-    const contentType =
-  response.headers.get("content-type");
-
-if (!contentType?.includes("application/json")) {
-  throw new Error(
-    `Server returned ${response.status} instead of JSON.`
-  );
-}
-
-const result =
-  await response.json();
-
-    if (!response.ok) {
-      setState({
-        status: "error",
-
-        message:
-          result.message ||
-          "Unable to submit your enquiry.",
-
-        errors:
-          result.fields,
-      });
-
-      setLoading(false);
-
+    if (loading) {
       return;
     }
 
-    setReference(
-      result.reference || ""
-    );
+    setLoading(true);
 
     setState({
-      status: "success",
-
-      message:
-        result.message ||
-        "Your enquiry has been received.",
-
-      reference:
-        result.reference,
+      status: "submitting",
     });
 
-    form.reset();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const payload = {
+      type: "product",
+      name: formData.get("name"),
+      company: formData.get("company"),
+      email: formData.get("email"),
+      phone: formData.get("phone"),
+      country: formData.get("country"),
+      product: formData.get("product"),
+      quantity: formData.get("quantity"),
+      packaging: formData.get("packaging"),
+      destination: formData.get("destination"),
+      message: formData.get("message"),
+      website: formData.get("website"),
+    };
 
-    setSubmitted(true);
-  } catch (error) {
-    console.error(
-      "Inquiry submission failed:",
-      error
-    );
+    try {
+      const response = await fetch("/api/quote", {
+        method: "POST",
+        headers: {
+          "Content-Type":
+          "application/json",
+        },
 
-    setState({
-      status: "error",
+        body: JSON.stringify(payload),
+      });
 
-      message:
-        "Unable to submit your enquiry right now. Please try again.",
-    });
-  } finally {
-    setLoading(false);
+      const contentType = response.headers.get("content-type");
+
+      if (!contentType?.includes("application/json")) {
+        throw new Error(
+          `Server returned ${response.status} instead of JSON.`
+        );
+      }
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        setState({
+          status: "error",
+          message: result.message || "Unable to submit your enquiry.",
+          errors: result.fields,
+        });
+
+        setLoading(false);
+
+        return;
+      }
+
+      setState({
+        status: "success",
+        message: result.message || "Your enquiry has been received.",
+        reference: result.reference,
+      });
+
+      form.reset();
+      setSubmitted(true);
+
+    } catch (error) {
+      console.error(
+        "Inquiry submission failed:",
+        error
+      );
+
+      setState({
+        status: "error",
+        message:
+          "Unable to submit your enquiry right now. Please try again.",
+      });
+
+    } finally {
+      setLoading(false);
+    }
   }
-}
 
   if (submitted) {
     return (
-      <div
-        className=" rounded-3xl border border-emerald-200 bg-emerald-50 p-8 text-center">
-        <div
-          className="
-            mx-auto
-            mb-5
-            flex
-            h-14
-            w-14
-            items-center
-            justify-center
-            rounded-full
-            bg-emerald-600
-            text-2xl
-            text-white
-          "
-        >
+      <div className=" rounded-3xl border border-emerald-200 bg-emerald-50 p-8 text-center">
+        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-600 text-2xl text-white">
           ✓
         </div>
 
@@ -196,47 +137,32 @@ const result =
           Enquiry Received
         </h3>
         
-         <p className="mx-auto mt-3 max-w-md leading-7 text-zinc-600">
-  Thank you for contacting
-  Golden Palmera Global. Your
-  enquiry has been received.<br></br>
-  Our team will review
-          your requirements and get back to you
-          shortly.
-</p>
+        <p className="mx-auto mt-3 max-w-md leading-7 text-zinc-600">
+          Thank you for contacting Golden Palmera Global. Your enquiry has been received.<br></br>
+          Our team will review your requirements and get back to you shortly.
+        </p>
 
 
-{state.reference && (
-  <div className="mx-auto mt-5 max-w-sm rounded-xl border border-emerald-200 bg-white p-4">
-    <p className="text-xs font-medium uppercase tracking-wide text-zinc-500">
-      Your reference
-    </p>
+        {state.reference && (
+          <div className="mx-auto mt-5 max-w-sm rounded-xl border border-emerald-200 bg-white p-4">
+            <p className="text-xs font-medium uppercase tracking-wide text-zinc-500">
+              Your reference
+            </p>
 
-    <p className="mt-1 font-mono text-lg font-semibold text-emerald-700">
-      {state.reference}
-    </p>
-  </div>
-)}
+            <p className="mt-1 font-mono text-lg font-semibold text-emerald-700">
+              {state.reference}
+            </p>
+          </div>
+        )}
 
-
-        <button
+        <button className=" mt-6 text-sm font-semibold text-emerald-700 hover:text-emerald-900"
           type="button"
           onClick={() => {
             setSubmitted(false);
-
-            setReference("");
-
             setState({
               status: "idle",
             });
           }}
-          className="
-            mt-6
-            text-sm
-            font-semibold
-            text-emerald-700
-            hover:text-emerald-900
-          "
         >
           Submit another enquiry
         </button>
@@ -245,29 +171,17 @@ const result =
   }
 
   return (
-    <form
+    <form className="space-y-6"
       onSubmit={handleSubmit}
-      noValidate
-      className="space-y-6"
+      noValidate 
     >
-      {state.status === "error" &&
-        state.message && (
-          <div
-            role="alert"
-            className="
-              rounded-xl
-              border
-              border-red-200
-              bg-red-50
-              px-4
-              py-3
-              text-sm
-              text-red-700
-            "
-          >
+      {state.status === "error" && state.message && (
+        <div className=" rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+          role="alert"
+        >
             {state.message}
-          </div>
-        )}
+        </div>
+      )}
 
       <div className="grid gap-6 sm:grid-cols-2">
         <Field
@@ -335,15 +249,8 @@ const result =
         />
 
         <div>
-          <label
-            htmlFor="packaging"
-            className="
-              mb-2
-              block
-              text-sm
-              font-medium
-              text-zinc-800
-            "
+          <label className=" mb-2 block text-sm font-medium text-zinc-800"
+            htmlFor="packaging" 
           >
             Preferred Packaging
           </label>
@@ -351,9 +258,7 @@ const result =
           <select
             id="packaging"
             name="packaging"
-            aria-invalid={
-              !!state.errors?.packaging?.[0]
-            }
+            aria-invalid={ !!state.errors?.packaging?.[0] }
             className="
               h-12
               w-full
@@ -413,15 +318,8 @@ const result =
       />
 
       <div>
-        <label
-          htmlFor="message"
-          className="
-            mb-2
-            block
-            text-sm
-            font-medium
-            text-zinc-800
-          "
+        <label className=" mb-2 block text-sm font-medium text-zinc-800"
+          htmlFor="message"  
         >
           Additional Requirements
         </label>
@@ -456,23 +354,22 @@ const result =
           message={state.errors?.message?.[0]}
         />
       </div>
-      <div
-  aria-hidden="true"
-  className="absolute -left-[9999px] h-0 w-0 overflow-hidden"
->
-  <label htmlFor="website">
-    Website
-  </label>
 
-  <input
-    id="website"
-    name="website"
-    type="text"
-    tabIndex={-1}
-    autoComplete="off"
-  />
-</div>
+      <div className="absolute -left-[9999px] h-0 w-0 overflow-hidden"
+        aria-hidden="true"
+      >
+        <label htmlFor="website">
+          Website
+        </label>
 
+        <input
+          id="website"
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
 
       <button type="submit"
         disabled={loading}
@@ -496,18 +393,10 @@ const result =
           sm:w-auto
         "
       >
-        {loading
-          ? "Sending..."
-          : "Submit Enquiry"}
+        {loading ? "Sending..." : "Submit Enquiry"}
       </button>
 
-      <p
-        className="
-          text-xs
-          leading-5
-          text-zinc-500
-        "
-      >
+      <p className=" text-xs leading-5 text-zinc-500">
         By submitting this form, you agree that
         Golden Palmera Global may contact you
         regarding your enquiry.
@@ -535,15 +424,8 @@ function Field({
 }) {
   return (
     <div>
-      <label
+      <label className=" mb-2 block text-sm font-medium text-zinc-800"
         htmlFor={name}
-        className="
-          mb-2
-          block
-          text-sm
-          font-medium
-          text-zinc-800
-        "
       >
         {label}
 
@@ -605,9 +487,8 @@ function FieldError({
   }
 
   return (
-    <p
+    <p className="mt-1.5 text-xs text-red-600"
       id={id}
-      className="mt-1.5 text-xs text-red-600"
     >
       {message}
     </p>
