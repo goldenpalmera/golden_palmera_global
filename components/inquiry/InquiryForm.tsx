@@ -94,36 +94,34 @@ export default function InquiryForm({
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    const payload = {
-      type,
+  const getValue = (name: string) =>
+    formData.get(name)?.toString() ?? "";
 
-      name: formData.get("name"),
-      email: formData.get("email"),
-      phone: formData.get("phone"),
-      company: formData.get("company"),
-      country: formData.get("country"),
-      subject: formData.get("subject"),
+  const payload = {
+    type,
 
-      product: formData.get("product"),
-      quantity: formData.get("quantity"),
-      packaging: formData.get("packaging"),
-      destination: formData.get("destination"),
+    name: getValue("name"),
+    email: getValue("email"),
+    phone: getValue("phone"),
+    company: getValue("company"),
+    country: getValue("country"),
+    subject: getValue("subject"),
 
-      organizationType:
-        formData.get("organizationType"),
+    product: getValue("product"),
+    quantity: getValue("quantity"),
+    packaging: getValue("packaging"),
+    destination: getValue("destination"),
 
-      market: formData.get("market"),
+    organizationType: getValue("organizationType"),
+    market: getValue("market"),
+    companyWebsite: getValue("companyWebsite"),
+    partnershipFocus: getValue("partnershipFocus"),
 
-      companyWebsite:
-        formData.get("companyWebsite"),
+    message: getValue("message"),
 
-      partnershipFocus:
-        formData.get("partnershipFocus"),
+    website: getValue("website"),
+  };
 
-      message: formData.get("message"),
-
-      website: formData.get("website"),
-    };
 
     try {
       const response = await fetch(

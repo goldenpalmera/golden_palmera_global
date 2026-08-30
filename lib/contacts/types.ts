@@ -11,19 +11,14 @@ export type ContactStatus =
 
 export type Contact = {
   _id: string;
-
   name: string;
-
   email: string;
-
+  phone?: string;
+  country?: string;
   company?: string;
-
   message: string;
-
   status: ContactStatus;
-
   submittedAt: string;
-
   emailStatus?: "pending" | "sent" | "failed";
 };
 
@@ -31,7 +26,7 @@ export type ContactInput = {
   name: string;
   email: string;
   phone?: string;
-  country: string;
+  country?: string;
   company?: string;
   message: string;
 }

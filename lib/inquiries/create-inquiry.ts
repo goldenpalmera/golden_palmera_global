@@ -2,6 +2,7 @@ import crypto from "crypto";
 
 import { client } from "@/sanity/lib/client";
 import { Resend } from "resend";
+import { buildCustomerEmail } from "../send-customer-email";
 
 
 const resend = new Resend(
@@ -108,20 +109,21 @@ try {
     status: "NEW",
     name: data.name,
     email: data.email,
-    phone: data.phone || undefined,
-    company: data.company || undefined,
-    country: data.country || undefined,
-    product: data.product || undefined,
-    quantity: data.quantity || undefined,
-    packaging: data.packaging || undefined,
-    destination: data.destination || undefined,
+    phone: data.phone || "",
+    company: data.company || "",
+    country: data.country || "",
+    product: data.product || "",
+    quantity: data.quantity || "",
+    packaging: data.packaging || "",
+    destination: data.destination || "",
     message: data.message,
-    organizationType: data.organizationType || undefined,
-    market: data.market || undefined,
-    companyWebsite: data.companyWebsite || undefined,
-    partnershipFocus: data.partnershipFocus || undefined,
+    organizationType: data.organizationType || "",
+    market: data.market || "",
+    companyWebsite: data.companyWebsite || "",
+    partnershipFocus: data.partnershipFocus || "",
     submittedAt,
-    emailStatus: "pending",
+    notificationEmailStatus: "pending",
+    confirmationEmailStatus: "pending",
     statusHistory: [
       {
         _key: crypto.randomUUID(),
@@ -175,6 +177,30 @@ try {
       );
     }
 
+    await client
+      .patch(createdInquiry._id)
+      .set({ notificationEmailStatue: "sent"})
+      .commit();
+  } catch (error) {
+    console.log(
+      `[${context.requestId}] Inquiry notification email failed:`,
+      error
+    );
+
+    try {
+      await client
+        .patch(createdInquiry._id)
+        .set({ notificationEmailStatus: "failed"})
+        .commit();
+    } catch (statusError) {
+      console.error(
+        `[${context.requestId}] Failed to update notification status:`,
+        statusError
+      );
+    }
+  };
+
+  try {
     // Customer confirmation
     const customerEmail = process.env.NODE_ENV === "development"
         ? process.env.RESEND_TEST_EMAIL
@@ -216,61 +242,37 @@ try {
     }
 
     // Mark email delivery successful
-    try {
-      await client
-  .patch(createdInquiry._id)
-  .set({
-    emailStatus: "sent",
-  })
-  .commit();
+    await client
+      .patch(createdInquiry._id)
+      .set({
+        confirmationEmailStatus: "sent",
+      })
+      .commit();
 
-    } catch(statusError) {
-      /*
-       * Don't fail the request because
-       * emailStatus bookkeeping failed.
-       */
-      console.error(
-        `[${context.requestId}] Failed to update email status:`,
-        statusError
-      );
-    }
-
-    return {
-      success: true as const,
-      reference,
-    };
   } catch (error) {
     console.error(
-      `[${context.requestId}] Inquiry email delivery failed:`,
+      `[${context.requestId}] Inquiry confirmation email failed:`,
       error
     );
 
-    /*
-     * The inquiry is already stored.
-     *
-     *Only update its email status.
-     */
     try {
-        await client
-          .patch(createdInquiry._id)
-          .set({
-            emailStatus: "failed",
-          })
-          .commit();
-
+      await client
+        .patch(createdInquiry._id)
+        .set({
+          confirmationEmailStatus: "failed",
+        })
+        .commit();
     } catch (statusError) {
       console.error(
-        `[${context.requestId}] Failed to update email status:`,
+        `[${context.requestId}] Failed to update confirmation email status:`,
         statusError
       );
     }
-
-    return {
+  }
+  return {
       success: true as const,
       reference,
-      emailWarning: true as const,
     };
-  }
 }
 
 function buildNotificationEmail(

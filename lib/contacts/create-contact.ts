@@ -3,15 +3,8 @@ import crypto from "crypto";
 import { client } from "@/sanity/lib/client";
 import { Resend } from "resend";
 
-import {
-  contactSchema,
-} from "@/lib/validation/contact-validation";
-
-import {
-  contactRateLimit,
-} from "@/lib/security/rate-limit";
-
 import { ContactInput } from "./types"
+import { buildCustomerEmail } from "../send-customer-email";
 
 const resend = new Resend(
   process.env.RESEND_API_KEY
@@ -55,11 +48,11 @@ export async function createContact(
   context: ContactContext,
 ) {
   /*
-   * 1. Generate immutable reference
+   * Generate immutable reference
    */
   const reference = generateReference();
   
-  const submittedAt = new Date().toDateString();
+  const submittedAt = new Date().toISOString();
 
   /**
    * Store inquiry First.
@@ -77,13 +70,14 @@ export async function createContact(
         reference,
         name: data.name,
         email: data.email,
-        phone: data.phone || undefined,
-        company: data.company || undefined,
-        country: data.company || undefined,
+        phone: data.phone || "",
+        company: data.company || "",
+        country: data.country || "",
         message: data.message,
         status: "NEW",
         submittedAt,
-        emailStatus: "pending",
+        notificationEmailStatus: "pending",
+        confirmationEmailStatus: "pending",
         statusHistory: [
           {
             _key: crypto.randomUUID(),
@@ -144,7 +138,7 @@ export async function createContact(
             </p>
 
             <p>
-              <strong>Email:</strong>
+              <strong>Phone:</strong>
               ${escapeHtml(data.phone || "_")}
             </p>
 
@@ -156,7 +150,7 @@ export async function createContact(
             </p>
 
             <p>
-              <strong>Company:</strong>
+              <strong>Country:</strong>
               ${escapeHtml(
                 data.country || "—"
               )}
@@ -184,6 +178,30 @@ export async function createContact(
       );
     }
 
+    await client
+      .patch(createdContact._id)
+      .set({ notificationEmailStatue: "sent"})
+      .commit();
+  } catch (error) {
+    console.log(
+      `[${context.requestId}] Contact notification email failed:`,
+      error
+    );
+
+    try {
+      await client
+        .patch(createdContact._id)
+        .set({ notificationEmailStatus: "failed"})
+        .commit();
+    } catch (statusError) {
+      console.error(
+        `[${context.requestId}] Failed to update notification status:`,
+        statusError
+      );
+    }
+  };
+
+  try {
     // Customer confirmation
     const customerEmail = process.env.NODE_ENV === "development"
         ? process.env.RESEND_TEST_EMAIL
@@ -227,53 +245,35 @@ export async function createContact(
     /*
      * Mark email as sent
      */
-    try {
-      await client
-        .patch(createdContact._id)
-        .set({
-          emailStatus: "sent",
-        })
-        .commit();
-    } catch (statusError) {
-      console.error(
-        `[${context.requestId}] Failed to update contact email status:`,
-        statusError
-      );
-    }
+    await client
+      .patch(createdContact._id)
+      .set({
+        confirmationEmailStatus: "sent",
+      })
+      .commit();
 
-    return {
-      success: true as const,
-    };
   } catch (error) {
     console.error(
-      `[${conext.requestId}] Contact email delivery failed:`,
+      `[${context.requestId}] Customer confirmation email failed:`,
       error
     );
 
-    /*
-     * Contact is already stored.
-     *
-     * Email failure must not make the
-     * contact message disappear.
-     */
     try {
       await client
         .patch(createdContact._id)
         .set({
-          emailStatus: "failed",
+          confirmationEmailStatus: "failed",
         })
         .commit();
     } catch (statusError) {
       console.error(
-        `[${context.requestId}] Failed to update contact email status:`,
+        `[${context.requestId}] Failed to update confirmation email status:`,
         statusError
       );
     }
-
-    return {
+  }
+  return {
       success: true as const,
       reference,
-      emailWarning: true as const,
     };
-  }
 }
