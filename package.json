@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "lint": "eslint",
-    "type-check": "prisma generate && -noEmit",
+    "type-check": "prisma generate && tsc --noEmit",
     "build": "prisma generate && next build",
     "start": "next start",
     "postinstall": "prisma generate"
