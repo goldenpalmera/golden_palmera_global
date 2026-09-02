@@ -74,6 +74,19 @@ jobs:
             
       - name: Build Next.js Application 
         run: npm run build 
+
+      - name: Inspect Next.js Build
+        run: |
+          echo "=== .next ==="
+          du -sh .next
+          find .next -maxdepth 2 -type f | head -50
+
+          echo "=== public ==="
+          if [ -d public ]; then
+            du -sh public
+            find public -maxdepth 2 -type f | head -50
+          fi
+
             
       - name: Upload Next.js Build 
         if: always() 
