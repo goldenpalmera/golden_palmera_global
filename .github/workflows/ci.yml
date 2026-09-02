@@ -87,7 +87,21 @@ jobs:
             find public -maxdepth 2 -type f | head -50
           fi
 
-            
+      - name: Inspect Build Output
+        run: |
+          echo "=== .next size ==="
+          du -sh .next
+
+          echo "=== .next contents ==="
+          find .next -type f | wc -l
+
+          echo "=== standalone ==="
+          du -sh .next/standalone
+          find .next/standalone -maxdepth 2 -type f | head -50
+
+          echo "=== public ==="
+          du -sh public
+           
       - name: Upload Next.js Build 
         if: always() 
         uses: actions/upload-artifact@v5
