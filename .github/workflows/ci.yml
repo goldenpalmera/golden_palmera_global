@@ -41,6 +41,15 @@ jobs:
 
       - name: Install Dependencies 
         run: npm ci 
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Verify Prisma Client
+        run: |
+          echo "Checking generated Prisma client..."
+          ls -la app/generated/prisma || true
+          ls -la app/generated/prisma/client || true
             
       - name: Lint 
         run: npm run lint 

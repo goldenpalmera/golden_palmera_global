@@ -5,9 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "lint": "eslint",
-    "type-check": "tsc --noEmit",
-    "build": "next build",
-    "start": "next start"
+    "type-check": "prisma generate && -noEmit",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@portabletext/react": "^8.0.1",
