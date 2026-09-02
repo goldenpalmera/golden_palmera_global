@@ -1,11 +1,11 @@
-import Navbar from "../components/Navbar";
+import Navbar from "../../components/Navbar";
 import Footer from "../components/Footer";
 import PageHero from "../components/PageHero";
 import Link from "next/link";
 
 import { client } from "../../sanity/lib/client";
 import { PRODUCTS_QUERY, PRODUCTS_SEO_QUERY } from "../../sanity/lib/queries";
-import { urlFor } from "../../sanity/lib/image";
+// import { urlFor } from "../../sanity/lib/image";
 import { buildMetadata } from "@/sanity/lib/seo";
 import type { ProductsSeoData } from "../../sanity/lib/types"
 import { Metadata } from "next";
@@ -14,6 +14,8 @@ type Product = {
   _id: string;
   name: string;
   botanicalName?: string;
+  accent: string;
+  color: string;
   slug?: string;
   shortDescription?: string;
   image?: unknown;
@@ -95,7 +97,7 @@ export default async function ProductsPage() {
             <div className="mt-16 grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
               {products.map((product) => (
                 <article
-                  key={product.number}
+                  key={product._id}
                   className="group overflow-hidden rounded-3xl border border-black/5 bg-white shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
                 >
                   {/* Placeholder product image */}
@@ -105,7 +107,7 @@ export default async function ProductsPage() {
                     <div className="absolute inset-0 bg-black/10 transition-colors duration-500 group-hover:bg-black/0" />
 
                     <div className="absolute left-5 top-5 flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-black/10 text-xs font-semibold text-white backdrop-blur-sm">
-                      {product.number}
+                      {product._id}
                     </div>
 
                     <div className="absolute inset-0 flex items-center justify-center">
@@ -123,7 +125,7 @@ export default async function ProductsPage() {
 
                   <div className="p-7">
                     <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#b78628]">
-                      {product.botanical}
+                      {product.botanicalName}
                     </p>
 
                     <h3 className="mt-3 text-xl font-semibold text-[#173f2b]">
@@ -131,7 +133,7 @@ export default async function ProductsPage() {
                     </h3>
 
                     <p className="mt-3 text-sm leading-7 text-slate-600">
-                      {product.description}
+                      {product.shortDescription}
                     </p>
 
                     <div className="mt-6 border-t border-black/5 pt-5">

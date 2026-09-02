@@ -1,9 +1,11 @@
 import Link from "next/link";
 
 import { client } from "@/sanity/lib/client";
-import { blogPostsQuery } from "@/sanity/lib/queries";
+// import { blogPostsQuery } from "@/sanity/lib/queries";
 import { buildMetadata } from "@/sanity/lib/seo";
 import { Metadata } from "next";
+
+const PAGE_SIZE = 9;
 
 type BlogPost = {
   _id: string;

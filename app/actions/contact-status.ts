@@ -1,12 +1,9 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/auth/require-admin";
 
-import { auth } from "@/auth";
-
-import {
-  serverClient,
-} from "@/sanity/lib/server-client";
+import { client } from "@/sanity/lib/client";
 
 import {
   contactStatuses,
@@ -17,84 +14,90 @@ export async function updateContactStatus(
   id: string,
   status: ContactStatus
 ) {
-  const session = await auth();
+  // Require authentiction admin
+  const admin = await requireAdmin();
 
-  if (!session?.user?.email) {
-    throw new Error(
-      "Unauthorized."
-    );
-  }
-
-  if (
-    !contactStatuses.includes(status)
-  ) {
-    throw new Error(
-      "Invalid contact status."
-    );
-  }
-
-  const existing =
-    await serverClient.fetch<{
-      _id: string;
-      status: ContactStatus;
-    } | null>(
-      `*[
-        _type == "contactSubmission"
-        && _id == $id
-      ][0]{
-        _id,
-        status
-      }`,
-      { id }
-    );
-
-  if (!existing) {
-    throw new Error(
-      "Contact message not found."
-    );
-  }
-
-  if (
-    existing.status === status
-  ) {
+  // validate contact id
+  if (!id) {
     return {
-      success: true,
+      success: false as const,
+      error: "Invalid contact.",
     };
   }
 
-  await serverClient
-    .patch(id)
-    .set({
-      status,
-    })
-    .append(
-      "statusHistory",
-      [
-        {
-          _key:
-            crypto.randomUUID(),
+  // validate status
+  if (!contactStatuses.includes(status)) {
+    return {
+      success: false as const,
+      error: "Invalid contact status.",
+    };
+  }
 
-          status,
+  try {
+    const existing =
+      await client.fetch<{
+        _id: string;
+        status: ContactStatus;
+      } | null>(
+        `*[
+          _type == "contact"
+          && _id == $id
+        ][0]{
+          _id,
+          status
+        }`,
+        { id }
+      );
 
-          changedAt:
-            new Date().toISOString(),
+    if (!existing) {
+      return {
+        success: false as const,
+        error: "Contact not found",
+      };
+    }
 
-          changedBy:
-            session.user.email,
-        },
-      ]
-    )
-    .commit();
+    // Nothing to update
+    if (
+      existing.status === status
+    ) {
+      return {
+        success: true as const,
+      };
+    }
 
-  revalidatePath(
-    "/admin/contacts"
-  );
+    await client
+      .patch(id)
+      .set({
+        status,
+      })
+      .append(
+        "statusHistory",
+        [
+          {
+            _key: crypto.randomUUID(),
+            status,
+            changedAt: new Date().toISOString(),
+            changedBy: admin.email ?? 'admin',
+          },
+        ]
+      )
+      .commit();
 
-  revalidatePath(
-    `/admin/contacts/${id}`
-  );
+    revalidatePath("/admin/contacts");
+    revalidatePath(`/admin/contacts/${id}`);
 
-  return {
-    success: true,
-  };
+    return {
+      success: true as const,
+    };
+  } catch (error) {
+    console.log(
+      "Failed to update contact status:",
+      error
+    );
+
+    return {
+      success: false as const,
+      error: "Unable to update the contact status.",
+    };
+  }
 }

@@ -5,10 +5,8 @@ import {
   useTransition,
 } from "react";
 
-import {
-  updateInquiryStatus,
-  type InquiryStatus,
-} from "@/app/actions/inquiry-status";
+import {updateInquiryStatus } from "@/app/actions/inquiry-status";
+import { InquiryStatus } from "@/lib/inquiries/types";
 
 const statuses: InquiryStatus[] = [
   "NEW",
@@ -25,16 +23,9 @@ export default function InquiryStatusForm({
   id: string;
   currentStatus: InquiryStatus;
 }) {
-  const [
-    isPending,
-    startTransition,
-  ] = useTransition();
-
-  const [status, setStatus] =
-    useState(currentStatus);
-
-  const [error, setError] =
-    useState("");
+  const [ isPending, startTransition ] = useTransition();
+  const [ status, setStatus ] = useState(currentStatus);
+  const [ error, setError ] = useState("");
 
   function handleChange(
     nextStatus: InquiryStatus
@@ -69,7 +60,22 @@ export default function InquiryStatusForm({
               .value as InquiryStatus
           )
         }
-        className="h-11 rounded-xl border border-zinc-200 bg-white px-4 text-sm font-medium text-zinc-800 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/10 disabled:opacity-60"
+        className="
+          h-11 
+          rounded-xl 
+          border 
+          border-zinc-200 
+          bg-white 
+          px-4 
+          text-sm 
+          font-medium 
+          text-zinc-800 
+          outline-none 
+          focus:border-emerald-600 
+          focus:ring-2 
+          focus:ring-emerald-600/10 
+          disabled:opacity-60
+        "
       >
         {statuses.map(
           (item) => (

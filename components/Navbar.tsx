@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import Logo from "./Logo";
+import Logo from "../app/components/Logo";
 
 const links = [
   { href: "/", label: "Home" },
