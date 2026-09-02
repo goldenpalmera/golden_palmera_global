@@ -25,6 +25,11 @@ concurrency:
 jobs: 
   build: 
     name: Lint, Type Check, Test and Build 
+
+    env:
+      NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+      NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
+
         
     runs-on: 
       ubuntu-latest 
