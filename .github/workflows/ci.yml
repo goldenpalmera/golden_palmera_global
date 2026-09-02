@@ -29,7 +29,9 @@ jobs:
     env:
       NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
       NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
-
+      ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+      AUTH_GOOGLE_ID: ${{ secrets.AUTH_GOOGLE_ID}}
+      AUTH_GOOGLE_SECRET: ${{ secrets.AUTH_GOOGLE_SECRET }}
         
     runs-on: 
       ubuntu-latest 

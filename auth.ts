@@ -10,6 +10,14 @@ if (!adminEmail) {
   );
 }
 
+const googleClientId = process.env.AUTH_GOOGLE_ID!;
+const googleClientSecret = process.env.AUTH_GOOGLE_SECRET!;
+
+if (!googleClientId || !googleClientSecret) {
+  throw new Error("Google OAuth credentials are not configured.");
+}
+
+
 export const {
   handlers,
   auth,
@@ -18,10 +26,8 @@ export const {
 } = NextAuth({
   providers: [
     Google({
-      clientId:
-        process.env.AUTH_GOOGLE_ID!,
-      clientSecret:
-        process.env.AUTH_GOOGLE_SECRET!,
+      clientId: googleClientId,
+      clientSecret: googleClientSecret,
     }),
   ],
 
