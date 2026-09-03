@@ -52,6 +52,9 @@
     },
     "typeid-js": {
       "uuid": "^11.1.1"
+    },
+    "@sanity/sdk-react": {
+      "@sanity/workbench": "0.1.0-alpha.45"
     }
   }
 

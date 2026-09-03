@@ -24,6 +24,8 @@ import {
 import type {
   EmailType,
 } from "@/lib/email/types";
+import { success } from "zod";
+import { error } from "console";
 
 type DocumentType =
   | "contact"
@@ -51,6 +53,16 @@ export async function retryEmail(
       success: false as const,
       error: "Invalid document type.",
     };
+  }
+
+  if (
+    emailType !== "notification" &&
+    emailType !== "confirmation"
+  ) {
+    return {
+      success: false as const,
+      error: "Invalid email type."
+    }
   }
 
   /*
@@ -123,7 +135,6 @@ export async function retryEmail(
   /*
    * MARK PENDING
    */
-
   await client
     .patch(id)
     .set({
@@ -220,8 +231,12 @@ export async function retryEmail(
     };
   } catch (error) {
     console.error(
-      `Failed to retry ${documentType} ${emailType} email:`,
-      error
+      "Failed to retry email.",
+      {
+        documentType,
+        emailType,
+        error,
+      }
     );
 
     /*

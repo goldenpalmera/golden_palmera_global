@@ -183,8 +183,12 @@ export async function retryInquiryEmail(
     };
   } catch (error) {
     console.error(
-      `Failed to retry ${emailType} email for inquiry ${id}:`,
-      error
+      "Failed to retry inquiry email.",
+      {
+        inquiry: id,
+        emailType,
+        error,
+      }
     );
 
     const failedAt =
