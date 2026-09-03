@@ -1,8 +1,22 @@
 import { Resend } from "resend";
 
-const resend = new Resend(
-  process.env.RESEND_API_KEY
-);
+let resend: Resend | null = null;
+
+function getResend(): Resend {
+  const resend_api_key = process.env.RESEND_API_KEY;
+
+  if (!resend_api_key) {
+    throw new Error(
+      "Missing RESEND_API_KEY environment variable."
+    )
+  }
+
+  if (!resend) {
+    resend = new Resend(resend_api_key);
+  }
+
+  return resend;
+}
 
 const notificationEmail =
   process.env.INQUIRY_NOTIFICATION_EMAIL ||
@@ -36,8 +50,10 @@ type ContactEmailData = {
 export async function sendContactNotification(
   contact: ContactEmailData
 ) {
+  const resendClient = getResend();
+
   const result =
-    await resend.emails.send(
+    await resendClient.emails.send(
       {
         from:
           `Golden Palmera Global <${fromEmail}>`,
