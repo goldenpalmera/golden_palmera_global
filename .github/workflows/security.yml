@@ -4,7 +4,8 @@ on:
   pull_request: 
 
   push: 
-    branches: 
+    branches:
+      - 'feature/**'
       - main 
       - staging 
       - develop 

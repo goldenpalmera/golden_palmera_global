@@ -9,7 +9,7 @@ on:
 
   push: 
     branches: 
-      - 'feature/**' 
+      - 'feature/**'
       - staging 
       - develop 
       - deploy
@@ -101,6 +101,22 @@ jobs:
 
           echo "=== public ==="
           du -sh public
+
+      - name: Prepare Next.js Deployment
+        run: |
+          rm -rf deployment
+          mkdir -p deployment/.next
+          cp -r .next/standalone/* deployment/
+          cp -r .next/static deployment/.next/
+          cp -r public deployment/
+
+      - name: Inspect Deployment Artifact
+        run: |
+          echo "=== deployment size ==="
+          du -sh deployment
+
+          echo "=== deployment files ==="
+          find deployment -type f | wc -l
            
       - name: Upload Next.js Build 
         if: always() 
