@@ -88,7 +88,7 @@ jobs:
             build-args: |
               NEXT_PUBLIC_SANITY_PROJECT_ID=${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
               NEXT_PUBLIC_SANITY_DATASET=${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
-              ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+              ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}
                 
             cache-from: type=gha 
             cache-to: type=gha,mode=max 

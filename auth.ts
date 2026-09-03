@@ -54,14 +54,6 @@ export const {
 
       return email === adminEmail;
     },
-
-    // async session({ session, token }) {
-    //   if (session.user && token.email) {
-    //     session.user.email = token.email;
-    //   }
-
-    //   return session;
-    // },
   },
 
   trustHost: true,
