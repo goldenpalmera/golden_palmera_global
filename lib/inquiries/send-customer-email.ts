@@ -42,7 +42,7 @@ export async function sendCustomerConfirmation(
     );
   }
 
-  let resendClient = getResend();
+  const resendClient = getResend();
 
   const confirmation =
     await resendClient.emails.send(
