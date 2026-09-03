@@ -6,7 +6,7 @@ on:
       - develop 
       - deploy
       - main 
-
+      
   push: 
     branches: 
       - 'feature/**'
