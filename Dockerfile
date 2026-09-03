@@ -34,10 +34,9 @@ ARG NEXT_PUBLIC_SANITY_DATASET
 
 ENV NEXT_PUBLIC_SANITY_PROJECT_ID=$NEXT_PUBLIC_SANITY_PROJECT_ID
 ENV NEXT_PUBLIC_SANITY_DATASET=$NEXT_PUBLIC_SANITY_DATASET
-
+ENV ADMIN_EMAIL=$ADMIN_EMAIL
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN npx prisma generate
 RUN npm run build
 
 
@@ -59,9 +58,11 @@ RUN apk update && apk upgrade --no-cache \
     && apk add --no-cache libstdc++ \
     && addgroup --system --gid 1001 nodejs \
     && adduser --system --uid 1001 nextjs \
-
-    # Remove global npm/corepack/yarn modules to wipe out any inherited vulnerabilities
-    && rm -rf /usr/local/lib/node_modules /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack /opt/yarn*
+    && rm -rf /usr/local/lib/node_modules \
+                /usr/local/bin/npm \
+                /usr/local/bin/npx \
+                /usr/local/bin/corepack \
+                /opt/yarn*
 
 # Copy only the Node runtime
 COPY --from=builder /usr/local/bin/node /usr/local/bin/node

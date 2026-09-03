@@ -1,14 +1,19 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 
-const adminEmail =
-  process.env.ADMIN_EMAIL?.toLowerCase();
+function getAdminEmail(): string {
+  const adminEmail =
+    process.env.ADMIN_EMAIL?.toLowerCase();
 
-if (!adminEmail) {
-  throw new Error(
-    "ADMIN_EMAIL is not configured."
-  );
+  if (!adminEmail) {
+    throw new Error(
+      "ADMIN_EMAIL is not configured."
+    );
+  }
+  return adminEmail;
 }
+
+const adminEmail = getAdminEmail();
 
 const googleClientId = process.env.AUTH_GOOGLE_ID!;
 const googleClientSecret = process.env.AUTH_GOOGLE_SECRET!;
@@ -27,7 +32,7 @@ export const {
   providers: [
     Google({
       clientId: googleClientId,
-      clientSecret: googleClientSecret,
+      clientSecret: googleClientSecret
     }),
   ],
 
