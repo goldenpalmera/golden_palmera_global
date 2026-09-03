@@ -3,7 +3,7 @@ import Footer from "../components/Footer";
 import PageHero from "../components/PageHero";
 import Link from "next/link";
 
-import { client } from "../../sanity/lib/client";
+import { getSanityClient } from "../../sanity/lib/client";
 import { PRODUCTS_QUERY, PRODUCTS_SEO_QUERY } from "../../sanity/lib/queries";
 // import { urlFor } from "../../sanity/lib/image";
 import { buildMetadata } from "@/sanity/lib/seo";
@@ -30,6 +30,7 @@ async function getProducts(): Promise<Product[]> {
   return client.fetch(PRODUCTS_QUERY, {}, { next: { revalidate: 60 } });
 }
 
+const client = getSanityClient();
 async function getProductsPage() {
   return client.fetch<ProductsSeoData | null>(
     PRODUCTS_SEO_QUERY,

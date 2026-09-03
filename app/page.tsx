@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { client } from "@/sanity/lib/client";
+import { getSanityClient } from "@/sanity/lib/client";
 import { 
   commoditiesQuery, 
   homeServicesQuery, 
@@ -15,6 +15,7 @@ import type {
 
 import HomeHero from "@/components/home/HomeHero";
 
+const client = getSanityClient();
 export async function generateMetadata(): Promise<Metadata> {
   const page = await client.fetch<HomePageData | null>(
     homePageQuery

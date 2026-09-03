@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/auth/require-admin";
-import { client } from "@/sanity/lib/client";
+import { getSanityClient } from "@/sanity/lib/client";
 
 import { sendInquiryNotification } from "./send-inquiry-notification";
 import { sendCustomerConfirmation } from "./send-customer-email";
@@ -24,6 +24,8 @@ export async function retryInquiryEmail(
     };
   }
 
+  const client = getSanityClient();
+  
   const inquiry =
     await client.fetch<{
       _id: string;

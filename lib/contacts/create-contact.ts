@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { client } from "@/sanity/lib/client";
+import { getSanityClient } from "@/sanity/lib/client";
 import { ContactInput } from "./types"
 import { sendContactNotification } from "./send-contact-notification";
 import { sendContactConfirmation } from "./send-contact-confirmation";
@@ -42,7 +42,8 @@ export async function createContact(
    * the customer's inquiry.
    */
   let createdContact;
-
+  const client = getSanityClient();
+  
   try {
     createdContact =
       await client.create({

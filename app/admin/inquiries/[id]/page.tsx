@@ -4,6 +4,7 @@ import { getInquiryById } from "@/lib/inquiries/get-inquiries";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import InquiryStatusForm from "./InquiryStatusForm";
 import EmailDelivery from "@/components/admin/EmailDelivery";
+import { InquiryStatus, Inquiry } from "@/lib/inquiries/types";
 
 function formatDate(
   value: string
@@ -53,12 +54,12 @@ function inquiryTypeLabel(
   }
 }
 
-const statusStyles = {
-  'NEW': "!border-blue-500 text-blue-500",
-  "IN_PROGRESS": "!border-yellow-500 text-yellow-500",
-  "CONTACTED": "!border-purple-500 text-purple-500",
-  "REJECTED": "!border-red-500 text-red-500",
-  "RESOLVED": "!border-emerald-500 text-emerald-500",
+const statusStyles: Record<InquiryStatus, string> = {
+  NEW: "!border-blue-500 text-blue-500",
+  IN_PROGRESS: "!border-yellow-500 text-yellow-500",
+  CONTACTED: "!border-purple-500 text-purple-500",
+  REJECTED: "!border-red-500 text-red-500",
+  RESOLVED: "!border-emerald-500 text-emerald-500",
 };
 
 
@@ -73,7 +74,7 @@ export default async function InquiryDetailPage({
 
   const { id } = await params;
 
-  const inquiry =
+  const inquiry:Inquiry =
     await getInquiryById(id);
 
   if (!inquiry) {

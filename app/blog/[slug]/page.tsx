@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { PortableText } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
 
-import { client } from "@/sanity/lib/client";
+import { getSanityClient } from "@/sanity/lib/client";
 import {
   POST_QUERY,
   RELATED_BLOG_POSTS_QUERY,
@@ -65,6 +65,7 @@ const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ||
   "https://goldenpalmeraglobal.com";
 
+const client = getSanityClient();
 async function getPost(slug: string): Promise<BlogPost | null> {
   return client.fetch(
     POST_QUERY,

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { client } from "@/sanity/lib/client";
+import { getSanityClient } from "@/sanity/lib/client";
 // import { blogPostsQuery } from "@/sanity/lib/queries";
 import { buildMetadata } from "@/sanity/lib/seo";
 import { Metadata } from "next";
@@ -74,6 +74,7 @@ async function getBlogPosts(page: number, search?: string) {
     }
   `;
 
+  const client = getSanityClient();
   return client.fetch<{
     posts: BlogPost[];
     total: number;

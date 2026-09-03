@@ -1,6 +1,6 @@
 import crypto from "crypto";
 
-import { client } from "@/sanity/lib/client";
+import { getSanityClient } from "@/sanity/lib/client";
 import { CreateInquiryResult } from "../type";
 import { sendCustomerConfirmation } from "./send-customer-email";
 import { sendInquiryNotification } from "./send-inquiry-notification";
@@ -55,6 +55,7 @@ export async function createInquiry(
   /*
    * CREATE INQUIRY
    */
+  const client = getSanityClient();
   try {
     createdInquiry = await client.create({
       _type: "inquiry",

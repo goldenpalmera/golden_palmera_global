@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { requireAdmin } from "@/lib/auth/require-admin";
-import { client } from "@/sanity/lib/client";
+import { getSanityClient } from "@/sanity/lib/client";
 
 import {
   sendContactNotification,
@@ -68,6 +68,7 @@ export async function retryEmail(
   /*
    * LOAD DOCUMENT
    */
+  const client = getSanityClient();
 
   const document = await client.fetch<{
     _id: string;
