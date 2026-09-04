@@ -1,16 +1,19 @@
 import { buildMetadata } from "@/sanity/lib/seo";
 import { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { PortableText } from "@portabletext/react";
+import type { PortableTextBlock } from "@portabletext/types";
 
-import { client } from "@/sanity/lib/client";
+import { getSanityClient } from "@/sanity/lib/client";
 import {
   POST_QUERY,
   RELATED_BLOG_POSTS_QUERY,
   RECENT_BLOG_POSTS_QUERY,
 } from "@/sanity/lib/queries";
 import { urlFor } from "@/sanity/lib/image";
+import { SanityImageSource } from "@sanity/image-url";
 
 type Params = {
   slug: string;
@@ -21,27 +24,27 @@ type BlogPost = {
   title: string;
   slug: string;
   excerpt?: string;
-  coverImage?: unknown;
+  coverImage?: SanityImageSource;
 
   author?: {
     _id?: string;
     name?: string;
     role?: string;
     bio?: string;
-    image?: unknown;
+    image?: SanityImageSource;
   };
 
   publishedAt?: string;
   category?: string;
   tags?: string[];
-  body?: unknown[];
+  body?: PortableTextBlock[];
   featured?: boolean;
 
   seo?: {
     metaTitle?: string;
     metaDescription?: string;
     keywords?: string[];
-    ogImage?: unknown;
+    ogImage?: SanityImageSource;
   };
 };
 
@@ -50,7 +53,7 @@ type RelatedPost = {
   title: string;
   slug: string;
   excerpt?: string;
-  coverImage?: unknown;
+  coverImage?: SanityImageSource;
   category?: string;
   publishedAt?: string;
   author?: {
@@ -63,6 +66,8 @@ const SITE_URL =
   "https://goldenpalmeraglobal.com";
 
 async function getPost(slug: string): Promise<BlogPost | null> {
+  const client = getSanityClient();
+  
   return client.fetch(
     POST_QUERY,
     { slug },
@@ -84,16 +89,16 @@ function formatDate(date?: string) {
   }).format(new Date(date));
 }
 
-function calculateReadingTime(body?: unknown[]) {
+function calculateReadingTime(body?: PortableTextBlock[]) {
   if (!body?.length) return 1;
 
   const text = body
-    .map((block: any) => {
+    .map((block) => {
       if (block?._type !== "block") return "";
 
       return (
         block.children
-          ?.map((child: any) => child.text || "")
+          ?.map((child) => child.text || "")
           .join(" ") || ""
       );
     })
@@ -136,6 +141,8 @@ export default async function BlogArticlePage({
 }: {
   params: Promise<Params>;
 }) {
+  const client = getSanityClient();
+
   const { slug } = await params;
 
   const article = await getPost(slug);
@@ -358,7 +365,7 @@ export default async function BlogArticlePage({
         <div className="mx-auto max-w-3xl">
           {article.body && (
             <div className="prose prose-lg max-w-none prose-headings:text-[#182018] prose-p:text-[#5f675f] prose-p:leading-9 prose-a:text-[#a07a3d]">
-              <PortableText value={article.body as any} />
+              <PortableText value={article.body} />
             </div>
           )}
         </div>

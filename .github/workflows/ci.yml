@@ -6,10 +6,10 @@ on:
       - develop 
       - deploy
       - main 
-
+      
   push: 
     branches: 
-      - 'feature/**' 
+      - 'feature/**'
       - staging 
       - develop 
       - deploy
@@ -25,22 +25,42 @@ concurrency:
 jobs: 
   build: 
     name: Lint, Type Check, Test and Build 
+
+    env:
+      NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+      NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
+      ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+      AUTH_GOOGLE_ID: ${{ secrets.AUTH_GOOGLE_ID }}
+      AUTH_GOOGLE_SECRET: ${{ secrets.AUTH_GOOGLE_SECRET }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
+      UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+      UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
         
     runs-on: 
       ubuntu-latest 
         
     steps: 
       - name: Checkout Repository 
-        uses: actions/checkout@v4 
+        uses: actions/checkout@v5
             
       - name: Setup Node.js 
-        uses: actions/setup-node@v4 
+        uses: actions/setup-node@v5
         with: 
           node-version: 22 
           cache: npm 
 
       - name: Install Dependencies 
         run: npm ci 
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Verify Prisma Client
+        run: |
+          echo "Checking generated Prisma client..."
+          ls -la app/generated/prisma || true
+          ls -la app/generated/prisma/client || true
             
       - name: Lint 
         run: npm run lint 
@@ -54,15 +74,58 @@ jobs:
             
       - name: Build Next.js Application 
         run: npm run build 
-            
+
+      - name: Inspect Next.js Build
+        run: |
+          echo "=== .next ==="
+          du -sh .next
+          find .next -maxdepth 2 -type f | head -50
+
+          echo "=== public ==="
+          if [ -d public ]; then
+            du -sh public
+            find public -maxdepth 2 -type f | head -50
+          fi
+
+      - name: Inspect Build Output
+        run: |
+          echo "=== .next size ==="
+          du -sh .next
+
+          echo "=== .next contents ==="
+          find .next -type f | wc -l
+
+          echo "=== standalone ==="
+          du -sh .next/standalone
+          find .next/standalone -maxdepth 2 -type f | head -50
+
+          echo "=== public ==="
+          du -sh public
+
+      - name: Prepare Next.js Deployment
+        run: |
+          rm -rf deployment
+          mkdir -p deployment/.next
+          cp -r .next/standalone/* deployment/
+          cp -r .next/static deployment/.next/
+          cp -r public deployment/
+
+      - name: Inspect Deployment Artifact
+        run: |
+          echo "=== deployment size ==="
+          du -sh deployment
+
+          echo "=== deployment files ==="
+          find deployment -type f | wc -l
+           
       - name: Upload Next.js Build 
         if: always() 
-        uses: actions/upload-artifact@v4 
+        uses: actions/upload-artifact@v5
         with: 
           name: next-build 
           path: | 
             .next 
-              public 
+            public 
           retention-days: 1 
             
   notify: 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import InquiryForm from "@/components/inquiry/InquiryForm";
+// import InquiryForm from "@/components/inquiry/InquiryForm";
 import ContactForm from "@/components/contact/ContactForm";
 import ContactHero from "@/components/contact/ContactHero";
 

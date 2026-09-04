@@ -37,7 +37,7 @@ export default async function RequestQuotePage({
           </p>
 
           <h1 className="max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
-            Let's discuss your{" "}
+            Let&apos;s discuss your{" "}
             <span className="text-emerald-400">requirements.</span>
           </h1>
 

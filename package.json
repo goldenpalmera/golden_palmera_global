@@ -5,20 +5,24 @@
   "scripts": {
     "dev": "next dev",
     "lint": "eslint",
-    "type-check": "tsc --noEmit",
-    "build": "next build",
-    "start": "next start"
+    "type-check": "prisma generate && tsc --noEmit",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@portabletext/react": "^8.0.1",
     "@portabletext/types": "^4.0.2",
-    "@prisma/client": "^7.9.1",
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "^7.10.0",
     "@sanity/image-url": "^2.1.1",
+    "@sanity/vision": "^6.11.0",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.38.2",
     "next": "16.3.1",
     "next-auth": "^5.0.0-beta.32",
     "next-sanity": "^13.3.3",
+    "pg": "^8.23.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "resend": "^6.22.0",
@@ -28,19 +32,30 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.1",
+    "prisma": "^7.10.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
   "overrides": {
+    "deepmerge-ts": "^8.0.1",
+    "smol-toml": "^1.8.0",
     "@vercel/frameworks": {
       "js-yaml": "^4.1.0"
     },
+    "prisma": {
+      "mysql2": "3.24.3"
+    },
     "typeid-js": {
       "uuid": "^11.1.1"
+    },
+    "@sanity/sdk-react": {
+      "@sanity/workbench": "0.1.0-alpha.45"
     }
   }
+
 }

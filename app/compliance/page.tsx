@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { buildMetadata } from "@/sanity/lib/seo";
 import type { SeoData } from "@/sanity/lib/types";
 
-import { client } from "@/sanity/lib/client";
+import { getSanityClient } from "@/sanity/lib/client";
 import { compliancePageQuery } from "@/sanity/lib/queries";
 
 type ComplianceArea = {
@@ -29,6 +29,8 @@ type CompliancePageData = {
 };
 
 async function getCompliancePage() {
+  const client = getSanityClient();
+
   return client.fetch<CompliancePageData | null>(
     compliancePageQuery
   );

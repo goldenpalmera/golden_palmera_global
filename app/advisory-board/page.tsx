@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { client } from "@/sanity/lib/client";
+import { getSanityClient } from "@/sanity/lib/client";
 import { advisoryBoardPageQuery } from "@/sanity/lib/queries";
 import { urlFor } from "@/sanity/lib/image";
 
@@ -39,6 +39,8 @@ type AdvisoryBoardPageData = {
 };
 
 async function getAdvisoryBoardPage() {
+  const client = getSanityClient();
+
   return client.fetch<AdvisoryBoardPageData | null>(
     advisoryBoardPageQuery
   );

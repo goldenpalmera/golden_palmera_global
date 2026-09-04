@@ -2,7 +2,7 @@
 
 import { revalidatePath, revalidateTag } from "next/cache";
 import { requireAdmin } from "@/lib/auth/require-admin";
-import { client } from "@/sanity/lib/client";
+import { getSanityClient } from "@/sanity/lib/client";
 import {
   inquiryStatuses,
   type InquiryStatus,
@@ -33,6 +33,8 @@ export async function updateInquiryStatus(
 
   try {
   // Get existing inquire
+    const client = getSanityClient();
+    
     const existing =
       await client.fetch<{
         _id: string;

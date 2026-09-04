@@ -5,10 +5,10 @@ import ServiceCard from "@/components/services/ServicesCard";
 import ServicesHero from "@/components/services/ServicesHero";
 import ServicesProcess from "@/components/services/ServicesProcess";
 import { buildMetadata } from "@/sanity/lib/seo";
-import { client } from "@/sanity/lib/client";
+import { getSanityClient } from "@/sanity/lib/client";
 import { SERVICES_QUERY, SERVICES_SEO_QUERY } from "@/sanity/lib/queries";
-import next from "next";
-import { revalidatePath } from "next/cache";
+// import next from "next";
+// import { revalidatePath } from "next/cache";
 import { ServicesSeoData } from "@/sanity/lib/types";
 
 type Service = {
@@ -25,6 +25,8 @@ type Service = {
 };
 
 async function getService(): Promise<Service[]> {
+  const client = getSanityClient();
+
   return client.fetch(
     SERVICES_QUERY,
     {},
@@ -37,6 +39,8 @@ async function getService(): Promise<Service[]> {
 }
 
 async function getServicesPage() {
+  const client = getSanityClient();
+
   return client.fetch<ServicesSeoData | null>(
     SERVICES_SEO_QUERY,
     {},

@@ -1,31 +1,9 @@
 import crypto from "crypto";
-
-import { client } from "@/sanity/lib/client";
-import { Resend } from "resend";
-
+import { getSanityClient } from "@/sanity/lib/client";
 import { ContactInput } from "./types"
-import { buildCustomerEmail } from "../send-customer-email";
-
-const resend = new Resend(
-  process.env.RESEND_API_KEY
-);
-
-const notificationEmail =
-  process.env.INQUIRY_NOTIFICATION_EMAIL ||
-  "goldenpalmeraglobal@gmail.com";
-
-const fromEmail =
-  process.env.RESEND_FROM_EMAIL ||
-  "onboarding@resend.dev";
-
-function escapeHtml(value: string) {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
+import { sendContactNotification } from "./send-contact-notification";
+import { sendContactConfirmation } from "./send-contact-confirmation";
+import type { CreateInquiryResult } from "../type";
 
 type ContactContext = {
   requestId: string;
@@ -46,7 +24,10 @@ function generateReference() {
 export async function createContact(
   data: ContactInput,
   context: ContactContext,
-) {
+): Promise<CreateInquiryResult> {
+  // Track failures
+  let notificationFailed = false;
+  let confirmationFailed = false;
   /*
    * Generate immutable reference
    */
@@ -61,7 +42,8 @@ export async function createContact(
    * the customer's inquiry.
    */
   let createdContact;
-
+  const client = getSanityClient();
+  
   try {
     createdContact =
       await client.create({
@@ -74,10 +56,19 @@ export async function createContact(
         company: data.company || "",
         country: data.country || "",
         message: data.message,
+
         status: "NEW",
+
         submittedAt,
+
         notificationEmailStatus: "pending",
         confirmationEmailStatus: "pending",
+        notificationEmailLastAttemptAt: null,
+        notificationEmailSentAt: null,
+        notificationEmailFailedAt: null,
+        confirmationEmailLastAttemptAt: null,
+        confirmationEmailSentAt: null,
+        confirmationEmailFailedAt: null,
         statusHistory: [
           {
             _key: crypto.randomUUID(),
@@ -104,85 +95,35 @@ export async function createContact(
    * Notification email
    */
   try {
-    const notification =
-      await resend.emails.send({
-        from: `Golden Palmera Global <${fromEmail}>`,
-
-        to: notificationEmail,
-
-        replyTo: data.email,
-
-        subject:
-          `New Contact Message — ${data.name}-${reference}`,
-
-        html: `
-          <div
-            style="
-              font-family: Arial, sans-serif;
-              line-height: 1.6;
-              color: #18181b;
-            "
-          >
-            <h2>
-              New Golden Palmera Global Contact Message
-            </h2>
-
-            <p>
-              <strong>Name:</strong>
-              ${escapeHtml(data.name)}
-            </p>
-
-            <p>
-              <strong>Email:</strong>
-              ${escapeHtml(data.email)}
-            </p>
-
-            <p>
-              <strong>Phone:</strong>
-              ${escapeHtml(data.phone || "_")}
-            </p>
-
-            <p>
-              <strong>Company:</strong>
-              ${escapeHtml(
-                data.company || "—"
-              )}
-            </p>
-
-            <p>
-              <strong>Country:</strong>
-              ${escapeHtml(
-                data.country || "—"
-              )}
-            </p>
-
-            <h3>
-              Message
-            </h3>
-
-            <p>
-              ${escapeHtml(
-                data.message
-              ).replace(/\n/g, "<br />")}
-            </p>
-          </div>
-        `,
-      },
-    {
-      idempotencyKey: `contact-notification:${reference}`
+    await client
+      .patch(createdContact._id)
+      .set({ 
+        notificationEmailStatus: "pending",
+        notificationEmailLastAttemptAt: new Date().toISOString(),
+      })
+      .commit()
+    
+    await sendContactNotification({
+      reference,
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      company: data.company,
+      country: data.country,
+      message: data.message,
     });
-
-    if (notification.error) {
-      throw new Error(
-        notification.error.message
-      );
-    }
 
     await client
       .patch(createdContact._id)
-      .set({ notificationEmailStatue: "sent"})
+      .set({ 
+        notificationEmailStatus: "sent",
+        notificationEmailSentAt: new Date().toISOString(),
+      })
       .commit();
+
   } catch (error) {
+    notificationFailed = true;
+
     console.log(
       `[${context.requestId}] Contact notification email failed:`,
       error
@@ -191,8 +132,12 @@ export async function createContact(
     try {
       await client
         .patch(createdContact._id)
-        .set({ notificationEmailStatus: "failed"})
+        .set({ 
+          notificationEmailStatus: "failed",
+          notificationEmailFailedAt: new Date().toISOString(),
+        })
         .commit();
+
     } catch (statusError) {
       console.error(
         `[${context.requestId}] Failed to update notification status:`,
@@ -203,56 +148,30 @@ export async function createContact(
 
   try {
     // Customer confirmation
-    const customerEmail = process.env.NODE_ENV === "development"
-        ? process.env.RESEND_TEST_EMAIL
-        : data.email;
+    await client
+    .patch(createdContact._id)
+    .set({
+      confirmationEmailLastAttemptAt: new Date().toISOString(),
+    })
+    .commit();
 
-    if (!customerEmail) {
-      throw new Error(
-        "Customer email destination is not configured."
-      )
-    }
+    await sendContactConfirmation({
+      reference,
+      name: data.name,
+      email: data.email,
+    });
 
-    const confirmation = await resend.emails.send(
-        {
-          from: `Golden Palmera Global <${fromEmail}>`,
-
-          // to: data.email,
-
-          to: customerEmail,
-
-          subject:
-            `We received your inquiry — ${reference}`,
-
-          html:
-            buildCustomerEmail(
-              data.name,
-              reference
-            ),
-        },
-        {
-          idempotencyKey:
-            `inquiry-confirmation:${reference}`,
-        }
-      );
-
-    if (confirmation.error) {
-      throw new Error(
-        confirmation.error.message
-      );
-    }
-
-    /*
-     * Mark email as sent
-     */
     await client
       .patch(createdContact._id)
       .set({
         confirmationEmailStatus: "sent",
+        confirmationEmailSentAt: new Date().toISOString()
       })
       .commit();
 
   } catch (error) {
+    confirmationFailed = true;
+
     console.error(
       `[${context.requestId}] Customer confirmation email failed:`,
       error
@@ -263,6 +182,7 @@ export async function createContact(
         .patch(createdContact._id)
         .set({
           confirmationEmailStatus: "failed",
+          confirmationEmailFailedAt: new Date().toISOString(),
         })
         .commit();
     } catch (statusError) {
@@ -275,5 +195,7 @@ export async function createContact(
   return {
       success: true as const,
       reference,
+      message: "Your enquiry has been received.",
+      emailWarning: notificationFailed || confirmationFailed,
     };
 }

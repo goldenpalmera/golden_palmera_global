@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 
-import Navbar from "../components/Navbar";
+import Navbar from "../../components/Navbar";
 import Footer from "../components/Footer";
 import PageHero from "../components/PageHero";
 
-import { client } from "../../sanity/lib/client";
+import { getSanityClient } from "../../sanity/lib/client";
 import { ABOUT_PAGE_QUERY } from "../../sanity/lib/queries";
 import { buildMetadata } from "../../sanity/lib/seo";
 import type { AboutPageData } from "../../sanity/lib/types";
@@ -33,6 +33,8 @@ const fallbackValues = [
 ];
 
 async function getAboutPage() {
+  const client = getSanityClient();
+
   return client.fetch<AboutPageData | null>(
     ABOUT_PAGE_QUERY,
     {},

@@ -1,3 +1,5 @@
+import { EmailStatus } from "../email/types";
+
 export const contactStatuses = [
   "NEW",
   "READ",
@@ -9,6 +11,10 @@ export const contactStatuses = [
 export type ContactStatus =
   (typeof contactStatuses)[number];
 
+export type ContactEmailType = 
+  | "notification"
+  | "confirmation";
+
 export type Contact = {
   _id: string;
   name: string;
@@ -19,7 +25,15 @@ export type Contact = {
   message: string;
   status: ContactStatus;
   submittedAt: string;
-  emailStatus?: "pending" | "sent" | "failed";
+  notificationEmailStatus?: EmailStatus;
+  notificationEmailLastAttemptAt?: string;
+  notificationEmailSentAt?: string;
+  notificationEmailFailedAt?: string;
+
+  confirmationEmailStatus?: EmailStatus;
+  confirmationEmailLastAttemptAt?: string;
+  confirmationEmailSentAt?: string;
+  confirmationEmailFailedAt?: string;
 };
 
 export type ContactInput = {

@@ -21,7 +21,7 @@ import {
 } from "@/lib/security/client-ip";
 
 import {
-  inquiryRateLimit,
+  checkRateLimit,
 } from "@/lib/security/rate-limit";
 import { createContact } from "@/lib/contacts/create-contact";
 
@@ -95,7 +95,7 @@ export async function POST(request: Request) {
 
     // Rate limit
     const rateLimit =
-      await inquiryRateLimit.limit(
+      await checkRateLimit(
         `${ip}:${data.email}`
       );
 

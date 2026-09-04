@@ -1,10 +1,11 @@
-import { client } from "@/sanity/lib/client";
+import { getSanityClient } from "@/sanity/lib/client";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ||
   "https://goldenpalmeraglobal.com";
 
 export async function GET() {
+  const client = getSanityClient();
   const posts = await client.fetch<
     {
       title: string;

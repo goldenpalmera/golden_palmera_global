@@ -347,7 +347,7 @@ export default function HomeHero({
           <div className="section-label">05 — LET&apos;S CONNECT</div>
 
           <h2>
-            Let&spos;s take your
+            Let&apos;s take your
             <br />
             <em>commodity further.</em>
           </h2>

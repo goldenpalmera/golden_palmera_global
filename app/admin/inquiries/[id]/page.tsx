@@ -1,15 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
-import {
-  getInquiryById,
-} from "@/lib/inquiries/get-inquiries";
-
-import {
-  requireAdmin,
-} from "@/lib/auth/require-admin";
-
+import { getInquiryById } from "@/lib/inquiries/get-inquiries";
+import { requireAdmin } from "@/lib/auth/require-admin";
 import InquiryStatusForm from "./InquiryStatusForm";
+import EmailDelivery from "@/components/admin/EmailDelivery";
+import { InquiryStatus } from "@/lib/inquiries/types";
 
 function formatDate(
   value: string
@@ -23,23 +18,23 @@ function formatDate(
   ).format(new Date(value));
 }
 
-function label(value?: string) {
-  if (!value) {
-    return "—";
-  }
+// function label(value?: string) {
+//   if (!value) {
+//     return "—";
+//   }
 
-  return value
-    .replace(/_/g, " ")
-    .replace(/\b\w/g, (char) =>
-      char.toUpperCase()
-    );
-}
+//   return value
+//     .replace(/_/g, " ")
+//     .replace(/\b\w/g, (char) =>
+//       char.toUpperCase()
+//     );
+// }
 
 function inquiryTypeLabel(
   type: string
 ) {
   switch (type) {
-    case "general":
+    case "contact":
       return "Contact";
 
     case "product":
@@ -51,10 +46,22 @@ function inquiryTypeLabel(
     case "export_buyer":
       return "Export Buyer";
 
+    case "contact":
+      return "Contact"
+
     default:
       return "Inquiry";
   }
 }
+
+const statusStyles: Record<InquiryStatus, string> = {
+  NEW: "!border-blue-500 text-blue-500",
+  IN_PROGRESS: "!border-yellow-500 text-yellow-500",
+  CONTACTED: "!border-purple-500 text-purple-500",
+  REJECTED: "!border-red-500 text-red-500",
+  RESOLVED: "!border-emerald-500 text-emerald-500",
+};
+
 
 export default async function InquiryDetailPage({
   params,
@@ -87,9 +94,10 @@ export default async function InquiryDetailPage({
         <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-sm font-medium text-emerald-700">
-              {inquiry.reference} <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-700">
-  {inquiryTypeLabel(inquiry.type)}
-</span>
+              {inquiry.reference} 
+              <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-700">
+                {inquiryTypeLabel(inquiry.type)}
+              </span>
             </p>
 
             <h1 className="mt-1 text-3xl font-bold text-zinc-900">
@@ -106,29 +114,58 @@ export default async function InquiryDetailPage({
 
           
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-  <InquiryStatusForm
-    id={inquiry._id}
-    currentStatus={inquiry.status}
-  />
+            <InquiryStatusForm
+              id={inquiry._id}
+              currentStatus={inquiry.status}
+            />
 
-  <a
-    href={`mailto:${inquiry.email}?subject=${encodeURIComponent(
-      `Re: ${inquiry.reference} — Golden Palmera Global`
-    )}`}
-    className="inline-flex h-11 items-center justify-center rounded-xl bg-emerald-700 px-5 text-sm font-semibold text-white hover:bg-emerald-800"
-  >
-    Reply to Customer
-  </a>
-</div>
+            <a
+              href={`mailto:${inquiry.email}?subject=${encodeURIComponent(
+                `Re: ${inquiry.reference} — Golden Palmera Global`
+              )}`}
+              className="
+                inline-flex 
+                h-11 
+                items-center 
+                justify-center 
+                rounded-xl 
+                bg-emerald-700 
+                px-5 
+                text-sm 
+                font-semibold 
+                text-white 
+                transition-colors
+                duration-500
+                ease-in-out
+                hover:bg-white
+                hover:text-emerald-700
+              "
+            >
+              Reply to Customer
+            </a>
+          </div>
           
         </div>
 
         <div className="mt-8 grid gap-6 lg:grid-cols-3">
           <section className="rounded-2xl border border-zinc-200 bg-white p-6 lg:col-span-2">
-            <h2 className="text-lg font-semibold text-zinc-900">
-              Customer Information
-            </h2>
-
+            <div className="grid gap-5 sm:grid-cols-2">
+              <h2 className="text-lg font-semibold text-zinc-900">
+                Customer Information
+              </h2>
+              <h3 className={`
+                rounded-2xl 
+                border-zinc-200 
+                borderrounded-2xl 
+                border 
+                ${ statusStyles[inquiry.status] || "border-zinc-500" }
+                p-2 
+                text-xs 
+                sm:justify-self-end`}
+              >
+                {inquiry.status}
+              </h3>
+            </div>
             <div className="mt-6 grid gap-5 sm:grid-cols-2">
               <Info
                 label="Full Name"
@@ -168,156 +205,116 @@ export default async function InquiryDetailPage({
           </section>
 
           <section className="rounded-2xl border border-zinc-200 bg-white p-6">
-            <h2 className="text-lg font-semibold text-zinc-900">
-              Inquiry
-            </h2>
-
-            <div className="mt-6 space-y-5">
-              <Info
-                label="Type"
-                value={label(
-                  inquiry.type
-                )}
-              />
-
-              <Info
-                label="Status"
-                value={label(
-                  inquiry.status
-                )}
-              />
-
-              <Info
-                label="Email Status"
-                value={label(
-                  inquiry.emailStatus
-                )}
-              />
-
-              <Info
-                label="Reference"
-                value={
-                  inquiry.reference
+            <div className="mt-1">
+              <EmailDelivery
+                documentType="inquiry"
+                documentId={inquiry._id}
+                notificationStatus={
+                  inquiry.notificationEmailStatus
+                }
+                notificationLastAttemptAt={
+                  inquiry.notificationEmailLastAttemptAt
+                }
+                notificationSentAt={
+                  inquiry.notificationEmailSentAt
+                }
+                notificationFailedAt={
+                  inquiry.notificationEmailFailedAt
+                }
+                confirmationStatus={
+                  inquiry.confirmationEmailStatus
+                }
+                confirmationLastAttemptAt={
+                  inquiry.confirmationEmailLastAttemptAt
+                }
+                confirmationSentAt={
+                  inquiry.confirmationEmailSentAt
+                }
+                confirmationFailedAt={
+                  inquiry.confirmationEmailFailedAt
                 }
               />
             </div>
           </section>
         </div>
 
-        <section className="mt-6 rounded-2xl border border-zinc-200 bg-white p-6">
-          <h2 className="text-lg font-semibold text-zinc-900">
-            Order Requirements
-          </h2>
+        {inquiry.type === "product" || inquiry.type === "export_buyer" ? (
+          <section className="mt-6 rounded-2xl border border-zinc-200 bg-white p-6">
+            <h2 className="text-lg font-semibold text-zinc-900">
+              {inquiry.type === "export_buyer"
+                ? "Buyer Requirements"
+                : "Order Requirements"}
+            </h2>
 
-          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            <Info
-              label="Product"
-              value={
-                inquiry.product
-              }
-            />
+            <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              <Info
+                label="Product"
+                value={inquiry.product}
+              />
 
-            <Info
-              label="Quantity"
-              value={
-                inquiry.quantity
-              }
-            />
+              <Info
+                label="Quantity"
+                value={inquiry.quantity}
+              />
 
-            <Info
-              label="Packaging"
-              value={
-                inquiry.packaging
-              }
-            />
+              <Info
+                label="Packaging"
+                value={inquiry.packaging}
+              />
 
-            <Info
-              label="Destination"
-              value={
-                inquiry.destination
-              }
-            />
-          </div>
-        </section>
+              <Info
+                label="Destination"
+                value={inquiry.destination}
+              />
+            </div>
+          </section>
+        ) : null}
 
-        {inquiry.type === "product" ||
-inquiry.type === "export_buyer" ? (
-  <section className="mt-6 rounded-2xl border border-zinc-200 bg-white p-6">
-    <h2 className="text-lg font-semibold text-zinc-900">
-      {inquiry.type === "export_buyer"
-        ? "Buyer Requirements"
-        : "Order Requirements"}
-    </h2>
+        {inquiry.type === "partnership" && (
+          <section className="mt-6 rounded-2xl border border-zinc-200 bg-white p-6">
+            <h2 className="text-lg font-semibold text-zinc-900">
+              Partnership Details
+            </h2>
 
-    <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-      <Info
-        label="Product"
-        value={inquiry.product}
-      />
+            <div className="mt-6 grid gap-5 sm:grid-cols-2">
+              <Info
+                label="Organisation Type"
+                value={inquiry.organizationType}
+              />
 
-      <Info
-        label="Quantity"
-        value={inquiry.quantity}
-      />
+              <Info
+                label="Market / Region"
+                value={inquiry.market}
+              />
 
-      <Info
-        label="Packaging"
-        value={inquiry.packaging}
-      />
+              <Info
+                label="Partnership Focus"
+                value={inquiry.partnershipFocus}
+              />
 
-      <Info
-        label="Destination"
-        value={inquiry.destination}
-      />
-    </div>
-  </section>
-) : null}
+              <Info
+                label="Website"
+                value={inquiry.companyWebsite}
+                href={inquiry.companyWebsite}
+              />
+            </div>
+          </section>
+        )}
 
-{inquiry.type === "partnership" && (
-  <section className="mt-6 rounded-2xl border border-zinc-200 bg-white p-6">
-    <h2 className="text-lg font-semibold text-zinc-900">
-      Partnership Details
-    </h2>
+        {inquiry.type === "contact" && (
+          <section className="mt-6 rounded-2xl border border-zinc-200 bg-white p-6">
+            <h2 className="text-lg font-semibold text-zinc-900">
+              Contact Enquiry
+            </h2>
 
-    <div className="mt-6 grid gap-5 sm:grid-cols-2">
-      <Info
-        label="Organisation Type"
-        value={inquiry.organizationType}
-      />
-
-      <Info
-        label="Market / Region"
-        value={inquiry.market}
-      />
-
-      <Info
-        label="Partnership Focus"
-        value={inquiry.partnershipFocus}
-      />
-
-      <Info
-        label="Website"
-        value={inquiry.companyWebsite}
-        href={inquiry.companyWebsite}
-      />
-    </div>
-  </section>
-)}
-
-{inquiry.type === "general" && (
-  <section className="mt-6 rounded-2xl border border-zinc-200 bg-white p-6">
-    <h2 className="text-lg font-semibold text-zinc-900">
-      Contact Enquiry
-    </h2>
-
-    <div className="mt-6">
-      <Info
-        label="Subject"
-        value={inquiry.subject}
-      />
-    </div>
-  </section>
-)}
+            <div className="mt-6">
+              <Info
+                label="Subject"
+                value={inquiry.subject}
+              />
+            </div>
+          </section>
+        )}
 
         <section className="mt-6 rounded-2xl border border-zinc-200 bg-white p-6">
           <h2 className="text-lg font-semibold text-zinc-900">
