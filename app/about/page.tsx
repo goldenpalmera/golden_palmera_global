@@ -4,7 +4,7 @@ import Navbar from "../../components/Navbar";
 import Footer from "../components/Footer";
 import PageHero from "../components/PageHero";
 
-import { client } from "../../sanity/lib/client";
+import { getSanityClient } from "../../sanity/lib/client";
 import { ABOUT_PAGE_QUERY } from "../../sanity/lib/queries";
 import { buildMetadata } from "../../sanity/lib/seo";
 import type { AboutPageData } from "../../sanity/lib/types";
@@ -31,6 +31,8 @@ const fallbackValues = [
     text: "We connect African agricultural commodities with opportunities across international markets.",
   },
 ];
+
+const client = getSanityClient();
 
 async function getAboutPage() {
   return client.fetch<AboutPageData | null>(

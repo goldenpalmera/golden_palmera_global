@@ -4,7 +4,7 @@ import { getInquiryById } from "@/lib/inquiries/get-inquiries";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import InquiryStatusForm from "./InquiryStatusForm";
 import EmailDelivery from "@/components/admin/EmailDelivery";
-import { InquiryStatus, Inquiry } from "@/lib/inquiries/types";
+import { InquiryStatus } from "@/lib/inquiries/types";
 
 function formatDate(
   value: string
@@ -74,7 +74,7 @@ export default async function InquiryDetailPage({
 
   const { id } = await params;
 
-  const inquiry:Inquiry =
+  const inquiry =
     await getInquiryById(id);
 
   if (!inquiry) {

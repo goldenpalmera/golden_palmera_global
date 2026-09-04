@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { PortableText } from "@portabletext/react";
-import { client } from "@/sanity/lib/client";
+import { getSanityClient } from "@/sanity/lib/client";
 import { approachBySlugQuery } from "@/sanity/lib/queries";
 import { buildMetadata } from "@/sanity/lib/seo";
 import { ApproachPage } from "@/sanity/lib/types";
@@ -11,6 +11,8 @@ type Props = {
     slug: string;
   }>;
 };
+
+const client = getSanityClient();
 
 async function getApproach(slug: string) {
   return client.fetch<ApproachPage | null>(

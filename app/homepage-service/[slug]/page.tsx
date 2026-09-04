@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { PortableText } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
 
-import { client } from "@/sanity/lib/client";
+import { getSanityClient } from "@/sanity/lib/client";
 import { serviceBySlugQuery } from "@/sanity/lib/queries";
 
 type Props = {
@@ -24,6 +24,8 @@ type ServicePage = {
     noIndex?: boolean;
   };
 };
+
+const client = getSanityClient();
 
 async function getService(slug: string) {
   return client.fetch<ServicePage | null>(

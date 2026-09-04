@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { client } from "@/sanity/lib/client";
+import { getSanityClient } from "@/sanity/lib/client";
 
 const baseUrl =
   process.env.NEXT_PUBLIC_SITE_URL ||
@@ -12,6 +12,8 @@ type SitemapPost = {
 };
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const client = getSanityClient();
+  
   const posts = await client.fetch<SitemapPost[]>(
     `*[
       _type == "post" &&

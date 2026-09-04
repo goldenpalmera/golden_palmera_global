@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-import { client } from "@/sanity/lib/client";
+import { getSanityClient } from "@/sanity/lib/client";
 import {
   PRODUCT_QUERY,
   RELATED_PRODUCTS_QUERY,
@@ -53,6 +53,8 @@ type ProductPageProps = {
     slug: string;
   }>;
 };
+
+const client = getSanityClient();
 
 async function getProduct(slug: string): Promise<Product | null> {
   return client.fetch(

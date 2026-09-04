@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/auth/require-admin";
 
-import { client } from "@/sanity/lib/client";
+import { getSanityClient } from "@/sanity/lib/client";
 
 import {
   contactStatuses,
@@ -34,6 +34,8 @@ export async function updateContactStatus(
   }
 
   try {
+    const client = getSanityClient();
+    
     const existing =
       await client.fetch<{
         _id: string;

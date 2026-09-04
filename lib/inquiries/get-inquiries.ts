@@ -1,9 +1,11 @@
-import { client } from "@/sanity/lib/client";
+import { getSanityClient } from "@/sanity/lib/client";
 
 import type {
   Inquiry,
   InquiryStatus,
 } from "./types";
+
+const client = getSanityClient();
 
 export async function getInquiries({
   search = "",

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { client } from "@/sanity/lib/client";
+import { getSanityClient } from "@/sanity/lib/client";
 import { type ContactStatus }  from "@/lib/contacts/types"
 
 import ContactStatusForm from "./ContactStatusForm";
@@ -47,6 +47,8 @@ export default async function ContactDetailsPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+
+  const client = getSanityClient();
 
   const contact = await client.fetch(
     contactQuery,
