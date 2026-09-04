@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  useState,
-  useTransition,
-} from "react";
+import { useState, useTransition } from "react";
 
 import {updateInquiryStatus } from "@/app/actions/inquiry-status";
 import { InquiryStatus } from "@/lib/inquiries/types";

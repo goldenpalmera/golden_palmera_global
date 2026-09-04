@@ -1,16 +1,8 @@
 import Link from "next/link";
-
 import ContactStats from "@/components/admin/ContactStats";
 import ContactFilters from "@/components/admin/ContactFilters";
-
-import {
-  getContacts,
-  getContactStats,
-} from "@/lib/contacts/get-contacts";
-
-import type {
-  ContactStatus,
-} from "@/lib/contacts/types";
+import { getContacts, getContactStats } from "@/lib/contacts/get-contacts";
+import type { ContactStatus } from "@/lib/contacts/types";
 
 type Props = {
   searchParams: Promise<{
