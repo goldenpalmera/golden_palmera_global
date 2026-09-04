@@ -4,9 +4,8 @@ const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ||
   "https://goldenpalmeraglobal.com";
 
-const client = getSanityClient();
-
 export async function GET() {
+  const client = getSanityClient();
   const posts = await client.fetch<
     {
       title: string;

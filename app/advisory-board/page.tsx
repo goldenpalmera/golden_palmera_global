@@ -38,8 +38,9 @@ type AdvisoryBoardPageData = {
   seo?: SEO;
 };
 
-const client = getSanityClient();
 async function getAdvisoryBoardPage() {
+  const client = getSanityClient();
+
   return client.fetch<AdvisoryBoardPageData | null>(
     advisoryBoardPageQuery
   );

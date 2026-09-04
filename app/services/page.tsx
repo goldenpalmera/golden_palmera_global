@@ -24,8 +24,9 @@ type Service = {
   order?: number
 };
 
-const client = getSanityClient();
 async function getService(): Promise<Service[]> {
+  const client = getSanityClient();
+
   return client.fetch(
     SERVICES_QUERY,
     {},
@@ -38,6 +39,8 @@ async function getService(): Promise<Service[]> {
 }
 
 async function getServicesPage() {
+  const client = getSanityClient();
+
   return client.fetch<ServicesSeoData | null>(
     SERVICES_SEO_QUERY,
     {},

@@ -54,9 +54,9 @@ type ProductPageProps = {
   }>;
 };
 
-const client = getSanityClient();
-
 async function getProduct(slug: string): Promise<Product | null> {
+  const client = getSanityClient();
+
   return client.fetch(
     PRODUCT_QUERY,
     { slug },
@@ -72,6 +72,8 @@ async function getProduct(slug: string): Promise<Product | null> {
 async function getRelatedProducts(
   slug: string
 ): Promise<RelatedProduct[]> {
+  const client = getSanityClient();
+
   return client.fetch(
     RELATED_PRODUCTS_QUERY,
     { slug },

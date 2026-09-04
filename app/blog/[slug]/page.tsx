@@ -65,8 +65,9 @@ const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ||
   "https://goldenpalmeraglobal.com";
 
-const client = getSanityClient();
 async function getPost(slug: string): Promise<BlogPost | null> {
+  const client = getSanityClient();
+  
   return client.fetch(
     POST_QUERY,
     { slug },
@@ -140,6 +141,8 @@ export default async function BlogArticlePage({
 }: {
   params: Promise<Params>;
 }) {
+  const client = getSanityClient();
+
   const { slug } = await params;
 
   const article = await getPost(slug);

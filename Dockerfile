@@ -38,7 +38,11 @@ ENV NEXT_PUBLIC_SANITY_DATASET=$NEXT_PUBLIC_SANITY_DATASET
 ENV ADMIN_EMAIL=$ADMIN_EMAIL
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN npm run build
+RUN --mount=type=secret,id=SANITY_API_TOKEN \
+    --mount=type=secret,id=ADMIN_EMAIL \
+    export ADMIN_EMAIL="$(cat /run/secrets/ADMIN_EMAIL)" && \
+    export SANITY_API_TOKEN="$(cat /run/secrets/SANITY_API_TOKEN)" && \
+    npm run build
 
 
 # ----------------------------------------

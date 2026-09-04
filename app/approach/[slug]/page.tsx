@@ -12,9 +12,9 @@ type Props = {
   }>;
 };
 
-const client = getSanityClient();
-
 async function getApproach(slug: string) {
+  const client = getSanityClient();
+
   return client.fetch<ApproachPage | null>(
     approachBySlugQuery,
     { slug }

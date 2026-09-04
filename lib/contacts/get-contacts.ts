@@ -5,7 +5,6 @@ import type {
   ContactStatus,
 } from "./types";
 
-const client = getSanityClient();
 
 export async function getContacts({
   search = "",
@@ -59,6 +58,8 @@ export async function getContacts({
     }
   `;
 
+  const client = getSanityClient();
+
   return client.fetch<Contact[]>(
     query,
     {
@@ -109,6 +110,8 @@ export async function getContactStats() {
     }
   `;
 
+  const client = getSanityClient();
+
   return client.fetch<{
     new: number;
     read: number;
@@ -157,6 +160,8 @@ export async function getContactById(
       confirmationEmailFailedAt
     }
   `;
+
+  const client = getSanityClient();
 
   return client.fetch<Contact | null>(
     query,

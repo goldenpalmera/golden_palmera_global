@@ -25,9 +25,9 @@ type ServicePage = {
   };
 };
 
-const client = getSanityClient();
-
 async function getService(slug: string) {
+  const client = getSanityClient();
+
   return client.fetch<ServicePage | null>(
     serviceBySlugQuery,
     { slug }

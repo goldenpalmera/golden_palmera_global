@@ -28,9 +28,9 @@ type CompliancePageData = {
   seo?: SeoData;
 };
 
-const client = getSanityClient();
-
 async function getCompliancePage() {
+  const client = getSanityClient();
+
   return client.fetch<CompliancePageData | null>(
     compliancePageQuery
   );

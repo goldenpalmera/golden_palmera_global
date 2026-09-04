@@ -15,8 +15,9 @@ import type {
 
 import HomeHero from "@/components/home/HomeHero";
 
-const client = getSanityClient();
 export async function generateMetadata(): Promise<Metadata> {
+  const client = getSanityClient();
+  
   const page = await client.fetch<HomePageData | null>(
     homePageQuery
   );
@@ -81,16 +82,22 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 async function getCommodities() {
+  const client = getSanityClient();
+
   return client.fetch<Commodity[]>(commoditiesQuery);
 }
 
 async function getServices() {
+  const client = getSanityClient();
+
   return client.fetch<HomeService[]>(
     homeServicesQuery
   );
 }
 
 async function getApproaches() {
+  const client = getSanityClient();
+
   return client.fetch<Approach[]>(
     approachesQuery
   );

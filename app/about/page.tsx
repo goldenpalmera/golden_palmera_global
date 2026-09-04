@@ -32,9 +32,9 @@ const fallbackValues = [
   },
 ];
 
-const client = getSanityClient();
-
 async function getAboutPage() {
+  const client = getSanityClient();
+
   return client.fetch<AboutPageData | null>(
     ABOUT_PAGE_QUERY,
     {},

@@ -27,11 +27,14 @@ type Product = {
 };
 
 async function getProducts(): Promise<Product[]> {
+const client = getSanityClient();
+
   return client.fetch(PRODUCTS_QUERY, {}, { next: { revalidate: 60 } });
 }
 
-const client = getSanityClient();
 async function getProductsPage() {
+  const client = getSanityClient();
+
   return client.fetch<ProductsSeoData | null>(
     PRODUCTS_SEO_QUERY,
     {},
