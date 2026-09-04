@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import type { Commodity, HomeService, Approach } from "@/sanity/lib/types";
 import Link from "next/link";
+import { whatsappLink } from "@/lib/utils";
+import { ArrowRight, MessageCircle } from "lucide-react";
 
 type HomeHeroProps = {
   commodities: Commodity[];
@@ -48,13 +50,15 @@ export default function HomeHero({
   }, []);
 
   return (
-    <>
+    <section className="hero-background relative min-h-screen overflow-hidden">
+      
+    {/**Background diagonal pattern */}
+      <div className="hero-diagonal-pattern"/>
+      <div className="hero-grain" />
       <div
-        className="mouse-glow pointer-events-none fixed z-0"
+        className="mouse-glow"
         style={{
-          transform: `translate3d(${mouse.x - 180}px, ${
-            mouse.y - 180
-          }px, 0)`,
+          transform: `translate3d(${mouse.x - 180}px, ${mouse.y - 180}px, 0)`,
         }}
       />
 
@@ -85,31 +89,42 @@ export default function HomeHero({
       {/* HERO */}
       <section className="hero relative z-10">
         <div className="hero-copy">
-          <p className="eyebrow">
+          <p className="eyebrow animate-fade-up">
             <span />
-            AGRICULTURAL COMMODITIES · GLOBAL TRADE
+            West Africa&apos;s Premier Agribusiness Export House
+            {/*AGRICULTURAL COMMODITIES · GLOBAL TRADE */}
           </p>
 
-          <h1>
+          <h1 className="animate-fade-up delay-100">
             From trusted
             <em> origins</em>
             <br />
             to global markets.
           </h1>
 
-          <p className="hero-description">
+          <p className="hero-description text-ivory-100/60 animate-fade-up delay-200">
             Golden Palmera Global connects quality agricultural
             commodities from Africa with buyers and markets around
             the world.
           </p>
 
-          <div className="hero-actions">
-            <a href="#products" className="primary-button">
-              Explore commodities <span>↗</span>
-            </a>
+          <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 animate-fade-up delay-400">
+            {["SGS Inspected", "Bureau Veritas", "ISO 9001", "RSPO Certified"].map((t) => (
+              <span key={t} className="flex items-center gap-1.5 text-[10px] text-ivory-100/40">
+                <span className="w-1 h-1 rounded-full bg-gold-500" />
+                {t}
+              </span>
+            ))}
+          </div>
 
-            <a href="#about" className="text-button">
-              Discover our company <span>↓</span>
+          <div className="hero-actions">
+            <Link href="/quote/request-quote" className="primary-button inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-400 text-forest-950 text-[11px] font-medium tracking-[0.06em] uppercase px-7 py-4 rounded transition-colors">
+              Request Quotation <span>↗</span>
+            </Link>
+
+            <a href={whatsappLink()} className="inline-flex items-center gap-2 border border-[#25D366]/40 hover:border-[#25D366] text-[#25D366] text-[11px] font-medium tracking-[0.06em] uppercase px-7 py-4 rounded transition-colors">
+              <MessageCircle size={14} />
+              WhatsApp Trade Desk <span>↓</span>
             </a>
           </div>
         </div>
@@ -378,6 +393,6 @@ export default function HomeHero({
 
         <a href="#top">Back to top ↑</a>
       </footer>
-    </>
+    </section>
   );
 }
