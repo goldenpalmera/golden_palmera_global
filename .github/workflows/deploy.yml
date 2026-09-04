@@ -90,7 +90,7 @@ jobs:
                 target: ~/app 
                 
             - name: Deploy Application 
-              uses: appleboy/ssh-action@v1.2.0 
+              uses: appleboy/ssh-action@v1.2.5 
               with: 
                 host: ${{ secrets.HOST }} 
                 username: ${{ secrets.USER }} 
