@@ -641,35 +641,35 @@ export const serviceBySlugQuery = `
   }
 `;
 
-const query = `
-{
-  "total": count(*[
-    _type == "inquiry"
-  ]),
+// const query = `
+// {
+//   "total": count(*[
+//     _type == "inquiry"
+//   ]),
 
-  "new": count(*[
-    _type == "inquiry"
-    && status == "NEW"
-  ]),
+//   "new": count(*[
+//     _type == "inquiry"
+//     && status == "NEW"
+//   ]),
 
-  "inProgress": count(*[
-    _type == "inquiry"
-    && status == "IN_PROGRESS"
-  ]),
+//   "inProgress": count(*[
+//     _type == "inquiry"
+//     && status == "IN_PROGRESS"
+//   ]),
 
-  "contacted": count(*[
-    _type == "inquiry"
-    && status == "CONTACTED"
-  ]),
+//   "contacted": count(*[
+//     _type == "inquiry"
+//     && status == "CONTACTED"
+//   ]),
 
-  "resolved": count(*[
-    _type == "inquiry"
-    && status == "RESOLVED"
-  ]),
+//   "resolved": count(*[
+//     _type == "inquiry"
+//     && status == "RESOLVED"
+//   ]),
 
-  "rejected": count(*[
-    _type == "inquiry"
-    && status == "REJECTED"
-  ])
-}
-`;
+//   "rejected": count(*[
+//     _type == "inquiry"
+//     && status == "REJECTED"
+//   ])
+// }
+// `;

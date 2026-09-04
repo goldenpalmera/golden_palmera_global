@@ -27,8 +27,7 @@ export const inquirySchema = z.object({
     .string()
     .trim()
     .max(30)
-    .optional()
-    .or(z.literal("")),
+    .optional(),
 
   company: z
     .string()

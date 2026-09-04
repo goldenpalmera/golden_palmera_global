@@ -1,9 +1,10 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { PortableText } from "@portabletext/react";
-import type { PortableTextBlock } from "@portabletext/types";
-import { client } from "@/sanity/lib/client";
+import { getSanityClient } from "@/sanity/lib/client";
 import { approachBySlugQuery } from "@/sanity/lib/queries";
+import { buildMetadata } from "@/sanity/lib/seo";
+import { ApproachPage } from "@/sanity/lib/types";
 
 type Props = {
   params: Promise<{
@@ -11,20 +12,9 @@ type Props = {
   }>;
 };
 
-type ApproachPage = {
-  title: string;
-  slug: string;
-  number: string;
-  shortDescription?: string;
-  description?: PortableTextBlock[];
-  seo?: {
-    metaTitle?: string;
-    metaDescription?: string;
-    noIndex?: boolean;
-  };
-};
-
 async function getApproach(slug: string) {
+  const client = getSanityClient();
+
   return client.fetch<ApproachPage | null>(
     approachBySlugQuery,
     { slug }
@@ -41,26 +31,24 @@ export async function generateMetadata({
   if (!approach) {
     return {
       title: "Our Approach | Golden Palmera Global",
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
-  return {
-    title:
-      approach.seo?.metaTitle ||
+  return buildMetadata({
+    seo: approach.seo,
+    fallbackTitle:
       `${approach.title} | Golden Palmera Global`,
-
-    description:
-      approach.seo?.metaDescription ||
-      approach.shortDescription,
-
-    robots: approach.seo?.noIndex
-      ? {
-          index: false,
-          follow: false,
-        }
-      : undefined,
-  };
+    fallbackDescription:
+      approach.shortDescription ||
+      `Learn about ${approach.title} at Golden Palmera Global.`,
+    canonical: `/approach/${approach.slug}`,
+  });
 }
+
 
 export default async function ApproachDetailPage({
   params,
@@ -100,7 +88,7 @@ export default async function ApproachDetailPage({
       <section className="bg-white px-6 py-20 md:px-12 lg:px-20">
         <article className="prose prose-lg mx-auto max-w-4xl">
           {approach.description && (
-            <PortableText value={approach.description as any} />
+            <PortableText value={approach.description} />
           )}
         </article>
       </section>

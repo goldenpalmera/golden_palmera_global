@@ -28,7 +28,7 @@ body {
 }
 
 a {
-  color: inherit;
+  /* color: inherit; */
   text-decoration: none;
 }
 
@@ -470,6 +470,23 @@ a {
   right: 30px;
   top: 30px;
   color: var(--gold);
+}
+
+.product-empty-state {
+  border: 1px solid rgba(183, 134, 40, 0.2);
+  padding: 4rem 2rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.product-empty-state h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.product-empty-state p {
+  margin-top: 0.75rem;
+  color: #697169;
 }
 
 /* SERVICES */

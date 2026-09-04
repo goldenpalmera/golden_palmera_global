@@ -5,12 +5,8 @@ import {
 } from "next/server";
 
 import {
-  contantSchema,
+  contactSchema,
 } from "@/lib/validation/contact-validation";
-
-import {
-  createInquiry,
-} from "@/lib/inquiries/create-inquiry";
 
 import {
   generateRequestId,
@@ -25,8 +21,9 @@ import {
 } from "@/lib/security/client-ip";
 
 import {
-  inquiryRateLimit,
+  checkRateLimit,
 } from "@/lib/security/rate-limit";
+import { createContact } from "@/lib/contacts/create-contact";
 
 export const runtime = "nodejs";
 
@@ -53,7 +50,7 @@ export async function POST(request: Request) {
     const body = await request.json();
 
     // validate input
-    const parsed = inquirySchema.safeParse(body);
+    const parsed = contactSchema.safeParse(body);
 
     if (!parsed.success) {
       return NextResponse.json(
@@ -98,7 +95,7 @@ export async function POST(request: Request) {
 
     // Rate limit
     const rateLimit =
-      await inquiryRateLimit.limit(
+      await checkRateLimit(
         `${ip}:${data.email}`
       );
 
@@ -119,7 +116,7 @@ export async function POST(request: Request) {
     }
 
     // Create inquiry
-    const result = await createInquiry(data, {
+    const result = await createContact(data, {
           requestId,
           ip,
       });

@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-
 import { auth } from "@/auth";
 
 export default auth(
@@ -10,10 +9,9 @@ export default auth(
     if (pathname === "/admin/login") {
       return NextResponse.next();
     }
-    const isLoggedIn =
-      !!request.auth?.user;
+    const user = request.auth?.user;
 
-    if (!isLoggedIn) {
+    if (!user) {
       return NextResponse.redirect(
         new URL(
           "/admin/login",
@@ -22,17 +20,12 @@ export default auth(
       );
     }
 
-    const email =
-      request.auth.user.email?.toLowerCase();
+    const email = user.email?.toLowerCase();
 
     const adminEmail =
       process.env.ADMIN_EMAIL?.toLowerCase();
 
-    if (
-      !email ||
-      !adminEmail ||
-      email !== adminEmail
-    ) {
+    if (!email || !adminEmail || email !== adminEmail) {
       return NextResponse.redirect(
         new URL(
           "/unauthorized",

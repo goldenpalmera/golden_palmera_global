@@ -1,4 +1,3 @@
-```tsx
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -6,12 +5,14 @@ import { notFound } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-import { client } from "@/sanity/lib/client";
+import { getSanityClient } from "@/sanity/lib/client";
 import {
   PRODUCT_QUERY,
   RELATED_PRODUCTS_QUERY,
 } from "@/sanity/lib/queries";
 import { urlFor } from "@/sanity/lib/image";
+import { buildMetadata } from "@/sanity/lib/seo";
+import { Metadata } from "next";
 
 type Product = {
   _id: string;
@@ -54,6 +55,8 @@ type ProductPageProps = {
 };
 
 async function getProduct(slug: string): Promise<Product | null> {
+  const client = getSanityClient();
+
   return client.fetch(
     PRODUCT_QUERY,
     { slug },
@@ -69,6 +72,8 @@ async function getProduct(slug: string): Promise<Product | null> {
 async function getRelatedProducts(
   slug: string
 ): Promise<RelatedProduct[]> {
+  const client = getSanityClient();
+
   return client.fetch(
     RELATED_PRODUCTS_QUERY,
     { slug },
@@ -83,7 +88,7 @@ async function getRelatedProducts(
 
 export async function generateMetadata({
   params,
-}: ProductPageProps) {
+}: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
 
   const product = await getProduct(slug);
@@ -91,19 +96,27 @@ export async function generateMetadata({
   if (!product) {
     return {
       title: "Product Not Found | Golden Palmera Global",
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
-  return {
-    title:
-      product.seoTitle ||
+  return buildMetadata({
+    seo: {
+      metaTitle: product.seoTitle,
+      metaDescription: product.seoDescription,
+    },
+    fallbackTitle:
       `${product.name} | Golden Palmera Global`,
-    description:
-      product.seoDescription ||
+    fallbackDescription:
       product.shortDescription ||
       `Learn more about ${product.name} from Golden Palmera Global.`,
-  };
+    canonical: `/products/${product.slug}`,
+  });
 }
+
 
 export default async function ProductPage({
   params,
@@ -583,4 +596,3 @@ function renderPortableText(blocks: unknown[]) {
     return null;
   });
 }
-```

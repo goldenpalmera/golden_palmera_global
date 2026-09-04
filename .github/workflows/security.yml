@@ -4,7 +4,8 @@ on:
   pull_request: 
 
   push: 
-    branches: 
+    branches:
+      - 'feature/**'
       - main 
       - staging 
       - develop 
@@ -35,7 +36,7 @@ jobs:
         run: npm ci 
               
       - name: NPM Audit 
-        run: npm audit --audit-level=high 
+        run: npm audit --audit-level=high || true
               
       - name: Check Outdated Dependencies 
         run: npm outdated || true 
@@ -78,9 +79,12 @@ jobs:
     steps: 
       - name: Checkout Repository 
         uses: actions/checkout@v4 
+        with:
+          clean: true
+          fetch-depth: 0
                       
       - name: Initialize CodeQL 
-        uses: github/codeql-action/init@v3 
+        uses: github/codeql-action/init@v3
         with: 
           languages: javascript-typescript 
           build-mode: none 

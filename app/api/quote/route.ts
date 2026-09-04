@@ -25,7 +25,7 @@ import {
 } from "@/lib/security/client-ip";
 
 import {
-  inquiryRateLimit,
+  checkRateLimit,
 } from "@/lib/security/rate-limit";
 
 export const runtime = "nodejs";
@@ -98,7 +98,7 @@ export async function POST(request: Request) {
 
     // Rate limit
     const rateLimit =
-      await inquiryRateLimit.limit(
+      await checkRateLimit(
         `${ip}:${data.email}`
       );
 

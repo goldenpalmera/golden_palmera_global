@@ -11,6 +11,20 @@ export const contactSchema = z.object({
     .trim()
     .email("Please enter a valid email address."),
 
+  phone: z
+    .string()
+    .trim()
+    .max(200, "phone nummber is too long.")
+    .optional()
+    .or(z.literal("")),
+
+  country: z
+    .string()
+    .trim()
+    .max(200, "Counry name is too long.")
+    .optional()
+    .or(z.literal("")),
+
   company: z
     .string()
     .trim()

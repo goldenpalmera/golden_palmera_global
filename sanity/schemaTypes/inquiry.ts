@@ -167,34 +167,72 @@ export const inquiry = defineType({
     }),
 
     defineField({
-  name: "requestId",
-  title: "Request ID",
-  type: "string",
-  readOnly: true,
-}),
-
+      name: "requestId",
+      title: "Request ID",
+      type: "string",
+      readOnly: true,
+    }),
 
     defineField({
-      name: "emailStatus",
-      title: "Email Status",
+      name: "notificationEmailStatus",
+      title: "Notification Email Status",
       type: "string",
       options: {
         list: [
-          {
-            title: "Pending",
-            value: "pending",
-          },
-          {
-            title: "Sent",
-            value: "sent",
-          },
-          {
-            title: "Failed",
-            value: "failed",
-          },
+          { title: "Pending", value: "pending" },
+          { title: "Sent", value: "sent" },
+          { title: "Failed", value: "failed" },
         ],
       },
-      initialValue: "pending",
+    }),
+
+    defineField({
+      name: "notificationEmailLastAttemptAt",
+      title: "Notification Email Last Attempt",
+      type: "datetime",
+    }),
+    
+    defineField({
+      name: "notificationEmailSentAt",
+      title: "Notification Email Sent At",
+      type: "datetime",
+    }),
+
+    defineField({
+      name: "notificationEmailFailedAt",
+      title: "Notification Email Failed At",
+      type: "datetime",
+    }),
+
+    defineField({
+      name: "confirmationEmailStatus",
+      title: "Confirmation Email Status",
+      type: "string",
+      options: {
+        list: [
+          { title: "Pending", value: "pending" },
+          { title: "Sent", value: "sent" },
+          { title: "Failed", value: "failed" },
+        ],
+      },
+    }),
+
+    defineField({
+      name: "confirmationEmailLastAttemptAt",
+      title: "Confirmation Email Last Attempt",
+      type: "datetime",
+    }),
+
+    defineField({
+      name: "confirmationEmailSentAt",
+      title: "Confirmation Email Sent At",
+      type: "datetime",
+    }),
+
+    defineField({
+      name: "confirmationEmailFailedAt",
+      title: "Confirmation Email Failed At",
+      type: "datetime",
     }),
 
     defineField({
@@ -225,26 +263,12 @@ export const inquiry = defineType({
               type: "string",
               options: {
                 list: [
+                  { title: "New", value: "NEW"},
+                  { title: "In Progress", value: "IN_PROGRESS"},
+                  { title: "Contacted", value: "CONTACTED"},
                   {
-                    title: "New",
-                    value: "NEW",
-                  },
-                  {
-                    title: "In Progress",
-                    value: "IN_PROGRESS",
-                  },
-                  {
-                    title: "Contacted",
-                    value: "CONTACTED",
-                  },
-                  {
-                    title: "Resolved",
-                    value: "RESOLVED",
-                  },
-                  {
-                    title: "Rejected",
-                    value: "REJECTED",
-                  },
+                    title: "Resolved", value: "RESOLVED"},
+                  { title: "Rejected", value: "REJECTED"},
                 ],
               },
             }),

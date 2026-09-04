@@ -13,7 +13,7 @@ import { approach } from './approach'
 import { homePageSeo } from './homeSeo'
 import { aboutPage } from "./aboutPage";
 import { inquiry } from "./inquiry";
-import { contactSubmission} from "./contactSubmission";
+import { contact } from "./contact";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -31,6 +31,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     homePageSeo,
     aboutPage,
     inquiry,
-    contactSubmission,
+    contact,
   ],
 }

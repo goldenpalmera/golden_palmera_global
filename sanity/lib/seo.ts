@@ -13,11 +13,12 @@ export function buildMetadata({
   fallbackTitle,
   fallbackDescription,
   canonical,
-}: { BuildMetadataOptions }): Metadata {
+}: BuildMetadataOptions ): Metadata {
   const title = seo?.metaTitle || fallbackTitle;
   const description =
     seo?.metaDescription || fallbackDescription;
-  const image = seo?.ogImage?.assert?.url;
+  const imageUrl = seo?.ogImage?.asset?.url;
+
   return {
     title,
     description,
@@ -44,8 +45,8 @@ export function buildMetadata({
       title,
       description,
       type: "website",
-      images: seo?.ogImage?.asset?.url
-        ? [{ url: seo.ogImage.asset.url }]
+      images: imageUrl
+        ? [{ url: imageUrl }]
         : undefined,
     },
 
@@ -53,8 +54,8 @@ export function buildMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: seo?.ogImage?.asset?.url
-        ? [seo.ogImage.asset.url]
+      images: imageUrl
+        ? [ imageUrl ]
         : undefined,
     },
   };
