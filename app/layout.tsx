@@ -7,6 +7,8 @@ import {
   Playfair_Display,
 } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
+import Header from "@/components/Header"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -69,7 +71,10 @@ export default function RootLayout({ children }: Readonly<{
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className={`${playfair.variable} ${dmSans.variable} ${ibmPlexMono.variable} min-h-full flex flex-col`}>{children}</body>
+      <body className={`${playfair.variable} ${dmSans.variable} ${ibmPlexMono.variable} min-h-full flex flex-col`}>
+        <Header />
+        {children}
+      </body>
     </html>
   );
 }

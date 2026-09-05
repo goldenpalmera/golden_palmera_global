@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import type { Commodity, HomeService, Approach } from "@/sanity/lib/types";
 import Link from "next/link";
 import { whatsappLink } from "@/lib/utils";
-import { ArrowRight, MessageCircle } from "lucide-react";
+import { CircleCheck, MessageCircle } from "lucide-react";
 
 type HomeHeroProps = {
   commodities: Commodity[];
@@ -62,30 +62,6 @@ export default function HomeHero({
         }}
       />
 
-      {/* NAVIGATION */}
-      <header className="nav relative z-10">
-        <Link href="/" className="brand">
-          <span className="brand-mark">GP</span>
-
-          <span>
-            <strong>GOLDEN PALMERA</strong>
-            <small>GLOBAL</small>
-          </span>
-        </Link>
-
-        <nav className="nav-links">
-          <a href="#about">About</a>
-          <a href="#products">Products</a>
-          <a href="#services">Services</a>
-          <a href="#contact">Contact</a>
-        </nav>
-
-        <a href="#contact" className="nav-button">
-          Get in touch
-          <span>↗</span>
-        </a>
-      </header>
-
       {/* HERO */}
       <section className="hero relative z-10">
         <div className="hero-copy">
@@ -108,14 +84,24 @@ export default function HomeHero({
             the world.
           </p>
 
-          <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 animate-fade-up delay-400">
-            {["SGS Inspected", "Bureau Veritas", "ISO 9001", "RSPO Certified"].map((t) => (
-              <span key={t} className="flex items-center gap-1.5 text-[10px] text-ivory-100/40">
-                <span className="w-1 h-1 rounded-full bg-gold-500" />
-                {t}
+          <div className="hero-credentials animate-fade-up delay-400">
+            {[
+              "SGS Inspected",
+              "Bureau Veritas",
+              "ISO 9001",
+              "RSPO Certified",
+            ].map((t) => (
+              <span key={t} className="hero-credential">
+                <CircleCheck
+                  size={13}
+                  strokeWidth={1.8}
+                  className="hero-credential-icon"
+                />
+                <span>{t}</span>
               </span>
             ))}
           </div>
+
 
           <div className="hero-actions">
             <Link href="/quote/request-quote" className="primary-button inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-400 text-forest-950 text-[11px] font-medium tracking-[0.06em] uppercase px-7 py-4 rounded transition-colors">
@@ -141,15 +127,7 @@ export default function HomeHero({
             </div>
           </div>
 
-          <div className="floating-card card-top">
-            <span>01</span>
-            <strong>Source</strong>
-          </div>
 
-          <div className="floating-card card-bottom">
-            <span>02</span>
-            <strong>Connect</strong>
-          </div>
         </div>
 
         <div className="scroll-indicator">

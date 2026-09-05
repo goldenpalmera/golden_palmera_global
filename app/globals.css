@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+@theme {
+  --color-forest-950: #0A1A10;
+  --color-forest-900: #0F2D1C;
+  --color-forest-800: #1A3D2B;
+  --color-forest-700: #235c3a;
+  --color-green-dark: #09281d;
+
+  --color-gold-500: #C9A84C;
+  --color-gold-300: #e8d07a;
+
+  --color-ivory-100: #F5F0E8;
+}
+
 :root {
   --font-playfair: "Playfair Display", Georgia, serif;
   --font-dm-sans:  "DM Sans", system-ui, sans-serif;
@@ -318,6 +331,39 @@ a {
   line-height: 1.8;
   font-size: 16px;
 }
+
+.hero-credentials {
+  margin-top: 28px;
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 22px;
+}
+
+.hero-credential {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  color: rgba(245, 240, 232, 0.72);
+
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.045em;
+  white-space: nowrap;
+}
+
+.hero-credential-icon {
+  flex: 0 0 auto;
+  color: var(--gold-500);
+
+  filter: drop-shadow(
+    0 0 5px rgba(201, 168, 76, 0.35)
+  );
+}
+
 
 .hero-actions {
   margin-top: 40px;
