@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM node:22.23.2-alpine3.24 AS base
+FROM node:26.9.0-alpine3.24 AS base
 
 
 # ----------------------------------------
@@ -49,7 +49,7 @@ RUN --mount=type=secret,id=SANITY_API_TOKEN \
 # Production
 # ----------------------------------------
 
-FROM node:22.23.2-alpine3.24 AS runner
+FROM node:26.9.0-alpine3.24 AS runner
 
 WORKDIR /app
 
