@@ -1,52 +1,14 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { PortableText } from "@portabletext/react";
-import { getSanityClient } from "@/sanity/lib/client";
-import { approachBySlugQuery } from "@/sanity/lib/queries";
-import { buildMetadata } from "@/sanity/lib/seo";
-import { ApproachPage } from "@/sanity/lib/types";
-
-type Props = {
-  params: Promise<{
-    slug: string;
-  }>;
-};
-
-async function getApproach(slug: string) {
-  const client = getSanityClient();
-
-  return client.fetch<ApproachPage | null>(
-    approachBySlugQuery,
-    { slug }
-  );
-}
+import { getApproach } from "@/content/approach/sanity";
+import { Props } from "@/content/approach/types";
+import { getApproachMetadata } from "@/content/approach/metadata";
 
 export async function generateMetadata({
   params,
 }: Props): Promise<Metadata> {
-  const { slug } = await params;
-
-  const approach = await getApproach(slug);
-
-  if (!approach) {
-    return {
-      title: "Our Approach | Golden Palmera Global",
-      robots: {
-        index: false,
-        follow: false,
-      },
-    };
-  }
-
-  return buildMetadata({
-    seo: approach.seo,
-    fallbackTitle:
-      `${approach.title} | Golden Palmera Global`,
-    fallbackDescription:
-      approach.shortDescription ||
-      `Learn about ${approach.title} at Golden Palmera Global.`,
-    canonical: `/approach/${approach.slug}`,
-  });
+  return getApproachMetadata(params);
 }
 
 
@@ -54,7 +16,6 @@ export default async function ApproachDetailPage({
   params,
 }: Props) {
   const { slug } = await params;
-
   const approach = await getApproach(slug);
 
   if (!approach) {

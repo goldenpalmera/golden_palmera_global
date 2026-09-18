@@ -668,7 +668,7 @@ a {
 }
 
 .product-grid {
-  margin-top: 80px;
+  /* margin-top: 80px; */
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   border-top: 1px solid rgba(255,255,255,.15);
@@ -698,6 +698,7 @@ a {
   margin: 30px 0;
   color: var(--gold);
   font-size: 38px;
+  position: relative;
 }
 
 .product-info h3 {

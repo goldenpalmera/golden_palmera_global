@@ -7,8 +7,12 @@ import {
   Playfair_Display,
 } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Header from "@/components/Header"
+import Header from "@/components/sharedComponents/Header"
+import '@fortawesome/fontawesome-svg-core/styles.css';
+import { config } from '@fortawesome/fontawesome-svg-core';
+
+// Prevent Font Awesome from adding its CSS automatically
+config.autoAddCss=false;
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

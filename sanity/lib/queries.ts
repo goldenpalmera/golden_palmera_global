@@ -48,29 +48,7 @@ export const PRODUCT_QUERY = defineQuery(`
   }
 `);
 
-export const PRODUCTS_SEO_QUERY = `
-  *[_type == "productsPage"][0]{
-    title,
-    heroEyebrow,
-    heroTitle,
-    heroDescription,
-    portfolioEyebrow,
-    portfolioTitle,
-    portfolioDescription,
 
-    seo{
-      metaTitle,
-      metaDescription,
-      keywords,
-      noIndex,
-      ogImage{
-        asset->{
-          url
-        }
-      }
-    }
-  }
-`;
 
 export const POSTS_QUERY = defineQuery(`
   *[
@@ -177,71 +155,6 @@ export const featuredBlogPostsQuery = `
   }
 `;
 
-export const RELATED_BLOG_POSTS_QUERY = defineQuery(`
-  *[
-    _type == "post"
-    && defined(slug.current)
-    && defined(publishedAt)
-    && publishedAt <= now()
-    && slug.current != $slug
-    && (
-      category == $category
-      || count(tags[@ in $tags]) > 0
-    )
-  ]
-  | order(
-      select (
-        category == $category => 0,
-        1
-      ) asc,
-      publishedAt desc
-    )[0...3] {
-      _id,
-      title,
-      "slug": slug.current,
-      excerpt,
-      coverImage,
-      category,
-      publishedAt,
-      tags,
-
-      author->{
-        name,
-        role
-      }
-    }
-`);
-
-/**
- * Fallback related articles.
- *
- * Useful when there aren't enough articles in
- * the same category/tag.
- */
-export const RECENT_BLOG_POSTS_QUERY = defineQuery(`
-  *[
-    _type == "post"
-    && defined(slug.current)
-    && defined(publishedAt)
-    && publishedAt <= now()
-    && slug.current != $slug
-  ]
-  | order(publishedAt desc)[0...3] {
-    _id,
-    title,
-    "slug": slug.current,
-    excerpt,
-    coverImage,
-    category,
-    publishedAt,
-
-    author->{
-      name,
-      role
-    }
-  }
-`);
-
 export const SEARCH_BLOG_POSTS_QUERY = defineQuery(`
   *[
     _type == "post"
@@ -305,22 +218,6 @@ export const SERVICES_SEO_QUERY = `
   }
 `;
 
-export const RELATED_PRODUCTS_QUERY = defineQuery(`
-  *[
-    _type == "product" &&
-    defined(slug.current) &&
-    slug.current != $slug
-  ]
-  | order(featured desc, order asc, name asc)[0...4] {
-    _id,
-    name,
-    botanicalName,
-    "slug": slug.current,
-    shortDescription,
-    image,
-    featured
-  }
-`);
 
 export const compliancePageQuery = `
   *[_type == "compliancePage"][0] {
@@ -536,22 +433,6 @@ export const approachesQuery = `
   }
 `;
 
-export const approachBySlugQuery = `
-  *[
-    _type == "approach"
-    && slug.current == $slug
-    && active == true
-  ][0] {
-    _id,
-    title,
-    "slug": slug.current,
-    number,
-    shortDescription,
-    description,
-    coverImage,
-    seo
-  }
-`;
 
 export const homePageQuery = `
   *[_type == "homePage"][0]{

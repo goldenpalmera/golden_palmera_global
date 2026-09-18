@@ -1,4 +1,4 @@
-import { PortableTextBlock } from "next-sanity";
+import type { SanityImageSource } from "@sanity/image-url";
 
 export type ComplianceArea = {
   number: string;
@@ -43,41 +43,6 @@ export type AdvisoryBoardPageData = {
   philosophyParagraphs: string[];
 };
 
-export type Commodity = {
-  _id: string;
-  name: string;
-  slug: {
-    current: string;
-  };
-  scientific?: string;
-  description: string;
-  symbol?: string;
-  order: number;
-  image?: {
-    asset?: {
-      _id: string;
-      url: string;
-    };
-  };
-};
-
-// type HomeProduct = {
-//   _id: string;
-//   name: string;
-//   slug: string;
-//   scientificName?: string;
-//   description: string;
-//   symbol?: string;
-//   image?: unknown;
-// };
-
-export type HomeService = {
-  _id: string;
-  title: string;
-  slug: string;
-  number: string;
-  shortDescription?: string;
-};
 
 export type Approach = {
   _id: string;
@@ -86,8 +51,6 @@ export type Approach = {
   number: string;
   shortDescription?: string;
 };
-
-// sanity/lib/types.ts
 
 export type SeoData = {
   metaTitle?: string;
@@ -100,6 +63,13 @@ export type SeoData = {
       url?: string;
     };
   };
+};
+
+export type BuildMetadataOptions = {
+  seo?: SeoData;
+  fallbackTitle: string;
+  fallbackDescription?: string;
+  canonical?: string;
 };
 
 export type HomePageData = {
@@ -134,16 +104,7 @@ export type AboutPageData = {
   seo?: SeoData;
 };
 
-export type ProductsSeoData = {
-  title?: string;
-  heroEyebrow?: string;
-  heroTitle?: string;
-  heroDescription?: string;
-  portfolioEyebrow?: string;
-  portfolioTitle?: string;
-  portfolioDescription?: string;
-  seo?: SeoData;
-};
+
 
 export type ServicesSeoData = {
   title?: string;
@@ -175,39 +136,22 @@ export type EmailStatus =
 
 export type Inquiry = {
   _id: string;
-
   reference: string;
-
   type: string;
-
   status: InquiryStatus;
-
   name: string;
-
   email: string;
-
   phone?: string;
-
   company?: string;
-
   country?: string;
-
   product?: string;
-
   quantity?: string;
-
   packaging?: string;
-
   destination?: string;
-
   message?: string;
-
   emailStatus?: EmailStatus;
-
   submittedAt: string;
-
   lastEmailAttemptAt?: string;
-
   statusHistory?: {
     _key: string;
     status: InquiryStatus;
@@ -216,11 +160,52 @@ export type Inquiry = {
   }[];
 };
 
-export type ApproachPage = {
+
+export type PageLink = {
+  href: string;
+  newTab: boolean;
+};
+
+export type PageCTA = {
   title: string;
-  slug: string;
-  number: string;
-  shortDescription?: string;
-  description?: PortableTextBlock[];
-  seo?: SeoData
+  description: string;
+  label: string;
+  link: PageLink;
+};
+
+export type SanityLink = {
+  type?: "internal" | "external";
+  internalPath?: string;
+  externalUrl?: string;
+  newTab?: boolean;
+};
+
+export type SanityImageProps = {
+  image?: SanityImageSource | null;
+  alt: string;
+  width?: number;
+  height?: number;
+  fill?: boolean;
+  className?: string;
+  sizes?: string;
+  priority?: boolean;
+};
+
+export type SanityImage = {
+  asset?: {
+    _id: string;
+    url: string;
+  };
+  hotspot?: {
+    x: number;
+    y: number;
+    height: number;
+    width: number;
+  };
+  crop?: {
+    top: number;
+    bottom: number;
+    left: number;
+    right: number;
+  };
 };

@@ -1,6 +1,4 @@
-import type { Metadata } from "next";
-import { getHomeContent } from "@/content/home/getHomeContent";
-import { getHomeMetadata } from "@/content/home/metadata";
+import type { HomePageContent } from "@/content/home/types";
 
 import {
   HeroSection,
@@ -14,24 +12,20 @@ import {
   TestimonialsSection,
   ContactSection,
   HomeFooter,
-} from "@/components/home";
+} from ".";
 
-export async function generateMetadata(): Promise<Metadata> {
-  return getHomeMetadata();
-}
+type HomePageProps = {
+  content: HomePageContent;
+};
 
-export default async function HomePage() {
-  const content= await getHomeContent();
-
+export function HomePage({
+  content,
+}: HomePageProps) {
   return (
-    <main className="site-shell">
-      <HeroSection
-        content={content.hero}
-      />
+    <main>
+      <HeroSection content={content.hero} />
 
-      <IntroSection
-        content={content.intro}
-      />
+      <IntroSection content={content.intro} />
 
       <CommoditiesSection
         commodities={content.commodities}
@@ -50,14 +44,9 @@ export default async function HomePage() {
       />
 
       <QualitySection
-        eyebrow={content.quality?.eyebrow}
-        title={content.quality?.title}
-        description={content.quality?.description}
         tests={content.qualityTests}
         partners={content.inspectionPartners}
         documents={content.documents}
-        sampleDocumentLabel={content.quality?.sampleDocumentLabel}
-        sampleDocumentUrl={content.quality?.sampleDocumentUrl}
       />
 
       <CaseStudiesSection
@@ -76,4 +65,3 @@ export default async function HomePage() {
     </main>
   );
 }
-
