@@ -2,7 +2,16 @@
 
 import { useEffect, useState } from "react";
 
-export default function ServicesHero() {
+type ServicesHeroProps = {
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+};
+
+export default function ServicesHero({
+  eyebrow, 
+  title, 
+  description}: ServicesHeroProps) {
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -52,22 +61,25 @@ export default function ServicesHero() {
 
         <div className="max-w-6xl pb-8">
           <p className="mb-7 text-xs uppercase tracking-[0.35em] text-[#b7924a]">
-            From source to global market
+            {eyebrow ?? "From source to global market"}
           </p>
 
           <h1 className="max-w-5xl text-[clamp(4rem,10vw,9.5rem)] font-medium leading-[0.84] tracking-[-0.07em]">
-            Moving
-            <br />
-            <span className="text-white/35">agriculture</span>
-            <br />
-            forward.
+            {title ?? (
+              <>
+                Moving
+                <br />
+                <span className="text-white/35">agriculture</span>
+                <br />
+                forward.
+              </>
+            )}
           </h1>
 
           <div className="mt-10 flex max-w-2xl flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <p className="max-w-xl text-base leading-7 text-white/55 md:text-lg">
-              We connect agricultural producers, processors and international
-              markets through reliable sourcing, value addition, quality
-              management and export services.
+              {description ?? 
+              "We connect agricultural producers, processors and international markets through reliable sourcing, value addition, quality management and export services."}
             </p>
 
             <div className="shrink-0 font-mono text-xs uppercase tracking-[0.2em] text-white/35">
