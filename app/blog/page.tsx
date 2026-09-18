@@ -1,106 +1,17 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-import { getSanityClient } from "@/sanity/lib/client";
-// import { blogPostsQuery } from "@/sanity/lib/queries";
-import { buildMetadata } from "@/sanity/lib/seo";
-import { Metadata } from "next";
-
-const PAGE_SIZE = 9;
-
-type BlogPost = {
-  _id: string;
-  title: string;
-  slug: string;
-  excerpt?: string;
-  author?: string;
-  category?: string;
-  publishedAt?: string;
-  featured?: boolean;
-};
-
-type BlogPageProps = {
-  searchParams: Promise<{
-    page?: string;
-    q?: string;
-  }>;
-};
-
-async function getBlogPosts(page: number, search?: string) {
-  const start = (page - 1) * PAGE_SIZE;
-  const end = start + PAGE_SIZE;
-
-  const query = `
-    {
-      "posts": *[
-        _type == "post"
-        && defined(slug.current)
-        && defined(publishedAt)
-        && publishedAt <= now()
-        && (
-          !defined($search)
-          || $search == ""
-          || title match $search
-          || excerpt match $search
-          || category match $search
-          || $search in tags
-        )
-      ]
-      | order(publishedAt desc)
-      [${start}...${end}] {
-        _id,
-        title,
-        "slug": slug.current,
-        excerpt,
-        author,
-        category,
-        publishedAt,
-        featured
-      },
-
-      "total": count(*[
-        _type == "post"
-        && defined(slug.current)
-        && defined(publishedAt)
-        && publishedAt <= now()
-        && (
-          !defined($search)
-          || $search == ""
-          || title match $search
-          || excerpt match $search
-          || category match $search
-          || $search in tags
-        )
-      ])
-    }
-  `;
-
-  const client = getSanityClient();
-  return client.fetch<{
-    posts: BlogPost[];
-    total: number;
-  }>(query, {
-    search: search?.trim() || "",
-  });
-}
+import type { BlogPageProps } from "@/content/blog/types";
+import {
+  getBlogPosts,
+  PAGE_SIZE,
+} from "@/content/blog/sanity";
+import { getBlogsMetadata } from "@/content/blog/metadata";
+import { formatDate } from "@/content/blog/utils";
 
 export async function generateMetadata(): Promise<Metadata> {
-  return buildMetadata({
-    fallbackTitle:
-      "GPG Insights | Golden Palmera Global",
-    fallbackDescription:
-      "Perspectives on agricultural commodities, African supply chains, sustainability, export markets, and international trade.",
-    canonical: "/blog",
-  });
-}
-
-function formatDate(date?: string) {
-  if (!date) return "";
-
-  return new Intl.DateTimeFormat("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  }).format(new Date(date));
+  return getBlogsMetadata();
 }
 
 export default async function BlogPage({
@@ -108,12 +19,33 @@ export default async function BlogPage({
 }: BlogPageProps) {
   const params = await searchParams;
 
-  const page = Math.max(1, Number(params.page) || 1);
-  const search = params.q?.trim() || "";
+  const pageParam = Number.parseInt(params.page ?? "1", 10);
 
-  const { posts, total } = await getBlogPosts(page, search);
+  const page = Number.isFinite(pageParam)
+    ? Math.max(1, pageParam)
+    : 1;
 
-  const totalPages = Math.ceil(total / PAGE_SIZE);
+  const search = params.q?.trim() ?? "";
+
+  const { posts, total } = await getBlogPosts(
+    page,
+    search,
+  );
+
+  const totalPages = Math.ceil(
+    Math.ceil(total / PAGE_SIZE),
+  );
+
+  if (totalPages > 0 && page > totalPages) {
+    const query = new URLSearchParams();
+
+    if (search) {
+      query.set("q", search);
+    }
+
+    query.set("page", String(totalPages));
+    redirect(`/blog?${query.toString()}`);
+  }
 
   return (
     <main className="bg-[#f7f6f1] text-[#182018]">
@@ -130,12 +62,15 @@ export default async function BlogPage({
               <br />
               Commodities.
               <br />
-              <span className="text-[#a07a3d]">Global Trade.</span>
+              <span className="text-[#a07a3d]">
+                Global Trade.
+              </span>
             </h1>
 
             <p className="mt-8 max-w-2xl text-lg leading-8 text-[#5d655d] md:text-xl">
-              Perspectives on agricultural commodities, African supply chains,
-              export markets, sustainability, and international trade.
+              Perspectives on agricultural commodities,
+              African supply chains, export markets,
+              sustainability, and international trade.
             </p>
           </div>
 
@@ -145,12 +80,21 @@ export default async function BlogPage({
             method="GET"
             className="mt-12 flex max-w-2xl gap-3"
           >
+            <label
+              htmlFor="blog-search"
+              className="sr-only"
+            >
+              Search insights
+            </label>
+
             <input
+              id="blog-search"
               type="search"
               name="q"
               defaultValue={search}
               placeholder="Search insights..."
-              className="min-w-0 flex-1 rounded-full border border-[#d9d5c9] bg-white px-6 py-4 text-sm outline-none transition focus:border-[#a07a3d]"
+              autoComplete="off"
+              className="min-w-0 flex-1 rounded-full border border-[#d9d5c9] bg-white px-6 py-4 text-sm outline-none transition focus:border-[#a07a3d] focus:ring-2 focus:ring-[#a07a3d]/20"
             />
 
             <button
@@ -178,24 +122,7 @@ export default async function BlogPage({
           )}
 
           {posts.length === 0 ? (
-            <div className="rounded-3xl border border-[#ddd9cc] bg-white p-12 text-center">
-              <p className="text-lg font-semibold">
-                No insights found.
-              </p>
-
-              <p className="mt-3 text-sm text-[#687068]">
-                Try searching for another topic.
-              </p>
-
-              {search && (
-                <Link
-                  href="/blog"
-                  className="mt-6 inline-flex rounded-full bg-[#182018] px-6 py-3 text-sm font-semibold text-white"
-                >
-                  View all insights
-                </Link>
-              )}
-            </div>
+            <EmptyState search={search} />
           ) : (
             <div className="grid gap-6 lg:grid-cols-3">
               {posts.map((article) => (
@@ -205,16 +132,31 @@ export default async function BlogPage({
                 >
                   <div className="flex items-center justify-between gap-4">
                     <span className="text-xs font-medium uppercase tracking-[0.18em] text-[#a07a3d]">
-                      {article.category || "GPG Insights"}
+                      {article.category ||
+                        "GPG Insights"}
                     </span>
 
-                    <span className="text-xs text-[#858b85]">
-                      {formatDate(article.publishedAt)}
-                    </span>
+                    {article.publishedAt && (
+                      <time
+                        dateTime={article.publishedAt}
+                        className="text-xs text-[#858b85]"
+                      >
+                        {formatDate(
+                          article.publishedAt,
+                        )}
+                      </time>
+                    )}
                   </div>
 
                   <h2 className="mt-10 text-2xl font-semibold leading-tight transition-colors group-hover:text-[#a07a3d]">
-                    {article.title}
+                    <Link
+                      href={`/blog/${encodeURIComponent(
+                        article.slug,
+                      )}`}
+                      className="focus:outline-none focus:ring-2 focus:ring-[#a07a3d] focus:ring-offset-4"
+                    >
+                      {article.title}
+                    </Link>
                   </h2>
 
                   {article.excerpt && (
@@ -224,11 +166,17 @@ export default async function BlogPage({
                   )}
 
                   <Link
-                    href={`/blog/${article.slug}`}
+                    href={`/blog/${encodeURIComponent(
+                      article.slug,
+                    )}`}
                     className="mt-8 inline-flex items-center text-sm font-semibold"
                   >
                     Read article
-                    <span className="ml-2 transition-transform duration-300 group-hover:translate-x-1">
+
+                    <span
+                      aria-hidden="true"
+                      className="ml-2 transition-transform duration-300 group-hover:translate-x-1"
+                    >
                       →
                     </span>
                   </Link>
@@ -237,7 +185,6 @@ export default async function BlogPage({
             </div>
           )}
 
-          {/* Pagination */}
           {totalPages > 1 && (
             <Pagination
               currentPage={page}
@@ -261,8 +208,9 @@ export default async function BlogPage({
             </h2>
 
             <p className="mt-5 leading-7 text-white/60">
-              New insights covering agricultural commodities, sourcing,
-              international trade, and African agricultural markets.
+              New insights covering agricultural
+              commodities, sourcing, international trade,
+              and African agricultural markets.
             </p>
           </div>
 
@@ -278,6 +226,33 @@ export default async function BlogPage({
   );
 }
 
+function EmptyState({
+  search,
+}: {
+  search: string;
+}) {
+  return (
+    <div className="rounded-3xl border border-[#ddd9cc] bg-white p-12 text-center">
+      <p className="text-lg font-semibold">
+        No insights found.
+      </p>
+
+      <p className="mt-3 text-sm text-[#687068]">
+        Try searching for another topic.
+      </p>
+
+      {search && (
+        <Link
+          href="/blog"
+          className="mt-6 inline-flex rounded-full bg-[#182018] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#a07a3d]"
+        >
+          View all insights
+        </Link>
+      )}
+    </div>
+  );
+}
+
 function Pagination({
   currentPage,
   totalPages,
@@ -287,7 +262,7 @@ function Pagination({
   totalPages: number;
   search: string;
 }) {
-  function getUrl(page: number) {
+  function getUrl(page: number): string {
     const params = new URLSearchParams();
 
     if (search) {
@@ -300,17 +275,20 @@ function Pagination({
 
     const query = params.toString();
 
-    return query ? `/blog?${query}` : "/blog";
+    return query
+      ? `/blog?${query}`
+      : "/blog";
   }
 
   return (
     <nav
       aria-label="Blog pagination"
-      className="mt-16 flex items-center justify-center gap-2"
+      className="mt-16 flex flex-wrap items-center justify-center gap-2"
     >
       {currentPage > 1 && (
         <Link
           href={getUrl(currentPage - 1)}
+          rel="prev"
           className="rounded-full border border-[#ddd9cc] bg-white px-5 py-3 text-sm font-semibold transition hover:border-[#a07a3d] hover:text-[#a07a3d]"
         >
           ← Previous
@@ -318,16 +296,22 @@ function Pagination({
       )}
 
       <div className="flex items-center gap-2">
-        {Array.from({ length: totalPages }, (_, index) => {
-          const page = index + 1;
+        {Array.from(
+          { length: totalPages },
+          (_, index) => index + 1,
+        ).map((page) => {
+          const isCurrent = page === currentPage;
 
           return (
             <Link
               key={page}
               href={getUrl(page)}
-              aria-current={page === currentPage ? "page" : undefined}
+              aria-current={
+                isCurrent ? "page" : undefined
+              }
+              aria-label={`Page ${page}`}
               className={`flex h-11 w-11 items-center justify-center rounded-full text-sm font-semibold transition ${
-                page === currentPage
+                isCurrent
                   ? "bg-[#182018] text-white"
                   : "border border-[#ddd9cc] bg-white hover:border-[#a07a3d] hover:text-[#a07a3d]"
               }`}
@@ -341,6 +325,7 @@ function Pagination({
       {currentPage < totalPages && (
         <Link
           href={getUrl(currentPage + 1)}
+          rel="next"
           className="rounded-full border border-[#ddd9cc] bg-white px-5 py-3 text-sm font-semibold transition hover:border-[#a07a3d] hover:text-[#a07a3d]"
         >
           Next →
