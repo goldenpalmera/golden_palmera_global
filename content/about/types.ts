@@ -67,9 +67,9 @@ export type AboutPageData = {
   missionTitle?: string;
   missionDescription?: string;
 
-  featuredLeader: TeamMember;
+  featuredLeader?: TeamMember;
 
-  seo: SeoData;
+  seo?: SeoData;
 };
 
 

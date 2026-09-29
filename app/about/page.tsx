@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
-
-import Footer from "@/components/sharedComponents/Footer";
-import PageHero from "../components/PageHero";
-
+import PageHero from "../../components/sharedComponents/PageHero";
 import { SupplyChainSection } from "@/components/home";
 import {
   getFeaturedLeader,
@@ -19,7 +16,6 @@ import {
   WhoWeAreSection,
   AboutCTA,
 } from "@/components/about";
-
 import { getTeamMembers } from "@/content/about/getTeamMembers";
 import { getAboutPageMetadata } from "@/content/about/metadata";
 import { getAboutPage } from "@/content/about/getAboutPage";
@@ -119,8 +115,6 @@ export default async function AboutPage() {
         {/* CTA */}
         <AboutCTA />
       </main>
-
-      <Footer />
     </>
   );
 }

@@ -46,6 +46,7 @@ export const ABOUT_PAGE_QUERY = defineQuery(`
       credentials,
       image,
       linkedIn,
+      country,
       quote,
       order,
       isAdvisoryBoard
@@ -107,4 +108,3 @@ export const TEAM_MEMBERS_QUERY = defineQuery(`
       isAdvisoryBoard
     }
 `);
-
