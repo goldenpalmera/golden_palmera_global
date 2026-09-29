@@ -16,7 +16,7 @@ export const COMPLIANCE_PAGE_QUERY = defineQuery(`
       title
     },
 
-    certifications[]->{
+    certifications[]-> {
       _id,
       name,
       shortName,
@@ -24,13 +24,17 @@ export const COMPLIANCE_PAGE_QUERY = defineQuery(`
       status,
 
       logo {
-        asset -> {
+        asset-> {
+          _id,
           url
-        }
+        },
+        hotspot,
+        crop
       },
 
       certificateFile {
-        asset -> {
+        asset-> {
+          _id,
           url
         }
       },
@@ -43,24 +47,26 @@ export const COMPLIANCE_PAGE_QUERY = defineQuery(`
       title,
       description,
 
-      tests[]->{
+      tests[]-> {
         _id,
         name
       },
 
-      partners[]->{
+      partners[]-> {
         _id,
         name,
         role
       },
 
-      documents[]->{
+      documents[]-> {
         _id,
         name,
-        description
+        description,
+        "fileUrl": file.asset->url
       },
-      "sampleDocumentUrl": sampleDocumentUrl.asset->url,
-      sampleDocumentLable
+
+      sampleDocumentLabel,
+      "sampleDocumentUrl": sampleDocument.asset->url   
     },
 
     eudrSection {
@@ -77,7 +83,7 @@ export const COMPLIANCE_PAGE_QUERY = defineQuery(`
       roadmapTitle
     },
 
-    milestones[]->{
+    milestones[]-> {
       _id,
       year,
       quarter,
@@ -91,11 +97,7 @@ export const COMPLIANCE_PAGE_QUERY = defineQuery(`
       description,
       downloadLabel,
 
-      downloadFile {
-        asset -> {
-          url
-        }
-      },
+      "downloadUrl": downloadFile.asset->url,
 
       contactLabel
     },
@@ -104,20 +106,20 @@ export const COMPLIANCE_PAGE_QUERY = defineQuery(`
       eyebrow,
       title,
       text
-    },
+    }
   }
 `);
 
 export const COMPLIANCE_PAGE_SEO_QUERY = defineQuery(`
-  *[_type == "aboutPage"][0].seo {
+  *[_type == "compliancePage"][0].seo {
     metaTitle,
     metaDescription,
     keywords,
     noIndex,
     canonicalUrl,
-    
+
     ogImage {
-      asset->{
+      asset-> {
         _id,
         url,
         metadata {

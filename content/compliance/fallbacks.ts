@@ -153,21 +153,25 @@ export const COMPLIANCE_FALLBACKS: CompliancePageData = {
 
     stats: [
       {
+        _key: "fallback-stat-1",
         value: "100%",
         label:
           "Farm-level GPS data collection — Palm Oil & Cocoa",
       },
       {
+        _key: "fallback-stat-2",
         value: "2020",
         label:
           "Baseline cutoff — all source farms verified pre-2020",
       },
       {
+        _key: "fallback-stat-3",
         value: "Q3 2025",
         label:
           "Target: full EUDR due diligence system operational",
       },
       {
+        _key: "fallback-stat-3",
         value: "0",
         label:
           "Forest-risk sourcing incidents recorded to date",

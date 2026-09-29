@@ -1,4 +1,4 @@
-import type { SeoData } from "@/sanity/lib/types";
+import type { SeoData, SanityImage } from "@/sanity/lib/types";
 
 export type CertificationStatus =
   | "Active"
@@ -32,6 +32,7 @@ export type QualityDocument = {
   _id: string;
   name: string;
   description: string;
+  fileUrl?: string;
 };
 
 export type QualitySectionProps = {
@@ -45,6 +46,16 @@ export type QualitySectionProps = {
 
   sampleDocumentUrl?: string;
   sampleDocumentLabel?: string;
+};
+
+export type EudrSectionProps = {
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+  image?: SanityImage;
+  stats?: EudrStat[];
+  roadmapTitle?: string;
+  milestones: EudrMilestone[];
 };
 
 export type Certification = {
@@ -69,13 +80,14 @@ export type Certification = {
 export type EudrMilestone = {
   _id: string;
   year: string;
-  quarter?: string;
+  quarter?: "Q1" | "Q2" | "Q3" | "Q4";
   title: string;
   description?: string;
   status: EudrMilestoneStatus;
 };
 
 export type EudrStat = {
+  _key: string;
   value: string;
   label: string;
 };
@@ -104,11 +116,7 @@ export type CompliancePageData = {
     title?: string;
     description?: string;
 
-    stats?: {
-      _key?: string;
-      value: string;
-      label: string;
-    }[];
+    stats?: EudrStat[];
 
     roadmapTitle?: string;
   };

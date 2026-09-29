@@ -17,8 +17,6 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function CompliancePage() {
   const page = await getComplianceData();
 
-  console.log(page);
-
   if (!page) {
     return notFound();
   }
