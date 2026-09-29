@@ -50,8 +50,8 @@ export default async function RequestQuotePage({
 
       {/* Form */}
       <section className="px-6 py-16 sm:px-10 lg:px-16 lg:py-24">
-        <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[0.75fr_1.25fr] lg:gap-20">
-          <aside>
+        <div className="mx-auto grid max-w-7xl items-start gap-12 lg:grid-cols-[0.8fr_1.4fr] lg:gap-16">
+          <aside className="lg:pt-2">
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700">
               Request a Quote
             </p>
@@ -60,7 +60,7 @@ export default async function RequestQuotePage({
               Tell us about your order.
             </h2>
 
-            <p className="mt-5 leading-7 text-zinc-600">
+            <p className="mt-5 max-w-md leading-7 text-zinc-600">
               Whether you are looking for a single commodity or a long-term
               supply partnership, share your requirements with us.
             </p>
@@ -95,9 +95,8 @@ export default async function RequestQuotePage({
             </div>
           </aside>
 
-          <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8 lg:p-10">
-          
-          <QuoteForm product={product} />
+          <div className="w-full rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8 lg:p-10 xl:p-12">
+            <QuoteForm product={product} />
           </div>
         </div>
       </section>

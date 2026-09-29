@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import InquiryForm from "@/components/inquiry/InquiryForm";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title:
@@ -12,14 +13,70 @@ export default function PartnershipPage() {
   return (
     <main className="bg-[#f8f6f0] text-[#171717]">
       {/* Hero */}
-      <section className="relative overflow-hidden bg-[#173f2b] px-6 py-24 text-white md:px-10 lg:px-16 lg:py-14">
-        <div className="absolute inset-0 opacity-[0.08]">
+      {/* Hero */}
+      <section className="relative isolate overflow-hidden bg-[#173f2b] px-6 py-24 text-white md:px-10 lg:min-h-[620px] lg:px-16 lg:py-14">
+        {/* Background grid */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-[0.06]"
+        >
           <div className="absolute left-[20%] top-0 h-full w-px bg-white" />
           <div className="absolute left-[50%] top-0 h-full w-px bg-white" />
           <div className="absolute left-[80%] top-0 h-full w-px bg-white" />
         </div>
 
-        <div className="relative mx-auto max-w-[1400px]">
+        {/* Background glow */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-40 -top-40 h-[32rem] w-[32rem] rounded-full bg-[#b78628]/20 blur-3xl"
+        />
+
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-white/5 blur-3xl"
+        />
+
+        {/* Diagonal image */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 hidden lg:block"
+        >
+          <div
+            className="
+              absolute
+              -right-[6%]
+              -top-[10%]
+              h-[125%]
+              w-[58%]
+              overflow-hidden
+            "
+            style={{
+              clipPath:
+                "polygon(32% 0%, 100% 0%, 70% 100%, 0% 100%)",
+            }}
+          >
+            <Image
+              src="/images/partnership-hero.jpg"
+              alt=""
+              fill
+              priority
+              sizes="58vw"
+              className="object-cover object-center"
+            />
+
+            {/* Green brand tint */}
+            <div className="absolute inset-0 bg-[#173f2b]/25" />
+
+            {/* Fade image into the text */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#173f2b]/85 via-[#173f2b]/30 to-transparent" />
+
+            {/* Very subtle gold tone */}
+            <div className="absolute inset-0 bg-[#b78628]/5 mix-blend-screen" />
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 mx-auto max-w-[1400px]">
           <div className="flex items-center justify-between">
             <p className="text-xs uppercase tracking-[0.3em] text-white/45">
               Golden Palmera Global
@@ -30,15 +87,15 @@ export default function PartnershipPage() {
             </span>
           </div>
 
-          <div className="mt-10 max-w-6xl">
+          <div className="mt-10 max-w-6xl lg:min-h-[470px] lg:flex lg:flex-col lg:justify-center">
             <p className="text-xs uppercase tracking-[0.35em] text-[#d6b45c]">
               Strategic partnerships
             </p>
 
-            <h1 className="mt-7 text-[clamp(4rem,9vw,8.5rem)] font-medium leading-[0.85] tracking-[-0.07em]">
+            <h1 className="mt-7 max-w-5xl text-[clamp(4rem,9vw,8.5rem)] font-medium leading-[0.85] tracking-[-0.07em]">
               Let&apos;s build
               <br />
-              <span className="text-white/35">
+              <span className="text-gold-500">
                 something together.
               </span>
             </h1>
@@ -50,8 +107,25 @@ export default function PartnershipPage() {
               work together.
             </p>
           </div>
+
+          {/* Mobile image */}
+          <div className="relative mt-12 aspect-[16/9] overflow-hidden rounded-2xl border border-white/10 lg:hidden">
+            <Image
+              src="/images/partnership-hero.jpg"
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover"
+            />
+
+            <div className="absolute inset-0 bg-[#173f2b]/20" />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-[#173f2b]/50 to-transparent" />
+          </div>
         </div>
       </section>
+
 
       {/* Partnership section */}
       <section className="px-6 py-24 md:px-10 lg:px-16 lg:py-36">

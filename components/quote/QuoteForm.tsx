@@ -4,6 +4,7 @@ import {
   useState,
   type SubmitEvent,
 } from "react";
+import { useSearchParams } from "next/navigation";
 
 type QuoteFormProps = {
   product?: string;
@@ -36,6 +37,14 @@ export default function QuoteForm({
   const [state, setState] = useState<FormState>({
     status: "idle",
   });
+
+  const searchParams = useSearchParams();
+
+  const productFromUrl =
+    searchParams.get("product") ?? "";
+
+  const selectedProduct =
+    product || productFromUrl;
 
   async function handleSubmit( event: SubmitEvent<HTMLFormElement> ) {
     event.preventDefault();
@@ -232,11 +241,12 @@ export default function QuoteForm({
         <Field
           label="Product"
           name="product"
-          defaultValue={product}
+          defaultValue={selectedProduct}
           placeholder="Product you're interested in"
           required
           error={state.errors?.product?.[0]}
         />
+
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2">
@@ -456,6 +466,8 @@ function Field({
           bg-white
           px-4
           text-sm
+          text-zinc-900
+          placeholder:text-zinc-400
           outline-none
           transition
           focus:ring-2
