@@ -11,8 +11,7 @@ export const BLOG_POSTS_QUERY = defineQuery(`
       && defined(publishedAt)
       && publishedAt <= now()
       && (
-        !defined($search)
-        || $search == ""
+        $search == ""
         || title match $search
         || excerpt match $search
         || category match $search
@@ -27,7 +26,8 @@ export const BLOG_POSTS_QUERY = defineQuery(`
       excerpt,
       category,
       publishedAt,
-      featured
+      featured,
+      coverImage
     },
 
     "total": count(*[
@@ -36,8 +36,7 @@ export const BLOG_POSTS_QUERY = defineQuery(`
       && defined(publishedAt)
       && publishedAt <= now()
       && (
-        !defined($search)
-        || $search == ""
+        $search == ""
         || title match $search
         || excerpt match $search
         || category match $search
@@ -46,6 +45,7 @@ export const BLOG_POSTS_QUERY = defineQuery(`
     ])
   }
 `);
+
 
 /**
  * Blog listing page SEO.
@@ -199,5 +199,18 @@ export const RECENT_BLOG_POSTS_QUERY = defineQuery(`
     coverImage,
     category,
     publishedAt
+  }
+`);
+
+
+// for static params generation
+export const BLOG_POST_SLUGS_QUERY = defineQuery(`
+  *[
+    _type == "post"
+    && defined(slug.current)
+    && defined(publishedAt)
+    && publishedAt <= now()
+  ] {
+    "slug": slug.current
   }
 `);

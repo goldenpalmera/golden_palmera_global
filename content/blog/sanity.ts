@@ -7,6 +7,7 @@ import {
   POST_SEO_QUERY,
   RELATED_BLOG_POSTS_QUERY,
   RECENT_BLOG_POSTS_QUERY,
+  BLOG_POST_SLUGS_QUERY,
 } from "@/sanity/lib/queries/blog/queries";
 
 import type {
@@ -129,6 +130,17 @@ export async function getRecentPosts(
   return client.fetch<RelatedPost[]>(
     RECENT_BLOG_POSTS_QUERY,
     { slug },
+    SANITY_OPTIONS,
+  );
+}
+
+// for static Params
+export async function getBlogPostSlugs(): Promise<{ slug: string }[]> {
+  const client = getSanityClient();
+
+  return client.fetch(
+    BLOG_POST_SLUGS_QUERY,
+    {},
     SANITY_OPTIONS,
   );
 }

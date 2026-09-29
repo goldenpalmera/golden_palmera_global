@@ -15,14 +15,38 @@ import {
   getArticleImageUrl,
   getAuthorImageUrl,
 } from "@/content/blog/images";
-
+import { 
+  FALLBACK_ARTICLE,
+  FALLBACK_BLOG_POSTS,
+  FALLBACK_IMAGE_BY_SLUG,
+} from "@/content/blog/fallbacks";
 import { RelatedArticles } from "@/components/blog/RelatedArticles";
+import { getBlogStaticParams } from "@/content/blog/staticParams";
 
 type Props = {
   params: Promise<{
     slug: string;
   }>;
 };
+
+export async function generateStaticParams() {
+  const sanityParams = await getBlogStaticParams();
+
+  const fallbackParams = FALLBACK_BLOG_POSTS.map((post) => ({
+    slug: post.slug,
+  }));
+
+  const params = [
+    ...sanityParams,
+    ...fallbackParams,
+  ];
+
+  return Array.from(
+    new Map(
+      params.map((item) => [item.slug, item])
+    ).values()
+  );
+}
 
 export async function generateMetadata({
   params,
@@ -35,26 +59,40 @@ export default async function BlogArticlePage({
 }: Props) {
   const { slug } = await params;
 
-  const article = await getPost(slug);
+  const sanityArticle = await getPost(slug);
+
+  const article =
+    sanityArticle ??
+    (slug === FALLBACK_ARTICLE.slug
+      ? FALLBACK_ARTICLE
+      : undefined
+    );
 
   if (!article) {
     notFound();
   }
 
-  const [
-    relatedArticles,
-  ] = await Promise.all([
+
+  const [sanityRelatedArticles] =
+  await Promise.all([
     getRelatedBlogPosts(article),
   ]);
+
+  const relatedArticles =
+    sanityRelatedArticles.length > 0
+      ? sanityRelatedArticles
+      : FALLBACK_BLOG_POSTS.filter(
+          (post) => post.slug !== article.slug,
+        ).slice(0, 3);
 
   const readingTime = calculateReadingTime(
     article.body,
   );
 
-  const articleImage = getArticleImageUrl(
-    article.coverImage,
-  );
-
+  const articleImage = 
+    getArticleImageUrl(article.coverImage) ??
+    FALLBACK_IMAGE_BY_SLUG[article.slug];
+    
   const authorImage = getAuthorImageUrl(
     article.author?.image,
   );
@@ -158,10 +196,10 @@ export default async function BlogArticlePage({
       </section>
 
       {/* Cover */}
-      {articleImage && (
-        <section className="px-6 pb-20 md:px-12 lg:px-20">
-          <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem]">
-            <div className="relative aspect-[16/8]">
+      <section className="px-6 pb-20 md:px-12 lg:px-20">
+        <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem]">
+          <div className="relative aspect-[16/8] overflow-hidden bg-[#182018]">
+            {articleImage ? (
               <Image
                 src={articleImage}
                 alt={article.title}
@@ -170,23 +208,57 @@ export default async function BlogArticlePage({
                 sizes="(max-width: 768px) 100vw, 1400px"
                 className="object-cover"
               />
-            </div>
+            ) : (
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,#a07a3d_0%,transparent_35%),linear-gradient(135deg,#182018_0%,#293329_50%,#182018_100%)]">
+                <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(255,255,255,.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.08)_1px,transparent_1px)] [background-size:48px_48px]" />
+
+                <div className="absolute bottom-10 left-10 max-w-lg md:bottom-14 md:left-14">
+                  <p className="text-xs uppercase tracking-[0.3em] text-[#d2b477]">
+                    Golden Palmera Global
+                  </p>
+
+                  <p className="mt-4 text-2xl font-semibold text-white md:text-4xl">
+                    Agriculture. Commodities. Global Trade.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* Article */}
       <article className="border-y border-[#ddd9cc] bg-white px-6 py-20 md:px-12 lg:px-20">
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-3xl text-justify">
           {article.body?.length ? (
-            <div className="prose prose-lg max-w-none prose-headings:text-[#182018] prose-p:text-[#5f675f] prose-p:leading-9 prose-a:text-[#a07a3d] prose-strong:text-[#182018]">
+            <div
+              className="
+                prose
+                prose-lg
+                max-w-none
+                prose-headings:font-semibold
+                prose-headings:tracking-tight
+                prose-headings:text-[#182018]
+                prose-h2:mt-14
+                prose-h2:mb-5
+                prose-h2:text-3xl
+                prose-h3:mt-10
+                prose-h3:mb-4
+                prose-h3:text-2xl
+                prose-p:text-[#5f675f]
+                prose-p:leading-8
+                prose-p:mb-7
+                prose-a:text-[#a07a3d]
+                prose-strong:text-[#182018]
+              "
+            >
               <PortableText value={article.body} />
             </div>
           ) : (
             <p className="text-[#687068]">
               This article has no published content yet.
             </p>
-          )}
+        )}
         </div>
       </article>
 

@@ -1,6 +1,16 @@
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url";
 
+type ImageWithFallback = {
+  fallbackUrl?: string;
+};
+
+export function getFallbackImageUrl(
+  image?: ImageWithFallback | null,
+): string | undefined {
+  return image?.fallbackUrl;
+}
+
 export function getArticleImageUrl(
   image?: SanityImageSource,
 ): string | null {
