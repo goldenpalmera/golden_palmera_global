@@ -1,5 +1,5 @@
 import { SanityImage, SeoData } from "@/sanity/lib/types";
-import { PortableTextBlock } from "next-sanity";
+import type { PortableTextBlock } from "@portabletext/types";
 import { PageCTA } from "@/sanity/lib/types";
 
 export type Product = {
@@ -9,7 +9,7 @@ export type Product = {
   botanicalName?: string;
   category?: string;
   shortDescription?: string;
-  description?: PortableTextBlock;
+  description?: PortableTextBlock[];
 
   image?: SanityImage;
   gallery?: SanityImage[];

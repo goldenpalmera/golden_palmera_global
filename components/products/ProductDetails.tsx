@@ -1,4 +1,5 @@
 import type { Product } from "@/content/products/types";
+import { PortableText } from "@portabletext/react";
 
 type Props = {
   product: Product;
@@ -18,9 +19,9 @@ export function ProductDetails({ product }: Props) {
               About {product.name}
             </h2>
 
-            {product.shortDescription && (
+            {product.description && (
               <p className="mt-7 text-base leading-8 text-slate-600">
-                {product.shortDescription}
+                <PortableText value={product.description} />
               </p>
             )}
           </div>

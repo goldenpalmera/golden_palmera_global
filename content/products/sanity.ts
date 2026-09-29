@@ -3,16 +3,10 @@ import type {
   ProductsPage as SanityProductsPage,
   Product,
   ProductsPage,
-  RelatedProduct,
 } from "./types";
 import { FALLBACK } from "./fallbacks";
 import { mapLink } from "../shared/linkMapper";
 import { SanityImage } from "@/sanity/lib/types";
-import { getSanityClient } from "@/sanity/lib/client";
-import {
-  PRODUCT_QUERY,
-  RELATED_PRODUCTS_QUERY,
-} from "@/sanity/lib/queries/products/queries";
 
 function mapImage(
   image: SanityProduct["image"]
@@ -152,38 +146,4 @@ export function mapProductsPage(
         mapLink(page?.cta?.link),
     },
   };
-}
-
-export async function getProduct(
-  slug: string,
-): Promise<Product | null> {
-  const client = getSanityClient();
-
-  return client.fetch(
-    PRODUCT_QUERY,
-    { slug },
-    {
-      next: {
-        revalidate: 60,
-        tags: [`product:${slug}`],
-      },
-    },
-  );
-}
-
-export async function getRelatedProducts(
-  slug: string,
-): Promise<RelatedProduct[]> {
-  const client = getSanityClient();
-
-  return client.fetch(
-    RELATED_PRODUCTS_QUERY,
-    { slug },
-    {
-      next: {
-        revalidate: 60,
-        tags: ["products"],
-      },
-    },
-  );
 }

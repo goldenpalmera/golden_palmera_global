@@ -5,7 +5,7 @@ export const PRODUCTS_QUERY = defineQuery(`
     _type == "product"
     && active == true
   ]
-  | order(order asc) {
+  | order(order asc, name asc) {
     _id,
     name,
     "slug": slug.current,
@@ -87,7 +87,14 @@ export const RELATED_PRODUCTS_QUERY = defineQuery(`
     botanicalName,
     "slug": slug.current,
     shortDescription,
-    image,
+    image {
+      asset-> {
+        _id,
+        url
+      },
+      hotspot,
+      crop
+    },
     featured
   }
 `);
@@ -135,7 +142,8 @@ export const PRODUCTS_PAGE_QUERY = defineQuery(`
       title,
       description,
 
-      steps[] {
+      steps[]->{
+        _id,
         number,
         title,
         description

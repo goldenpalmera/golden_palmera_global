@@ -1,4 +1,4 @@
-import { getRelatedProducts } from "./sanity";
+import { getRelatedProducts } from "./getProducts";
 
 export async function getProductRecommendations(
   slug: string,

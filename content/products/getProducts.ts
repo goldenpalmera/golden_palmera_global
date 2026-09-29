@@ -2,15 +2,18 @@ import { getSanityClient } from "@/sanity/lib/client";
 import {
   PRODUCTS_QUERY,
   PRODUCT_QUERY,
-} from "@/sanity/lib/queries";
-
-import type { Product } from "./types";
+  RELATED_PRODUCTS_QUERY,
+} from "@/sanity/lib/queries/products/queries";
+import type { 
+  Product,
+  RelatedProduct,
+ } from "./types";
 import { mapProduct } from "./sanity";
 
 export async function getProducts(): Promise<Product[]> {
   const client = getSanityClient();
 
-  const products = await client.fetch(
+  return await client.fetch(
     PRODUCTS_QUERY,
     {},
     {
@@ -20,8 +23,6 @@ export async function getProducts(): Promise<Product[]> {
       },
     }
   );
-
-  return products.map(mapProduct);
 }
 
 export async function getProduct(
@@ -41,4 +42,22 @@ export async function getProduct(
   );
 
   return product ? mapProduct(product) : null;
+}
+
+
+export async function getRelatedProducts(
+  slug: string,
+): Promise<RelatedProduct[]> {
+  const client = getSanityClient();
+
+  return client.fetch(
+    RELATED_PRODUCTS_QUERY,
+    { slug },
+    {
+      next: {
+        revalidate: 60,
+        tags: ["products"],
+      },
+    },
+  );
 }

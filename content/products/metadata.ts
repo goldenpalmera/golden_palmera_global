@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { buildMetadata } from "@/sanity/lib/seo";
-import { getProduct } from "./sanity";
+import { getProduct } from "./getProducts";
 import type { ProductPageProps } from "./types";
 import { getProductsPageSEO } from "./getProductsPage";
 

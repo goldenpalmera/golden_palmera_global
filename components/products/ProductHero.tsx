@@ -1,30 +1,65 @@
 import Image from "next/image";
 import Link from "next/link";
-
-import { urlFor } from "@/sanity/lib/image";
-
+import { getProductImageUrl } from "@/content/products/images";
 import type { Product } from "@/content/products/types";
 import { formatCategory } from "@/content/products/formatters";
+import { FALLBACK_PRODUCT_IMAGES } from "@/content/products/fallbacks"
+import { ArrowLeft } from "lucide-react";
 
 type Props = {
   product: Product;
 };
 
 export function ProductHero({ product }: Props) {
+  const productImage = 
+    getProductImageUrl(product.image) ??
+    FALLBACK_PRODUCT_IMAGES[product.slug];
   return (
     <section className="bg-[#f5f2e9] py-16 lg:py-24">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <nav
+            aria-label="Breadcrumb"
+            className="mb-10 flex items-center gap-2 text-sm"
+          >
+            <Link
+              href="/"
+              className="text-slate-500 transition-colors hover:text-[#173f2b]"
+            >
+              Home
+            </Link>
+
+            <span className="text-slate-400">/</span>
+
+            <Link
+              href="/products"
+              className="text-slate-500 transition-colors hover:text-[#173f2b]"
+            >
+              Products
+            </Link>
+
+            <span className="text-slate-400">/</span>
+
+            <span
+              className="truncate font-medium text-[#173f2b]"
+              aria-current="page"
+            >
+              {product.name}
+            </span>
+          </nav>
+          <Link
+            href="/products"
+            className="inline-flex items-center gap-2 text-sm font-medium text-[#173f2b] transition-colors hover:text-[#b78628]"
+          >
+            <ArrowLeft size={17} strokeWidth={2} />
+            Back to Products
+          </Link>
+
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-20">
           <div className="relative overflow-hidden rounded-3xl bg-[#e8e3d5]">
             <div className="relative aspect-[4/3]">
-              {product.image ? (
+              {productImage ? (
                 <Image
-                  src={urlFor(product.image)
-                    .width(1200)
-                    .height(900)
-                    .fit("crop")
-                    .auto("format")
-                    .url()}
+                  src={productImage}
                   alt={product.name}
                   fill
                   priority
@@ -86,7 +121,7 @@ export function ProductHero({ product }: Props) {
 
             <div className="mt-10">
               <Link
-                href={`/quote/request-quote?product=${product.slug}`}
+                href={`/quote/request-quote?product=${encodeURIComponent(product.name)}`}
                 className="inline-flex rounded-full bg-[#173f2b] px-7 py-4 text-sm font-semibold text-white transition-all hover:-translate-y-1 hover:bg-[#b78628]"
               >
                 Request a Quote

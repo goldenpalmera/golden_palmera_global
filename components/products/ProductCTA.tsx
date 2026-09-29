@@ -25,7 +25,7 @@ export function ProductCTA({ product }: Props) {
         </p>
 
         <Link
-          href={`/quote/request-quote?product=${product.slug}`}
+          href={`/quote/request-quote?product=${encodeURIComponent(product.slug)}`}
           className="mt-9 inline-flex rounded-full bg-[#d6b45c] px-7 py-4 text-sm font-semibold text-[#173f2b] transition-all hover:-translate-y-1 hover:bg-white"
         >
           Request a Quote

@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Footer from "../components/Footer";
-import PageHero from "../components/PageHero";
-import { getProducts } from "@/content/products/getProducts";
+import PageHero from "../../components/sharedComponents/PageHero";
+import { getProductsData } from "@/content/products/getProductsData";
 import { getProductsPage } from "@/content/products/getProductsPage";
 import { mapProductsPage } from "@/content/products/sanity"
 import { getProductsPageMetadata } from "@/content/products/metadata";
@@ -14,11 +13,12 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ProductsPage() {
   const [products, rawPage] = await Promise.all([
-    getProducts(),
+    getProductsData(),
     getProductsPage(),
   ])
 
   const page = mapProductsPage(rawPage);
+  console.log("prodts>>", products)
   
   return (
     <>
@@ -118,7 +118,7 @@ export default async function ProductsPage() {
             </p>
 
             <Link
-              href={page.cta.link}
+              href={page.cta.link.href}
               className="mt-9 inline-flex rounded-full bg-[#d6b45c] px-7 py-4 text-sm font-semibold text-[#173f2b] transition-all hover:-translate-y-1 hover:bg-white"
             >
               {page.cta.label}
@@ -126,8 +126,6 @@ export default async function ProductsPage() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </>
   );
 }
