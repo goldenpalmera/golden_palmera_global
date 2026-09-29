@@ -85,7 +85,17 @@ export default async function AdvisoryBoardPage() {
             {members.map((member) => (
               <article
                 key={member._id}
-                className="group overflow-hidden rounded-xl border border-gold-500/12 bg-muted transition-all duration-250 hover:-translate-y-1 hover:border-gold-500/40"
+                className="
+                  group overflow-hidden rounded-xl 
+                  border border-[var(--border-light)]
+                  bg-[var(--surface-light)]
+                  text-[var(--text-light-primary)]
+                  shadow-[0_8px_30px_rgba(24,32,24,0.06)]
+                  transition-all duration-300
+                  hover:border-[var(--accent-gold)]/50
+                  hover:shadow-[0_14px_40px_rgba(24,32,24,0.10)]
+                  hover:-translate-y-1 
+                "
               >
                 <div className="relative flex h-48 items-center justify-center overflow-hidden bg-forest-950">
                   {member.image ? (
@@ -115,29 +125,43 @@ export default async function AdvisoryBoardPage() {
                   )}
 
                   {member.country && (
-                    <span className="absolute bottom-3 right-3 rounded bg-forest-950/75 px-2 py-1 text-[9px] tracking-wide text-ivory-100/60 backdrop-blur-sm">
+                    <span 
+                      className="
+                        absolute bottom-3 right-3 
+                        rounded 
+                        border border-white/10
+                        bg-forest-950/75 
+                        px-2 py-1 
+                        text-[9px] 
+                        font-medium
+                        tracking-wide 
+                        text-ivory-100/60 
+                        backdrop-blur-sm
+                      "
+                    >
                       {member.country}
                     </span>
                   )}
                 </div>
 
+                {/**CARD CONTENT */}
                 <div className="p-5">
-                  <h3 className="mb-0.5 text-[15px] font-medium text-ivory-100">
+                  <h3 className="mb-0.5 text-[15px] font-semibold leading-snug text-[var(--text-light-primary)]">
                     {member.name}
                   </h3>
 
-                  <p className="mb-1 text-[11px] font-medium text-gold-500">
+                  <p className="mb-1 text-[11px] font-semibold text-[#a07a3d]">
                     {member.role}
                   </p>
 
                   {member.specialisation && (
-                    <p className="mb-4 font-mono text-[10px] tracking-wide text-ivory-100/35">
+                    <p className="mb-4 font-mono text-[10px] leading-relaxed tracking-wide text-[#657068]">
                       {member.specialisation}
                     </p>
                   )}
 
                   {member.bio && (
-                    <p className="mb-4 text-[12px] leading-relaxed text-ivory-100/55">
+                    <p className="mb-4 text-[12px] leading-[1.75] text-[var(--text-light-secondary)]">
                       {member.bio}
                     </p>
                   )}
@@ -147,7 +171,15 @@ export default async function AdvisoryBoardPage() {
                       {member.credentials.map((credential) => (
                         <span
                           key={credential}
-                          className="rounded border border-gold-500/15 bg-forest-800 px-2 py-0.5 text-[9px] text-ivory-100/50"
+                          className="
+                            rounded 
+                            border border-[#c9a84c]/25 
+                            bg-[#f5f0e8] 
+                            px-2 py-1 
+                            text-[9px] 
+                            font-medium
+                            text-[#526058]
+                          "
                         >
                           {credential}
                         </span>
@@ -160,10 +192,20 @@ export default async function AdvisoryBoardPage() {
                       href={member.linkedIn}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-1.5 text-[11px] text-ivory-100/35 transition-colors hover:text-gold-500"
+                      className="
+                        inline-flex 
+                        items-center 
+                        gap-1.5 
+                        text-[11px] 
+                        font-medium
+                        text-[#526058]
+                        transition-colors 
+                        hover:text-[#a07a3d]
+                        focus-visible:text-[#a07a3d]
+                      "
                     >
                       <LinkedInIcon />
-                      LinkedIn Profile
+                      <span>LinkedIn Profile</span>
                     </a>
                   )}
                 </div>
