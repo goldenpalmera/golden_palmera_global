@@ -1,12 +1,34 @@
 import { getSanityClient } from "@/sanity/lib/client";
-import { 
-	approachBySlugQuerySEO,
-	approachBySlugQuery
+
+import {
+  allApproachesQuery,
+  approachBySlugQuerySEO,
+  approachBySlugQuery,
 } from "@/sanity/lib/queries/approaches/queries";
-import type { 
-	ApproachSeoData,
-	ApproachPage, 
+
+import type {
+  ApproachSeoData,
+  ApproachPage,
 } from "./types";
+
+export async function getApproaches(): Promise<ApproachPage[]> {
+  const client = getSanityClient();
+
+  return client.fetch<ApproachPage[]>(
+    allApproachesQuery
+  );
+}
+
+export async function getApproach(
+  slug: string
+): Promise<ApproachPage | null> {
+  const client = getSanityClient();
+
+  return client.fetch<ApproachPage | null>(
+    approachBySlugQuery,
+    { slug }
+  );
+}
 
 export async function getApproachSEO(
   slug: string
@@ -26,13 +48,4 @@ export async function getApproachSEO(
 
     return null;
   }
-}
-
-export async function getApproach(slug: string) {
-  const client = getSanityClient();
-
-  return client.fetch<ApproachPage | null>(
-    approachBySlugQuery,
-    { slug }
-  );
 }

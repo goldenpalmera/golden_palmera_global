@@ -1,5 +1,22 @@
 import { defineQuery } from "next-sanity";
 
+export const allApproachesQuery = defineQuery(`
+  *[
+    _type == "approach"
+    && active == true
+  ] | order(order asc) {
+    _id,
+    title,
+    "slug": slug.current,
+    number,
+    shortDescription,
+    description,
+    coverImage,
+    order,
+    seo
+  }
+`);
+
 export const approachBySlugQuery = defineQuery(`
   *[
     _type == "approach"
@@ -13,6 +30,7 @@ export const approachBySlugQuery = defineQuery(`
     shortDescription,
     description,
     coverImage,
+    order,
     seo
   }
 `);
