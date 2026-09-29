@@ -1,15 +1,17 @@
 import Link from "next/link";
 import Image from "next/image";
-
+import {
+  FALLBACK_IMAGE_BY_SLUG,
+} from "@/content/blog/fallbacks";
 import type { RelatedPost } from "@/content/blog/types";
 import { getRelatedImageUrl } from "@/content/blog/images";
 
 type RelatedArticlesProps = {
-  articles: RelatedPost[];
+  articles?: RelatedPost[];
 };
 
 export function RelatedArticles({
-  articles,
+  articles = [],
 }: RelatedArticlesProps) {
   if (!articles.length) {
     return null;
@@ -21,31 +23,38 @@ export function RelatedArticles({
       className="bg-[#f7f6f1] px-6 py-20 md:px-12 lg:px-20"
     >
       <div className="mx-auto max-w-7xl">
-        <div className="mb-10">
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-[#a07a3d]">
-            Continue reading
-          </p>
+        <div className="flex items-end justify-between gap-8">
+          <div className="mb-10">
+            <p className="text-sm font-medium uppercase tracking-[0.2em] text-[#a07a3d]">
+              Continue reading
+            </p>
 
-          <h2
-            id="related-articles-heading"
-            className="mt-3 text-3xl font-semibold md:text-4xl"
+            <h2
+              id="related-articles-heading"
+              className="mt-3 text-3xl font-semibold md:text-4xl"
+            >
+              Related insights
+            </h2>
+          </div>
+          <Link
+            href="/blog"
+            className="hidden text-sm font-semibold text-[#687068] transition hover:text-[#a07a3d] md:inline-flex"
           >
-            Related insights
-          </h2>
+            View all insights →
+          </Link>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {articles.map((article) => {
-            const imageUrl = getRelatedImageUrl(
-              article.coverImage,
-            );
+            const imageUrl = getRelatedImageUrl(article.coverImage) ??
+              FALLBACK_IMAGE_BY_SLUG[article.slug];
 
             return (
               <article
                 key={article._id}
                 className="group overflow-hidden rounded-3xl border border-[#ddd9cc] bg-white"
               >
-                {imageUrl && (
+                {imageUrl ? (
                   <Link
                     href={`/blog/${article.slug}`}
                     aria-label={`Read ${article.title}`}
@@ -59,6 +68,8 @@ export function RelatedArticles({
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </Link>
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#182018] to-[#a07a3d]" />
                 )}
 
                 <div className="p-7">
