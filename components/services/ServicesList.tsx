@@ -7,17 +7,15 @@ type Props = {
 };
 
 export function ServicesList({ services }: Props) {
+  console.log("services >>>", services.length > 0);
+
   return (
     <section className="px-6 pb-24 md:px-10 lg:px-16 lg:pb-36">
       <div className="mx-auto max-w-[1400px]">
         <div className="mb-12 flex items-end justify-between border-b border-black/10 pb-6">
-          <p className="text-xs uppercase tracking-[0.3em] text-black/40">
+          <p className="text-xs uppercase tracking-[0.3em] text-green-light">
             Our capabilities
           </p>
-
-          <span className="font-mono text-xs text-black/30">
-            {String(services.length).padStart(2, "0")} SERVICES
-          </span>
         </div>
 
         {services.length > 0 ? (

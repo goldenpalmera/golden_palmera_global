@@ -1,6 +1,6 @@
-    import type { Metadata } from "next";
-
+import type { Metadata } from "next";
 import { buildMetadata } from "@/sanity/lib/seo";
+import { FALLBACK_SERVICES } from "./fallbacks";
 
 import { getServicesPage, getService } from "./sanity";
 
@@ -25,11 +25,16 @@ export async function getServicesMetadata(): Promise<Metadata> {
 export async function getServiceMetadata(
   slug: string,
 ): Promise<Metadata> {
-  const service = await getService(slug);
+  const service = await getService(slug) ??
+    FALLBACK_SERVICES.find(
+      (item) => item.slug === slug,
+    );
 
   if (!service) {
     return {
-      title: "Service Not Found | Golden Palmera Global",
+      title: "Services | Golden Palmera Global",
+      description:
+        "Agricultural sourcing, export, logistics, and global market access.",
       robots: {
         index: false,
         follow: false,

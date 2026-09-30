@@ -6,11 +6,9 @@ import {
   ServicesList,
   ServicesCTA,
 } from "@/components/services";
-import {
-  getServices,
-  getServicesPage,
-} from "@/content/services/sanity";
+import { getServicesPage } from "@/content/services/sanity";
 import { getServicesMetadata } from "@/content/services/metadata";
+import { getServicesData } from "@/content/services/getServicesData";
 
 export async function generateMetadata(): Promise<Metadata> {
   return getServicesMetadata();
@@ -19,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ServicesPage() {
   const [page, services] = await Promise.all([
     getServicesPage(),
-    getServices(),
+    getServicesData(),
   ]);
 
   return (

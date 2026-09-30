@@ -47,7 +47,7 @@ export async function getService(
 export async function getServicesPage(): Promise<ServicesPageData | null> {
   const client = getSanityClient();
 
-  return client.fetch(
+  return client.fetch<ServicesPageData | null>(
     SERVICES_PAGE_QUERY,
     {},
     {

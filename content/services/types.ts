@@ -1,5 +1,5 @@
 import { SanityImage, SeoData } from "@/sanity/lib/types";
-import { PortableTextBlock } from "next-sanity";
+import type { PortableTextBlock } from "@portabletext/types";
 
 export type ServicesPageSEO = {
   _id: string;
@@ -25,6 +25,7 @@ export type Service = {
   featured?: boolean;
   order?: number;
   active?: boolean;
+  seo?: SeoData;
 };
 
 export type ServicePageData = {

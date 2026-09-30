@@ -12,8 +12,7 @@ export const SERVICES_QUERY = defineQuery(`
     category,
     "slug": slug.current,
     shortDescription,
-    items,
-    description,
+
     coverImage {
       asset-> {
         _id,
@@ -23,7 +22,6 @@ export const SERVICES_QUERY = defineQuery(`
       crop
     },
     featured,
-    active,
     order
   }
 `);
@@ -42,7 +40,8 @@ export const SERVICE_QUERY = defineQuery(`
     shortDescription,
     description,
     items,
-    image {
+
+    coverImage {
       asset-> {
         _id,
         url
@@ -61,7 +60,9 @@ export const SERVICE_QUERY = defineQuery(`
       ogImage {
         asset-> {
           url
-        }
+        },
+        hotspot,
+        crop
       }
     }
   }

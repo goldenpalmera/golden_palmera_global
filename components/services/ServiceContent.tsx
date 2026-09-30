@@ -7,6 +7,7 @@ type Props = {
 };
 
 export function ServiceContent({ service }: Props) {
+  console.log("content >>", service)
   return (
     <section className="px-6 py-24 md:px-10 lg:px-16 lg:py-36">
       <div className="mx-auto grid max-w-[1400px] gap-12 md:grid-cols-[0.3fr_0.7fr]">

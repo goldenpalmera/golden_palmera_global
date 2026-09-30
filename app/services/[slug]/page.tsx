@@ -15,6 +15,8 @@ import {
   ServiceContent,
   ServiceCTA,
 } from "@/components/services";
+import { FALLBACK_SERVICES } from "@/content/services/fallbacks";
+
 
 type Props = {
   params: Promise<{
@@ -23,7 +25,27 @@ type Props = {
 };
 
 export async function generateStaticParams() {
-  return getServiceStaticParams();
+  const sanityParams =
+    await getServiceStaticParams();
+
+  const fallbackParams =
+    FALLBACK_SERVICES.map((service) => ({
+      slug: service.slug,
+    }));
+
+  const params = [
+    ...sanityParams,
+    ...fallbackParams,
+  ];
+
+  return Array.from(
+    new Map(
+      params.map((item) => [
+        item.slug,
+         item,
+      ]),
+    ).values(),
+  );
 }
 
 export async function generateMetadata({
@@ -39,7 +61,14 @@ export default async function ServicePage({
 }: Props) {
   const { slug } = await params;
 
-  const service = await getService(slug);
+  const sanityService =
+    await getService(slug);
+
+  const service =
+    sanityService ??
+    FALLBACK_SERVICES.find(
+      (item) => item.slug === slug,
+    );
 
   if (!service) {
     notFound();
