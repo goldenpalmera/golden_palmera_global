@@ -28,15 +28,15 @@ export function HomePage({
       <IntroSection content={content.intro} />
 
       <CommoditiesSection
-        commodities={content.commodities}
+        commodities={content.featuredProducts}
       />
 
       <ServicesSection
-        services={content.services}
+        services={content.featuredServices}
       />
 
       <ApproachSection
-        approaches={content.approach}
+        approaches={content.featuredApproaches}
       />
 
       <SupplyChainSection
@@ -44,17 +44,17 @@ export function HomePage({
       />
 
       <QualitySection
-        tests={content.qualityTests}
-        partners={content.inspectionPartners}
-        documents={content.documents}
+        tests={content.quality?.tests}
+        partners={content.quality?.partners}
+        documents={content.quality?.documents}
       />
 
       <CaseStudiesSection
-        caseStudies={content.caseStudies}
+        caseStudies={content.featuredCaseStudies}
       />
 
       <TestimonialsSection
-        testimonials={content.testimonials}
+        testimonials={content.featuredTestimonials}
       />
 
       <ContactSection

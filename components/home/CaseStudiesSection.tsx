@@ -19,7 +19,7 @@ export function CaseStudiesSection({
         />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {caseStudies.map((caseStudy) => (
+          {caseStudies?.map((caseStudy) => (
             <article
               key={caseStudy.id}
               className="border border-gold-500/15 rounded-lg p-6 bg-forest-950/40 hover:border-gold-500/35 transition-colors"

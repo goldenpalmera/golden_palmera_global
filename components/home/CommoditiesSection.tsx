@@ -26,7 +26,7 @@ export function CommoditiesSection({
         </h2>
       </div>
 
-      {commodities.length > 0 ? (
+      {commodities?.length > 0 ? (
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:mt-16 lg:grid-cols-4 lg:gap-6">
           {commodities.map((product, index) => (
             <ProductCard

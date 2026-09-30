@@ -19,7 +19,7 @@ export function TestimonialsSection({
         />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {testimonials.map((testimonial) => (
+          {testimonials?.map((testimonial) => (
             <article
               key={testimonial.id}
               className="bg-forest-900/60 border border-gold-500/10 rounded-lg p-6 flex flex-col"

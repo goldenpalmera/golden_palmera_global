@@ -33,11 +33,11 @@ export function ServicesSection({
       </div>
 
       <div className="service-list">
-        {services.map((service) => (
+        {services?.map((service) => (
           <Link
-            href={service.href}
+            href={`/services/${service.slug}`}
             className="service-row"
-            key={service.id}
+            key={service._id}
           >
             <span className="service-number">
               {service.number}
@@ -45,7 +45,7 @@ export function ServicesSection({
 
             <h3>{service.title}</h3>
 
-            <p>{service.description}</p>
+            <p>{service.shortDescription}</p>
 
             <span className="service-arrow">
               ↗

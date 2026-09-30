@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type {
   HomeIntroContent,
 } from "@/content/home/types";
@@ -28,13 +29,13 @@ export function IntroSection({
 
           <p>{content.body}</p>
 
-          <a
+          <Link
             href={content.linkHref}
             className="arrow-link"
           >
             {content.linkText}
             <span>→</span>
-          </a>
+          </Link>
         </div>
       </div>
     </section>

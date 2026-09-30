@@ -9,7 +9,7 @@ export function ApproachSection({
   approaches,
 }: ApproachSectionProps) {
   return (
-    <section className="supply section">
+    <section id="approach" className="supply section">
       <div className="supply-content">
         <div className="section-label">
           04 — OUR APPROACH
@@ -30,11 +30,11 @@ export function ApproachSection({
       </div>
 
       <div className="supply-path">
-        {approaches.map((item, index) => (
+        {approaches?.map((item, index) => (
           <Link
-            key={item.id}
-            href={item.href}
-            className="path-step"
+            key={item._id}
+            href={`/approach/${item.slug}`}
+            className="path-step service-row"
           >
             <span>{item.number}</span>
 
