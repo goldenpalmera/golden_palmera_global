@@ -2,6 +2,8 @@ import { SeoData } from "@/sanity/lib/types";
 import type { HomePageContent } from "./types";
 
 export const HOME_FALLBACKS: HomePageContent = {
+  _id: "01",
+
   hero: {
     eyebrow: "West Africa's Premier Agribusiness Export House",
     title: "From trusted",
@@ -23,94 +25,7 @@ export const HOME_FALLBACKS: HomePageContent = {
     linkHref: "#contact",
   },
 
-  quality: {
-    eyebrow: "Quality Assurance",
-    title: "Every Shipment. Independently Verified.",
-    description: "Third-party inspection on every lot. No exceptions, no shortcuts.",
-    sampleDocumentLabel: "Download sample doc set",
-    sampleDocumentUrl: "#",
-  },
-
-  commodities: [
-    {
-      _id: "fallback-sesame",
-      name: "Sesame Seeds",
-      slug: "sesame-seeds",
-      botanicalName: "Sesamum indicum",
-      shortDescription:
-        "Premium Nigerian sesame seeds sourced and prepared for international food and processing markets.",
-    },
-    {
-      _id: "fallback-cashew",
-      name: "Cashew",
-      slug: "cashew",
-      botanicalName: "Anacardium occidentale",
-      shortDescription:
-        "Quality cashew products sourced through trusted agricultural networks.",
-    },
-    {
-      _id: "fallback-palm-oil",
-      name: "Palm Oil",
-      slug: "palm-oil",
-      botanicalName: "Elaeis guineensis",
-      shortDescription:
-        "Reliable palm oil supply for international commodity and food-processing markets.",
-    },
-  ],
-
-  services: [
-    {
-      id: "fallback-sourcing",
-      number: "01",
-      title: "Commodity Sourcing",
-      description:
-        "Reliable sourcing through established agricultural networks and producer relationships.",
-      href: "/services/commodity-sourcing",
-    },
-    {
-      id: "fallback-processing",
-      number: "02",
-      title: "Processing & Packaging",
-      description:
-        "Commodity-specific processing and packaging aligned with buyer requirements.",
-      href: "/services/processing-packaging",
-    },
-    {
-      id: "fallback-export",
-      number: "03",
-      title: "Export & Logistics",
-      description:
-        "End-to-end coordination from origin through international delivery.",
-      href: "/services/export-logistics",
-    },
-  ],
-
-  approach: [
-    {
-      id: "fallback-origin",
-      number: "01",
-      title: "Responsible Sourcing",
-      href: "/approach/responsible-sourcing",
-    },
-    {
-      id: "fallback-quality",
-      number: "02",
-      title: "Quality Assurance",
-      href: "/approach/quality-assurance",
-    },
-    {
-      id: "fallback-transparency",
-      number: "03",
-      title: "Transparent Trade",
-      href: "/approach/transparent-trade",
-    },
-    {
-      id: "fallback-market",
-      number: "04",
-      title: "Global Market Access",
-      href: "/approach/global-market-access",
-    },
-  ],
+  featuredProducts: [],
 
   supplyChain: [
     {
@@ -157,88 +72,11 @@ export const HOME_FALLBACKS: HomePageContent = {
     },
   ],
 
-  qualityTests: [
-    {
-      _id: "fallback-test-1",
-      name: "Free Fatty Acid (FFA) Analysis",
-    },
-    {
-      _id: "fallback-test-2",
-      name: "Moisture & Volatile Matter",
-    },
-    {
-      _id: "fallback-test-3",
-      name: "Mycotoxin / Aflatoxin Screen",
-    },
-    {
-      _id: "fallback-test-4",
-      name: "Heavy Metal Residues",
-    },
-    {
-      _id: "fallback-test-5",
-      name: "Pesticide Residue Testing",
-    },
-    {
-      _id: "fallback-test-6",
-      name: "Peroxide Value",
-    },
-    {
-      _id: "fallback-test-7",
-      name: "Iodine Value",
-    },
-    {
-      _id: "fallback-test-8",
-      name: "Colour Analysis (Lovibond)",
-    },
-  ],
+  featuredServices: [],
 
-  inspectionPartners: [
-    {
-      _id: "fallback-sgs",
-      name: "SGS",
-      role: "Pre-shipment inspection on all export lots",
-    },
-    {
-      _id: "fallback-bv",
-      name: "Bureau Veritas",
-      role: "Analytical testing & quality certification",
-    },
-    {
-      _id: "fallback-intertek",
-      name: "Intertek",
-      role: "Container & load supervision",
-    },
-  ],
+  featuredApproaches: [],
 
-  documents: [
-    {
-      _id: "fallback-document-1",
-      name: "SGS Inspection Report",
-      description: "Issued per lot — original available",
-    },
-    {
-      _id: "fallback-document-2",
-      name: "Phytosanitary Certificate",
-      description: "NAFDAC / Federal Ministry of Agriculture",
-    },
-    {
-      _id: "fallback-document-3",
-      name: "Certificate of Origin",
-      description: "Chamber of Commerce endorsed",
-    },
-    {
-      _id: "fallback-document-4",
-      name: "Bill of Lading",
-      description: "3 originals issued",
-    },
-    {
-      _id: "fallback-document-5",
-      name: "Quality & Weight Certificate",
-      description: "Bureau Veritas verified",
-    },
-  ],
-
-  caseStudies: [
+  featuredCaseStudies: [
     {
       id: "fallback-case-1",
       title: "Sesame Supply to Japan",
@@ -268,7 +106,7 @@ export const HOME_FALLBACKS: HomePageContent = {
     },
   ],
 
-  testimonials: [
+  featuredTestimonials: [
     {
       id: "fallback-testimonial-1",
       quote:
@@ -301,6 +139,7 @@ export const HOME_FALLBACKS: HomePageContent = {
     email: "info@goldenpalmera.com",
   },
 };
+
 
 export const HOMEPAGE_FALLBACK_SEO: SeoData = {
   metaTitle: "Home Page | Golden Palmera Global",

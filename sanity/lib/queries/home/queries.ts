@@ -1,14 +1,16 @@
 import { defineQuery } from "next-sanity";
 
 export const HOME_PAGE_QUERY = defineQuery(`
-{
-  "page": *[_type == "homePage"][0] {
+  *[_type == "homePage"][0] {
+    _id,
+
     hero {
       eyebrow,
       title,
       titleAccent,
       titleEnd,
       description,
+
       image {
         asset-> {
           _id,
@@ -27,6 +29,7 @@ export const HOME_PAGE_QUERY = defineQuery(`
       body,
       linkText,
       linkHref,
+
       image {
         asset-> {
           _id,
@@ -39,35 +42,29 @@ export const HOME_PAGE_QUERY = defineQuery(`
 
     quality {
       eyebrow,
-      heading,
-      subheading,
+      title,
+      description,
 
-      tests[]->{
+      tests[]-> {
         _id,
         name
       },
 
-      partners[]->{
+      partners[]-> {
         _id,
         name,
         role
       },
 
-      documents[]->{
+      documents[]-> {
         _id,
         name,
-        sub,
-        description
+        description,
+        "fileUrl": file.asset->url
       },
 
       sampleDocumentLabel,
-
-      sampleDocument {
-        asset -> {
-          _id,
-          url
-        }
-      }
+      "sampleDocumentUrl": sampleDocument.asset->url
     },
 
     contact {
@@ -78,104 +75,78 @@ export const HOME_PAGE_QUERY = defineQuery(`
       email
     },
 
-    seo {
-      metaTitle,
-      metaDescription,
-      keywords,
-      noIndex,
-      canonicalUrl,
-      ogImage {
+    featuredProducts[]-> {
+      _id,
+      name,
+      "slug": slug.current,
+      botanicalName,
+      category,
+      shortDescription,
+
+      image {
         asset-> {
+          _id,
           url
-        }
+        },
+        hotspot,
+        crop
       }
-    }
-  },
+    },
 
-  "commodities": *[
-    _type == "product"
-    && active == true
-    && featured == true
-  ]
-  | order(order asc, name asc)[0...8] {
-    _id,
-    name,
-    "slug": slug.current,
-    botanicalName,
-    shortDescription,
-    featured,
-    image {
-      asset-> {
-        _id,
-        url
-      },
-      hotspot,
-      crop
-    }
-  },
+    featuredServices[]-> {
+      _id,
+      title,
+      number,
+      category,
+      "slug": slug.current,
+      shortDescription,
 
-  "services": *[
-    _type == "service"
-    && active == true
-    && featured == true
-  ]
-  | order(order asc, number asc)[0...4] {
-    _id,
-    number,
-    title,
-    shortDescription,
-    "slug": slug.current
-  },
+      coverImage {
+        asset-> {
+          _id,
+          url
+        },
+        hotspot,
+        crop
+      }
+    },
 
-  "approach": *[
-    _type == "approach"
-    && active == true
-  ]
-  | order(order asc) {
-    _id,
-    number,
-    title,
-    "slug": slug.current
-  },
+    featuredApproaches[]-> {
+      _id,
+      title,
+      number,
+      "slug": slug.current,
+      shortDescription,
 
-  "supplyChain": *[
-    _type == "supplyChainStep"
-    && active == true
-  ]
-  | order(order asc) {
-    _id,
-    number,
-    title,
-    description
-  },
+      coverImage {
+        asset-> {
+          _id,
+          url
+        },
+        hotspot,
+        crop
+      }
+    },
 
-  "caseStudies": *[
-    _type == "caseStudy"
-    && active == true
-  ]
-  | order(order asc) {
-    _id,
-    title,
-    country,
-    volume,
-    product,
-    summary
-  },
+    featuredCaseStudies[]-> {
+      _id,
+      title,
+      country,
+      volume,
+      product,
+      summary
+    },
 
-  "testimonials": *[
-    _type == "testimonial"
-    && active == true
-  ]
-  | order(order asc) {
-    _id,
-    quote,
-    companyType,
-    country,
-    isNamed,
-    name,
-    title
+    featuredTestimonials[]-> {
+      _id,
+      quote,
+      companyType,
+      country,
+      isNamed,
+      name,
+      title
+    },
   }
-}
 `);
 
 export const HOME_PAGE_SEO_QUERY = defineQuery(`

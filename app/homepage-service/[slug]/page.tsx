@@ -4,7 +4,7 @@ import { PortableText } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
 
 import { getSanityClient } from "@/sanity/lib/client";
-import { serviceBySlugQuery } from "@/sanity/lib/queries";
+import { SERVICE_BY_SLUG_QUERY } from "@/sanity/lib/queries/services/queries";
 
 type Props = {
   params: Promise<{
@@ -29,7 +29,7 @@ async function getService(slug: string) {
   const client = getSanityClient();
 
   return client.fetch<ServicePage | null>(
-    serviceBySlugQuery,
+    SERVICE_BY_SLUG_QUERY,
     { slug }
   );
 }

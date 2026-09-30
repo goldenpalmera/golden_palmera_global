@@ -3,18 +3,22 @@ import { HOME_PAGE_QUERY } from "@/sanity/lib/queries/home/queries";
 import { mapSanityHomeContent } from "./sanity";
 import type { HomePageContent } from "./types";
 import { getSanityClient } from "@/sanity/lib/client";
+import { FALLBACK_PRODUCTS } from "../products/fallbacks";
+import { FALLBACK_SERVICES } from "../services/fallbacks";
+import { FALLBACK_APPROACHES } from "../approach/fallback";
+import { COMPLIANCE_FALLBACKS } from "../compliance/fallbacks";
+import { FALLBACK_SUPPLY_CHAIN } from "../about/fallbacks";
 
 function withFallback<T>(
   value: T[] | undefined,
   fallback: T[]
 ): T[] {
-  return value && value.length > 0
-    ? value
-    : fallback;
+  return value && value.length > 0 ? value : fallback;
 }
 
 export async function getHomeContent(): Promise<HomePageContent> {
-	const client = getSanityClient();
+  const client = getSanityClient();
+
   const sanityData = await client.fetch(
     HOME_PAGE_QUERY,
     {},
@@ -25,63 +29,63 @@ export async function getHomeContent(): Promise<HomePageContent> {
     }
   );
 
-  const sanityContent =
-    mapSanityHomeContent(sanityData);
+  const sanityContent = mapSanityHomeContent(sanityData);
 
   return {
-    hero: HOME_FALLBACKS.hero,
-    intro: HOME_FALLBACKS.intro,
-    quality: HOME_FALLBACKS.quality,
+    _id: sanityData?._id ?? "home",
 
-    /*
-     * Collections are Sanity-first.
-     * If Sanity has no entries, fallback content is used.
-     */
-    commodities: withFallback(
-      sanityData.commodities,
-      HOME_FALLBACKS.commodities
+    hero: sanityData?.hero ?? HOME_FALLBACKS.hero,
+    intro: sanityData?.intro ?? HOME_FALLBACKS.intro,
+
+    featuredProducts: withFallback(
+      sanityData?.featuredProducts,
+      FALLBACK_PRODUCTS
     ),
 
-    services: withFallback(
+    featuredServices: withFallback(
       sanityContent.services,
-      HOME_FALLBACKS.services
+      FALLBACK_SERVICES
     ),
 
-    approach: withFallback(
+    featuredApproaches: withFallback(
       sanityContent.approach,
-      HOME_FALLBACKS.approach
+      FALLBACK_APPROACHES
     ),
 
     supplyChain: withFallback(
-      sanityData.supplyChain,
-      HOME_FALLBACKS.supplyChain
+      sanityData?.supplyChain,
+      FALLBACK_SUPPLY_CHAIN
     ),
 
-    qualityTests: withFallback(
-      sanityData.qualityTests,
-      HOME_FALLBACKS.qualityTests
-    ),
+    quality: {
+      ...HOME_FALLBACKS.quality,
 
-    inspectionPartners: withFallback(
-      sanityData.inspectionPartners,
-      HOME_FALLBACKS.inspectionPartners
-    ),
+      tests: withFallback(
+        sanityData?.quality?.tests,
+        COMPLIANCE_FALLBACKS.qualitySection?.tests ?? []
+      ),
 
-    documents: withFallback(
-      sanityData.documents,
-      HOME_FALLBACKS.documents
-    ),
+      partners: withFallback(
+        sanityData?.quality?.partners,
+        COMPLIANCE_FALLBACKS.qualitySection?.partners ?? []
+      ),
 
-    caseStudies: withFallback(
+      documents: withFallback(
+        sanityData?.quality?.documents,
+        COMPLIANCE_FALLBACKS.qualitySection?.documents ?? []
+      ),
+    },
+
+    featuredCaseStudies: withFallback(
       sanityContent.caseStudies,
-      HOME_FALLBACKS.caseStudies
+      HOME_FALLBACKS.featuredCaseStudies
     ),
 
-    testimonials: withFallback(
+    featuredTestimonials: withFallback(
       sanityContent.testimonials,
-      HOME_FALLBACKS.testimonials
+      HOME_FALLBACKS.featuredTestimonials
     ),
 
-    contact: HOME_FALLBACKS.contact,
+    contact: sanityData?.contact ?? HOME_FALLBACKS.contact,
   };
 }

@@ -13,7 +13,6 @@ import {
   CaseStudiesSection,
   TestimonialsSection,
   ContactSection,
-  HomeFooter,
 } from "@/components/home";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -34,15 +33,15 @@ export default async function HomePage() {
       />
 
       <CommoditiesSection
-        commodities={content.commodities}
+        commodities={content.featuredProducts}
       />
 
       <ServicesSection
-        services={content.services}
+        services={content.featuredServices}
       />
 
       <ApproachSection
-        approaches={content.approach}
+        approaches={content.featuredApproaches}
       />
 
       <SupplyChainSection
@@ -53,26 +52,24 @@ export default async function HomePage() {
         eyebrow={content.quality?.eyebrow}
         title={content.quality?.title}
         description={content.quality?.description}
-        tests={content.qualityTests}
-        partners={content.inspectionPartners}
-        documents={content.documents}
+        tests={content.quality?.tests}
+        partners={content.quality?.partners}
+        documents={content.quality?.documents}
         sampleDocumentLabel={content.quality?.sampleDocumentLabel}
         sampleDocumentUrl={content.quality?.sampleDocumentUrl}
       />
 
       <CaseStudiesSection
-        caseStudies={content.caseStudies}
+        caseStudies={content.featuredCaseStudies}
       />
 
       <TestimonialsSection
-        testimonials={content.testimonials}
+        testimonials={content.featuredTestimonials}
       />
 
       <ContactSection
         content={content.contact}
       />
-
-      <HomeFooter />
     </main>
   );
 }

@@ -28,18 +28,22 @@ export type HomeIntroContent = {
 };
 
 export type HomeService = {
-  id: string;
-  number: string;
+  _id: string;
+  number?: string;
   title: string;
-  description: string;
-  href: string;
+  category?: string;
+  shortDescription?: string;
+  slug?: string;
+  coverImage?: SanityImage;
 };
 
 export type HomeApproach = {
-  id: string;
-  number: string;
+  _id: string;
+  number?: string;
   title: string;
-  href: string;
+  shortDescription?: string;
+  slug?: string;
+  coverImage?: SanityImage;
 };
 
 export type HomeCaseStudy = {
@@ -69,24 +73,118 @@ export type HomeContactContent = {
   email: string;
 };
 
+export type HomeQualityContent = {
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+
+  tests?: QualityTest[];
+  partners: InspectionPartner[];
+  documents: QualityDocument[];
+
+  sampleDocumentLabel?: string;
+  sampleDocumentUrl?: string;
+};
+
 export type HomePageContent = {
+  _id: string;
   hero: HomeHeroContent;
   intro: HomeIntroContent;
-  quality: {
-    eyebrow?: string;
-    title?: string;
-    description?: string;
-    sampleDocumentLabel?: string;
-    sampleDocumentUrl?: string;
-  };
-  commodities: Product[];
-  services: HomeService[];
-  approach: HomeApproach[];
+  featuredProducts: Product[];
   supplyChain: SupplyChainStep[];
-  qualityTests: QualityTest[];
-  inspectionPartners: InspectionPartner[];
-  documents: QualityDocument[];
-  caseStudies: HomeCaseStudy[];
-  testimonials: HomeTestimonial[];
+  featuredServices: HomeService[];
+  featuredApproaches: HomeApproach[];
+  featuredCaseStudies: HomeCaseStudy[];
+  featuredTestimonials: HomeTestimonial[];
+  quality?: HomeQualityContent;
   contact: HomeContactContent;
+};
+
+export type SanityHomeData = {
+  commodities?: Array<{
+    _id: string;
+    name: string;
+    slug?: string;
+    botanicalName?: string;
+    shortDescription?: string;
+    image?: {
+      asset?: {
+        _id: string;
+        url: string;
+      };
+      hotspot?: {
+        x: number;
+        y: number;
+        height: number;
+        width: number;
+      };
+      crop?: {
+        top: number;
+        bottom: number;
+        left: number;
+        right: number;
+      };
+    };
+    featured?: boolean;
+  }>;
+
+  services?: Array<{
+    _id: string;
+    number?: string;
+    title: string;
+    shortDescription?: string;
+    slug?: string;
+  }>;
+
+  approach?: Array<{
+    _id: string;
+    number?: string;
+    title: string;
+    slug?: string;
+    shortDescription?: string;
+  }>;
+
+  supplyChain?: Array<{
+    _id: string;
+    number?: string;
+    title: string;
+    description?: string;
+  }>;
+
+  qualityTests?: Array<{
+    _id: string;
+    name: string;
+  }>;
+
+  inspectionPartners?: Array<{
+    _id: string;
+    name: string;
+    role?: string;
+  }>;
+
+  documents?: Array<{
+    _id: string;
+    name: string;
+    sub?: string;
+    description?: string;
+  }>;
+
+  caseStudies?: Array<{
+    _id: string;
+    title: string;
+    country?: string;
+    volume?: string;
+    product?: string;
+    summary?: string;
+  }>;
+
+  testimonials?: Array<{
+    _id: string;
+    quote: string;
+    companyType?: string;
+    country?: string;
+    isNamed?: boolean;
+    name?: string;
+    title?: string;
+  }>;
 };

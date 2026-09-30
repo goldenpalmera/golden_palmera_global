@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+import { getFooterData } from "@/content/footer/getFooterData";
+import { Footer } from "@/components/sharedComponents/Footer";
+import { FloatingButtons } from "@/components/sharedComponents/FloatingButtons";
+import { getFloatButtonsData } from "@/content/float-button/getFloatButtonsData";
 import { 
   Geist, 
   Geist_Mono, 
@@ -67,9 +71,12 @@ export const metadata: Metadata = {
   ],
 };
 
-export default function RootLayout({ children }: Readonly<{
+export default async function RootLayout({ children }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const footerData = await getFooterData();
+  const floatButtonData = await getFloatButtonsData();
+
   return (
     <html
       lang="en"
@@ -78,6 +85,8 @@ export default function RootLayout({ children }: Readonly<{
       <body className={`${playfair.variable} ${dmSans.variable} ${ibmPlexMono.variable} min-h-full flex flex-col`}>
         <Header />
         {children}
+        <FloatingButtons settings={floatButtonData} />
+        <Footer settings={footerData}  />
       </body>
     </html>
   );

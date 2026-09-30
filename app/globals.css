@@ -37,7 +37,29 @@
   --ink: #17251e;
   --muted: #9fa6a3;
   --line: rgba(18, 61, 43, 0.15);
+  
+  /* Light surfaces */
+  --surface-light: #fffdf8;
+  --surface-cream: #f3efe5;
+
+  /* Light-background text */
+  --text-light-primary: #182018;
+  --text-light-secondary: #526058;
+  --text-light-muted: #657068;
+
+  /* Dark-background text */
+  --text-dark-primary: #f5f0e8;
+  --text-dark-secondary: rgba(245, 240, 232, 0.68);
+  --text-dark-muted: rgba(245, 240, 232, 0.48);
+
+  /* Accent */
+  --accent-gold: #a07a3d;
+  --accent-gold-bright: #c9a84c;
+
+  /* Borders */
+  --border-light: #d9d5ca;
 }
+
 
 /* Scrollbar  */
 ::-webkit-scrollbar { width: 6px; }
@@ -477,9 +499,6 @@ a {
   pointer-events: none;
 }
 
-
-
-
 .circle-inner {
   width: 72%;
   height: 72%;
@@ -506,7 +525,6 @@ a {
   opacity: 0.7;
 }
 
-
 .circle-main {
   font-family: Georgia, serif;
   font-size: clamp(70px, 10vw, 130px);
@@ -516,14 +534,6 @@ a {
     0 2px 15px rgba(0, 0, 0, 0.25),
     0 0 25px rgba(232, 208, 122, 0.25);
 }
-
-
-
-/* .circle-label {
-  font-size: 8px;
-  letter-spacing: 4px;
-  opacity: 0.7;
-} */
 
 .orbit {
   position: absolute;
@@ -615,6 +625,7 @@ a {
   line-height: 1;
   letter-spacing: -3px;
   font-weight: 400;
+  color: var(--green);
 }
 
 .intro h2 span,
@@ -628,7 +639,7 @@ a {
 .intro p,
 .services-header p,
 .supply-content > p {
-  color: var(--muted);
+  color: var(--text-light-muted);
   line-height: 1.9;
 }
 
@@ -650,6 +661,15 @@ a {
 .arrow-link span {
   color: var(--gold);
   margin-left: 15px;
+}
+
+.arrow-link:hover > span {
+  color: var(--green-light);
+}
+
+.arrow-link:hover {
+  color: var(--gold);
+  border-bottom: 1px solid var(--green-light)
 }
 
 /* PRODUCTS */
@@ -770,11 +790,12 @@ a {
   padding: 30px 0;
   border-top: 1px solid var(--line);
   transition: 0.3s;
+  color: var(--forest-700);
 }
 
 .service-row:hover {
   padding-left: 15px;
-  color: var(--green-light);
+  color: var(--gold-500);
 }
 
 .service-number {
@@ -832,6 +853,7 @@ a {
 .path-step strong {
   font-weight: 400;
   font-size: 18px;
+  color: var(--text-light-muted);
 }
 
 .path-step i {
