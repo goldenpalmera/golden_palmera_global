@@ -127,6 +127,86 @@ export const homePage = defineType({
     }),
 
     defineField({
+      name: "featuredProducts",
+      title: "Featured Products",
+      type: "array",
+      validation: (Rule) => Rule.max(8),
+      of: [
+        {
+          type: "reference",
+          to: [{ type: "product" }],
+          options: {
+            filter: "active == true",
+          },
+        },
+      ],
+    }),
+
+    defineField({
+      name: "featuredServices",
+      title: "Featured Services",
+      type: "array",
+      validation: (Rule) => Rule.max(4),
+      of: [
+        {
+          type: "reference",
+          to: [{ type: "service" }],
+          options: {
+            filter: "active == true",
+          },
+        },
+      ],
+    }),
+
+    defineField({
+      name: "featuredApproaches",
+      title: "Featured Approaches",
+      type: "array",
+      of: [
+        {
+          type: "reference",
+          to: [{ type: "approach" }],
+          options: {
+            filter: "active == true",
+          },
+        },
+      ],
+    }),
+
+    defineField({
+      name: "featuredCaseStudies",
+      title: "Featured Case Studies",
+      type: "array",
+      validation: (Rule) => Rule.max(4),
+      of: [
+        {
+          type: "reference",
+          to: [{ type: "caseStudy" }],
+          options: {
+            filter: "active == true",
+          },
+        },
+      ],
+    }),
+
+    defineField({
+      name: "featuredTestimonials",
+      title: "Featured Testimonials",
+      type: "array",
+      validation: (Rule) => Rule.max(4),
+      of: [
+        {
+          type: "reference",
+          to: [{ type: "testimonial" }],
+          options: {
+            filter: "active == true",
+          },
+        },
+      ],
+    }),
+
+    // Quality
+    defineField({
       name: "quality",
       title: "Quality Assurance",
       type: "object",
@@ -164,6 +244,9 @@ export const homePage = defineType({
             {
               type: "reference",
               to: [{ type: "qualityTest" }],
+              options: {
+                filter: "active == true",
+              },
             },
           ],
         }),
@@ -176,6 +259,9 @@ export const homePage = defineType({
             {
               type: "reference",
               to: [{ type: "inspectionPartner" }],
+              options: {
+                filter: "active == true",
+              },
             },
           ],
         }),
@@ -188,6 +274,9 @@ export const homePage = defineType({
             {
               type: "reference",
               to: [{ type: "documentItem" }],
+              options: {
+                filter: "active == true",
+              },
             },
           ],
         }),

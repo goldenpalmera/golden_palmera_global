@@ -215,84 +215,157 @@ a {
 }
 
 /* HERO */
-
 .hero {
-  min-height: 100vh;
-  padding: 150px 8vw 80px;
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
+  min-height: 100svh;
+  padding: 150px 8vw 100px;
+  display: flex;
   align-items: center;
   position: relative;
+  overflow: hidden;
   background: transparent;
 }
 
-/* HERO BACKGROUND */
 
+/* HERO BACKGROUND */
 .hero-background {
-  --hero-bg: var(--forest-800);
+  --hero-bg: var(--forest-950);
   --hero-accent: var(--gold-500);
   --hero-accent-light: var(--gold-300);
   --hero-text: var(--ivory-100);
   --hero-muted: rgba(245, 240, 232, 0.62);
-  --hero-button: var(--forest-950);
-  --hero-button-hover: var(--forest-900);
 
-  background:
-    radial-gradient(
-      circle at 75% 45%,
-      color-mix(in srgb, var(--hero-accent) 14%, transparent),
-      transparent 28%
-    ),
-    var(--hero-bg);
-
+  background: var(--hero-bg);
   color: var(--hero-text);
+
+  isolation: isolate;
 }
 
 
-/* Diagonal gold lines */
-.hero-diagonal-pattern {
+/* PHOTOGRAPH */
+.hero-background-image {
   position: absolute;
   inset: 0;
   z-index: 0;
+  overflow: hidden;
   pointer-events: none;
-
-  background-image:
-    repeating-linear-gradient(
-      45deg,
-      rgba(201, 168, 76, 0.09) 0,
-      rgba(201, 168, 76, 0.09) 1px,
-      transparent 1px,
-      transparent 24px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      rgba(201, 168, 76, 0.065) 0,
-      rgba(201, 168, 76, 0.065) 1px,
-      transparent 1px,
-      transparent 24px
-    );
-
-  opacity: 0.65;
 }
 
-/* Grain */
-.hero-grain {
+.hero-background-image-img {
+  object-fit: cover;
+
+  /*
+   * Slightly toward the right because the copy
+   * occupies the left side.
+   */
+  object-position: 68% center;
+  filter:
+    saturate(0.78)
+    contrast(1.08)
+    brightness(0.72);
+  transform: scale(1.025);
+  animation: heroImageReveal 1.4s ease-out both;
+}
+
+
+/* IMAGE COLOR TREATMENT */
+.hero-image-tint {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(10, 26, 16, 0.98) 0%,
+      rgba(10, 26, 16, 0.91) 23%,
+      rgba(10, 26, 16, 0.70) 45%,
+      rgba(10, 26, 16, 0.38) 68%,
+      rgba(10, 26, 16, 0.48) 100%
+    );
+}
+
+
+/*
+ * Radial vignette keeps the photograph
+ * visually integrated with the brand background.
+ */
+.hero-image-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse at 70% 45%,
+      transparent 10%,
+      rgba(10, 26, 16, 0.10) 45%,
+      rgba(10, 26, 16, 0.68) 100%
+    );
+}
+
+/* Additional darkening toward bottom */
+.hero-image-vignette::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(10, 26, 16, 0.10) 0%,
+      transparent 55%,
+      rgba(10, 26, 16, 0.65) 100%
+    );
+}
+
+
+/* IMAGE GRAIN */
+.hero-image-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='heroNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23heroNoise)' opacity='0.75'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+  mix-blend-mode: soft-light;
+}
+
+
+/*DIAGONAL GOLD PATTERN */
+.hero-diagonal-pattern {
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  opacity: 0.08;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(201, 168, 76, 0.055) 0,
+      rgba(201, 168, 76, 0.055) 1px,
+      transparent 1px,
+      transparent 28px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(201, 168, 76, 0.035) 0,
+      rgba(201, 168, 76, 0.035) 1px,
+      transparent 1px,
+      transparent 28px
+    );
+
+  opacity: 0.55;
+}
+
+/* HERO GRAIN */
+.hero-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.045;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.65'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 256px 256px;
 }
 
-
-.hero-copy {
-  position: relative;
-  z-index: 3;
-}
-
+/* MOUSE GLOW */
 .mouse-glow {
   position: fixed;
   width: 360px;
@@ -300,23 +373,34 @@ a {
   border-radius: 50%;
   pointer-events: none;
   z-index: 2;
-
-  background: radial-gradient(
-    circle,
-    rgba(201, 168, 76, 0.14),
-    rgba(201, 168, 76, 0) 70%
-  );
-
-  transition: transform 0.18s ease-out;
+  background:
+    radial-gradient(
+      circle,
+      rgba(201, 168, 76, 0.11),
+      rgba(201, 168, 76, 0) 70%
+    );
+  transition:
+    transform 0.18s ease-out;
+  will-change: transform;
 }
 
 
-.eyebrow,
-.section-label {
+/* HERO COPY */
+.hero-copy {
+  position: relative;
+  z-index: 4;
+  width: min(900px, 72vw);
+}
+
+
+/* EYEBROW */
+.eyebrow {
   color: var(--gold-500);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 3px;
+  text-shadow:
+    0 2px 15px rgba(0, 0, 0, 0.3);
 }
 
 .eyebrow {
@@ -328,48 +412,89 @@ a {
 .eyebrow span {
   width: 30px;
   height: 1px;
-  background: var(--gold);
+  flex: 0 0 auto;
+  background: var(--gold-500);
+  box-shadow:
+    0 0 10px rgba(201, 168, 76, 0.3);
 }
 
+/* HEADLINE */
 .hero h1 {
   margin: 28px 0;
-  max-width: 800px;
-  font-size: clamp(56px, 7vw, 108px);
-  line-height: 0.93;
+  max-width: 900px;
+  font-size: clamp(
+    56px,
+    7.3vw,
+    110px
+  );
+  line-height: 0.91;
   letter-spacing: -5px;
   font-weight: 500;
+  text-wrap: balance;
+  color: var(--ivory-100);
+  text-shadow:
+    0 4px 30px rgba(0, 0, 0, 0.32),
+    0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-.hero h1 em,
-.contact h2 em {
-  color: var(--gold-500);
+.hero h1 em {
+  position: relative;
+  color: var(--gold-300);
   font-family: Georgia, serif;
   font-weight: 400;
+  font-style: italic;
 }
 
+
+/*
+ * Subtle gold rule beneath the accent word.
+ */
+.hero h1 em::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 1px;
+  height: 1px;
+  background:
+    linear-gradient(
+      90deg,
+      var(--gold-500),
+      transparent
+    );
+  opacity: 0.65;
+}
+
+
+/* DESCRIPTION */
 .hero-description {
   max-width: 510px;
-  color: var(--muted);
+  color: rgba(245, 240, 232, 0.66);
   line-height: 1.8;
   font-size: 16px;
+  text-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.4);
 }
 
+
+/* CREDENTIALS */
 .hero-credentials {
   margin-top: 28px;
-
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 10px 22px;
+  max-width: max-content;
+  padding: 12px 0;
+  border-top: 1px solid rgba(245, 240, 232, 0.11);
+  border-bottom: 1px solid rgba(245, 240, 232, 0.11);
 }
 
 .hero-credential {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-
   color: rgba(245, 240, 232, 0.72);
-
   font-size: 10px;
   font-weight: 500;
   line-height: 1;
@@ -380,34 +505,274 @@ a {
 .hero-credential-icon {
   flex: 0 0 auto;
   color: var(--gold-500);
-
-  filter: drop-shadow(
-    0 0 5px rgba(201, 168, 76, 0.35)
-  );
+  filter:
+    drop-shadow(
+      0 0 5px
+      rgba(201, 168, 76, 0.35)
+    );
 }
 
 
+/* ACTIONS */
 .hero-actions {
   margin-top: 40px;
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 16px;
 }
 
+
+/* Primary CTA */
 .primary-button {
   display: inline-flex;
   align-items: center;
+  gap: 12px;
+  padding: 16px 22px;
+  border: 1px solid var(--gold-500);
+  border-radius: 2px;
   background: var(--gold-500);
-  color: white;
-  padding: 17px 23px;
-  font-size: 12px;
-  letter-spacing: 0.5px;
-  transition: 0.3s;
+  color: var(--forest-950);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.16);
 }
 
 .primary-button:hover {
-  background: var(--green-light);
-  transform: translateY(-3px);
+  transform: translateY(-2px);
+  background: var(--gold-300);
+  border-color: var(--gold-300);
+}
+
+.primary-button span:last-child {
+  font-size: 14px;
+}
+
+
+/* WhatsApp */
+.whatsapp-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 16px 20px;
+  border: 1px solid rgba(37, 211, 102, 0.38);
+  border-radius: 2px;
+  background: rgba(10, 26, 16, 0.28);
+  backdrop-filter: blur(8px);
+  color: #25d366;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.whatsapp-button:hover {
+  transform: translateY(-2px);
+  background: rgba(37, 211, 102, 0.08);
+  border-color: rgba(37, 211, 102, 0.8);
+}
+
+
+/* GPG BRAND SEAL */
+.hero-brand-seal {
+  position: absolute;
+  z-index: 5;
+  right: 12%;
+  bottom: 15%;
+  width: 126px;
+  height: 126px;
+  display: grid;
+  place-items: center;
+  animation:
+    heroSealFloat 7s ease-in-out infinite;
+}
+
+
+/* Outer gold orbit */
+
+.hero-brand-seal-ring-outer {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(232, 208, 122, 0.65);
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle at 35% 25%,
+      rgba(255, 255, 255, 0.08),
+      transparent 40%
+    ),
+    rgba(10, 26, 16, 0.54);
+
+  backdrop-filter: blur(10px);
+
+  box-shadow:
+    0 15px 45px rgba(0, 0, 0, 0.28),
+    0 0 30px rgba(201, 168, 76, 0.1);
+}
+
+
+/* Inner ring */
+.hero-brand-seal-ring-inner {
+  position: absolute;
+  inset: 13px;
+  border: 1px solid rgba(232, 208, 122, 0.25);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  box-shadow:
+    inset 0 0 25px rgba(0, 0, 0, 0.15);
+}
+
+
+/* GPG */
+.hero-brand-seal-main {
+  color: var(--gold-300);
+  font-family: Georgia, serif;
+  font-size: 31px;
+  line-height: 1;
+  letter-spacing: -1px;
+  text-shadow:
+    0 0 18px rgba(232, 208, 122, 0.2);
+}
+
+
+/* Seal labels */
+.hero-seal-marker {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(245, 240, 232, 0.52);
+  font-family: var(--font-ibm-mono);
+  font-size: 5px;
+  letter-spacing: 2px;
+  white-space: nowrap;
+}
+
+.hero-seal-marker-top {
+  top: 12px;
+}
+
+.hero-seal-marker-bottom {
+  bottom: 12px;
+}
+
+
+/* GLOBAL TRADE LABEL */
+.hero-trade-label {
+  position: absolute;
+  right: 7vw;
+  top: 48%;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transform:
+    rotate(90deg)
+    translateX(50%);
+  transform-origin: right center;
+  color: rgba(245, 240, 232, 0.38);
+  font-family: var(--font-ibm-mono);
+  font-size: 8px;
+  letter-spacing: 0.2em;
+}
+
+.hero-trade-label span {
+  width: 34px;
+  height: 1px;
+  background: var(--gold-500);
+  opacity: 0.75;
+}
+
+.hero-trade-label strong {
+  font-weight: 400;
+}
+
+
+/* ORIGIN LABEL */
+.hero-origin-label {
+  position: absolute;
+  right: 8vw;
+  bottom: 8%;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(245, 240, 232, 0.48);
+  font-family: var(--font-ibm-mono);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+}
+
+.hero-origin-number {
+  color: var(--gold-500);
+}
+
+.hero-origin-line {
+  width: 28px;
+  height: 1px;
+  background: rgba(201, 168, 76, 0.6);
+}
+
+
+/* =========================================================
+   SCROLL INDICATOR
+   ========================================================= */
+
+.scroll-indicator {
+  position: absolute;
+  left: 8vw;
+  bottom: 30px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: rgba(245, 240, 232, 0.42);
+}
+
+.scroll-indicator i {
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--gold-500);
+}
+
+
+/* HERO ANIMATION */
+
+@keyframes heroImageReveal {
+  from {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1.025);
+  }
+}
+
+@keyframes heroSealFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-9px) rotate(1deg);
+  }
 }
 
 .text-button {
@@ -1130,5 +1495,34 @@ a {
     flex-direction: column;
     align-items: flex-start;
     gap: 20px;
+  }
+}
+
+/* ACCESSIBILITY — REDUCED MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .mouse-glow {
+    display: none;
+  }
+
+  .hero-background-image-img {
+    transform: scale(1.025);
+  }
+
+  .hero-brand-seal {
+    transform: none;
   }
 }

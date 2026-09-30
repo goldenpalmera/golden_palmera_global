@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
+import { urlFor } from "@/sanity/lib/image";
+import { useEffect, useState } from "react";
 import {
   CircleCheck,
   MessageCircle,
 } from "lucide-react";
-
 import type { HomeHeroContent } from "@/content/home/types";
 import { whatsappLink } from "@/lib/utils";
 
@@ -30,6 +31,11 @@ export function HeroSection({
   });
 
   useEffect(() => {
+    // Avoid running mouse tracking on touch devices.
+    if (window.matchMedia("(pointer: coarse)").matches) {
+      return;
+    }
+
     const handleMove = (event: MouseEvent) => {
       setMouse({
         x: event.clientX,
@@ -37,10 +43,7 @@ export function HeroSection({
       });
     };
 
-    window.addEventListener(
-      "mousemove",
-      handleMove
-    );
+    window.addEventListener("mousemove", handleMove);
 
     return () => {
       window.removeEventListener(
@@ -52,11 +55,50 @@ export function HeroSection({
 
   return (
     <section className="hero-background relative min-h-screen overflow-hidden">
-      <div className="hero-diagonal-pattern" />
-      <div className="hero-grain" />
+      {/* =========================================
+          BACKGROUND
+          ========================================= */}
+
+      <div
+        className="hero-background-image"
+        aria-hidden="true"
+      >
+        {content.image && (
+          <Image
+            src={urlFor(content.image)
+              .width(2400)
+              .quality(88)
+              .url()}
+            alt={content.title}
+            fill
+            priority
+            sizes="100vw"
+            className="hero-background-image-img"
+          />
+        )}
+        <div className="hero-image-tint" />
+        <div className="hero-image-vignette" />
+        <div className="hero-image-grain" />
+      </div>
+
+      {/* Existing brand texture */}
+      <div
+        className="hero-diagonal-pattern"
+        aria-hidden="true"
+      />
+
+      <div
+        className="hero-grain"
+        aria-hidden="true"
+      />
+
+      {/* =========================================
+          MOUSE LIGHT
+          ========================================= */}
 
       <div
         className="mouse-glow"
+        aria-hidden="true"
         style={{
           transform: `translate3d(
             ${mouse.x - 180}px,
@@ -66,25 +108,37 @@ export function HeroSection({
         }}
       />
 
-      <section className="hero relative z-10">
+      {/* =========================================
+          HERO
+          ========================================= */}
+
+      <div className="hero relative z-10">
         <div className="hero-copy">
+          {/* Eyebrow */}
+
           <p className="eyebrow animate-fade-up">
-            <span />
+            <span aria-hidden="true" />
             {content.eyebrow}
           </p>
 
+          {/* Headline */}
+
           <h1 className="animate-fade-up delay-100">
             {content.title}
-            <em> {content.titleAccent}</em>
+            <em>{content.titleAccent}</em>
             <br />
             {content.titleEnd}
           </h1>
 
-          <p className="hero-description text-ivory-100/60 animate-fade-up delay-200">
+          {/* Description */}
+
+          <p className="hero-description animate-fade-up delay-200">
             {content.description}
           </p>
 
-          <div className="hero-credentials animate-fade-up delay-400">
+          {/* Credentials */}
+
+          <div className="hero-credentials animate-fade-up delay-300">
             {CREDENTIALS.map((credential) => (
               <span
                 key={credential}
@@ -93,57 +147,105 @@ export function HeroSection({
                 <CircleCheck
                   size={13}
                   strokeWidth={1.8}
+                  aria-hidden="true"
                   className="hero-credential-icon"
                 />
+
                 <span>{credential}</span>
               </span>
             ))}
           </div>
 
-          <div className="hero-actions">
+          {/* CTAs */}
+
+          <div className="hero-actions animate-fade-up delay-400">
             <Link
               href="/quote/request-quote"
-              className="primary-button inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-400 text-forest-950 text-[11px] font-medium tracking-[0.06em] uppercase px-7 py-4 rounded transition-colors"
+              className="primary-button"
             >
-              Request Quotation
-              <span>↗</span>
+              <span>Request Quotation</span>
+              <span aria-hidden="true">↗</span>
             </Link>
 
             <a
               href={whatsappLink()}
-              className="inline-flex items-center gap-2 border border-[#25D366]/40 hover:border-[#25D366] text-[#25D366] text-[11px] font-medium tracking-[0.06em] uppercase px-7 py-4 rounded transition-colors"
+              className="whatsapp-button"
             >
-              <MessageCircle size={14} />
-              WhatsApp Trade Desk
-              <span>↓</span>
+              <MessageCircle
+                size={14}
+                aria-hidden="true"
+              />
+
+              <span>WhatsApp Trade Desk</span>
+
+              <span aria-hidden="true">↓</span>
             </a>
           </div>
         </div>
 
-        <div className="hero-visual">
-          <div className="orbit orbit-one" />
-          <div className="orbit orbit-two" />
+        {/* =========================================
+            GPG BRAND SEAL
+            ========================================= */}
 
-          <div className="hero-circle">
-            <div className="circle-inner">
-              <span className="circle-label">
-                AFRICA
-              </span>
-              <span className="circle-main">
-                GPG
-              </span>
-              <span className="circle-label">
-                GLOBAL TRADE
-              </span>
-            </div>
+        <div
+          className="hero-brand-seal"
+          aria-label="GPG Africa Global Trade"
+        >
+          <div className="hero-brand-seal-ring hero-brand-seal-ring-outer">
+            <span className="hero-seal-marker hero-seal-marker-top">
+              AFRICA
+            </span>
+
+            <span className="hero-seal-marker hero-seal-marker-bottom">
+              GLOBAL TRADE
+            </span>
+          </div>
+
+          <div className="hero-brand-seal-ring hero-brand-seal-ring-inner">
+            <span className="hero-brand-seal-main">
+              GPG
+            </span>
           </div>
         </div>
 
+        {/* =========================================
+            TRADE LABEL
+            ========================================= */}
+
+        <div
+          className="hero-trade-label"
+          aria-hidden="true"
+        >
+          <span />
+          <strong>GLOBAL COMMODITIES</strong>
+        </div>
+
+        {/* =========================================
+            IMAGE ORIGIN LABEL
+            ========================================= */}
+
+        <div
+          className="hero-origin-label"
+          aria-hidden="true"
+        >
+          <span className="hero-origin-number">
+            01
+          </span>
+
+          <span className="hero-origin-line" />
+
+          <span>AFRICAN ORIGIN</span>
+        </div>
+
+        {/* =========================================
+            SCROLL
+            ========================================= */}
+
         <div className="scroll-indicator">
           <span>SCROLL TO EXPLORE</span>
-          <i />
+          <i aria-hidden="true" />
         </div>
-      </section>
+      </div>
     </section>
   );
 }

@@ -23,6 +23,7 @@ curl \
     --show-error \
     "$BASE_URL/" >/dev/null
 
+echo "Homepage test passed."
 
 echo "Testing health endpoint..."
 
@@ -30,7 +31,8 @@ curl \
     --fail \
     --silent \
     --show-error \
-    "$BASE_URL/health" >/dev/null
+    "$BASE_URL/api/health" >/dev/null
 
+echo "Health endpoint test passed."
 
 echo "Smoke tests passed."

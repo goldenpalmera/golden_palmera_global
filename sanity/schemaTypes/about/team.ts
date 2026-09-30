@@ -99,6 +99,17 @@ export const teamMember = defineType({
 					Rule.max(600),
 		}),
 
+    defineField({
+			name: "country",
+			title: "Memeber's country",
+			description:
+					"Team memeber country of origin or residence",
+			type: "text",
+			rows: 5,
+			validation: (Rule) =>
+					Rule.max(600),
+		}),
+
   ],
 
   preview: {

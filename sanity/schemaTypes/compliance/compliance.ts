@@ -1,6 +1,6 @@
 import { defineType } from "sanity";
 
-defineType({
+export const compliancePage = defineType({
   name: "compliancePage",
   title: "Compliance Page",
   type: "document",
