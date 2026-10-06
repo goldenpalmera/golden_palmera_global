@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { PortableText } from "@portabletext/react";
@@ -8,6 +9,7 @@ import { getApproachStaticParams } from "@/content/approach/staticParams";
 import { FALLBACK_APPROACHES } from "@/content/approach/fallback";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { getHeroImageUrl } from "@/content/shared/getHeroImageUrl";
 
 export async function generateStaticParams() {
   const sanityParams =
@@ -55,35 +57,109 @@ export default async function ApproachDetailPage({
     notFound();
   }
 
+  const coverImageUrl = getHeroImageUrl(
+    approach?.heroImage ?? null,
+    1920,
+    1080,
+  );
+
   return (
     <main className="bg-[#f7f6f1] text-[#182018]">
-      <section className="px-6 pb-20 pt-32 md:px-12 lg:px-20">
-        <Link
-          href="/#approach"
-          className="inline-flex items-center gap-2 text-sm font-medium text-[#8a8b83] transition-colors hover:text-[#6f716a]"
 
-        >
-          <ArrowLeft size={17} strokeWidth={2} />
-          Back to Home
-        </Link>
-        <div className="mx-auto max-w-5xl">
-          <span className="text-sm font-medium text-[#a07a3d]">
-            {approach.number}
-          </span>
+      {/**Hero */}
+      <section className="relative overflow-hidden bg-[#f7f6f1]">
+        <div className="relative min-h-[680px]">
 
-          <p className="mt-6 text-sm uppercase tracking-[0.25em] text-[#a07a3d]">
-            Our Approach
-          </p>
+          {/* Desktop hero image */}
+          {coverImageUrl && (
+            <div
+              className="
+                pointer-events-none
+                absolute
+                inset-y-0
+                right-0
+                hidden
+                w-[52%]
+                lg:block
+              "
+              style={{
+                clipPath:
+                  "polygon(38% 0%, 100% 0%, 100% 100%, 0% 100%)",
+              }}
+            >
+              <Image
+                image={coverImageUrl}
+                alt=""
+                fill
+                priority
+                sizes="52vw"
+                className="object-cover"
+              />
 
-          <h1 className="mt-5 text-5xl font-semibold tracking-tight md:text-7xl">
-            {approach.title}
-          </h1>
+              {/* Dark treatment */}
+              <div className="absolute inset-0 bg-[#182018]/15" />
 
-          {approach.shortDescription && (
-            <p className="mt-8 max-w-3xl text-xl leading-8 text-[#5d655d]">
-              {approach.shortDescription}
-            </p>
+              {/* Fade into content */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#f7f6f1]/95 via-[#f7f6f1]/20 to-transparent" />
+
+              {/* Brand tone */}
+              <div className="absolute inset-0 bg-[#173f2b]/10 mix-blend-multiply" />
+            </div>
           )}
+
+          {/* Content */}
+          <div className="relative z-10 mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
+            <div className="flex min-h-[680px] items-center">
+              <div className="w-full max-w-3xl py-32 lg:w-[58%]">
+
+                {/* Back */}
+                <Link
+                  href="/#approach"
+                  className="mb-12 inline-flex items-center gap-2 text-sm font-medium text-[#8a8b83] transition-colors hover:text-[#6f716a]"
+                >
+                  <ArrowLeft size={17} strokeWidth={2} />
+                  Back to Home
+                </Link>
+
+                <span className="block text-sm font-medium text-[#a07a3d]">
+                  {approach.number}
+                </span>
+
+                <p className="mt-6 text-sm uppercase tracking-[0.25em] text-[#a07a3d]">
+                  Our Approach
+                </p>
+
+                <h1 className="mt-5 text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl">
+                  {approach.title}
+                </h1>
+
+                {approach.shortDescription && (
+                  <p className="mt-8 max-w-3xl text-xl leading-8 text-[#5d655d]">
+                    {approach.shortDescription}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Mobile image */}
+            {coverImageUrl && (
+              <div className="relative mx-0 mb-12 aspect-[16/9] overflow-hidden rounded-3xl lg:hidden">
+                <Image
+                  image={coverImageUrl}
+                  alt=""
+                  fill
+                  priority
+                  sizes="100vw"
+                  className="object-cover"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-[#182018]/45 to-transparent" />
+              </div>
+            )}
+          </div>
+
+          {/* Decorative glow */}
+          <div className="pointer-events-none absolute -right-24 top-20 h-72 w-72 rounded-full bg-[#d7c49a]/20 blur-3xl" />
         </div>
       </section>
 
