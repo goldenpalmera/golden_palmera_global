@@ -24,13 +24,16 @@ export default async function ServicesPage() {
     <main className="bg-[#f8f6f0] text-[#171717]">
       <ServicesHero
         eyebrow={page?.heroEyebrow}
-        title={page?.heroTitle}
+        title1={page?.heroTitle1}
+        title2={page?.heroTitle2}
+        title3={page?.heroTitle3}
         description={page?.heroDescription}
+        images={page?.heroImages}
       />
 
       <ServicesIntro
-        eyebrow={page?.heroEyebrow}
-        description={page?.intro}
+        eyebrow={ page?.servicesIntroEyebrow }
+        description={ page?.servicesIntroDescription }
       />
 
       <ServicesList services={services} />

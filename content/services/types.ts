@@ -1,4 +1,5 @@
 import { SanityImage, SeoData } from "@/sanity/lib/types";
+import { SanityImageSource } from "@sanity/image-url";
 import type { PortableTextBlock } from "@portabletext/types";
 
 export type ServicesPageSEO = {
@@ -36,6 +37,11 @@ export type ServicePageData = {
   category?: string;
   shortDescription?: string;
   description?: PortableTextBlock[];
+  heroImages?: Array<
+    SanityImageSource & {
+      alt?: string;
+    }
+  >;
   coverImage?: {
     asset?: {
       url?: string;
@@ -46,9 +52,17 @@ export type ServicePageData = {
 
 export type ServicesPageData = {
   heroEyebrow?: string;
-  heroTitle?: string;
+  heroTitle1?: string;
+  heroTitle2?: string;
+  heroTitle3?: string;
   heroDescription?: string;
-  intro?: string;
+  heroImages?: Array<
+    SanityImageSource & {
+      alt?: string;
+    }
+  >;
+  servicesIntroEyebrow?: string;
+  servicesIntroDescription: string;
   seo?: SeoData;
 };
 

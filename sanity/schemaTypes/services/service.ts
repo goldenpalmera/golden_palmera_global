@@ -73,6 +73,32 @@ export const service = defineType({
     }),
 
     defineField({
+      name: "heroImages",
+      title: "Hero Images",
+      type: "array",
+      description:
+        "Four images used in the Services hero composition. Order: Upper Left, Upper Right, Lower Left, Lower Right.",
+      validation: (Rule) =>
+        Rule.required().length(4),
+      of: [
+        {
+          type: "image",
+          options: {
+            hotspot: true,
+          },
+          fields: [
+            defineField({
+              name: "alt",
+              title: "Alt Text",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+        },
+      ],
+    }),
+
+    defineField({
       name: "coverImage",
       title: "Cover Image",
       type: "image",

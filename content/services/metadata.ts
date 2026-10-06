@@ -11,11 +11,12 @@ export async function getServicesMetadata(): Promise<Metadata> {
     seo: page?.seo,
 
     fallbackTitle:
-      page?.heroTitle ||
-      "Services | Golden Palmera Global",
+      page?.heroTitle1 && page?.heroTitle2
+        ? `${page.heroTitle1} ${page.heroTitle2} ${page.heroTitle3 || ""} | Golden Palmera Global`
+        : "Services | Golden Palmera Global",
 
     fallbackDescription:
-      page?.intro ||
+      page?.heroDescription ||
       "Golden Palmera Global provides sourcing, processing, packaging, quality control, and export services for agricultural commodities.",
 
     canonical: "/services",

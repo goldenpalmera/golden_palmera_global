@@ -1,20 +1,26 @@
 import Image from "next/image";
 import Link from "next/link";
-
 import type { ServicePageData } from "@/content/services/types";
+import { getHeroImageUrl } from "@/content/shared/getHeroImageUrl";
 
 type Props = {
   service: ServicePageData;
 };
 
-const serviceImages = [
-  "/images/agriculture/agriculture.jpg",
-  "/images/agriculture/commodity.jpg",
-  "/images/agriculture/logistics.jpg",
-  "/images/agriculture/consulting.jpg",
-];
-
 export function ServiceHero({ service }: Props) {
+  const serviceImages = (service.heroImages ?? [])
+    .slice(0, 4)
+    .map((image) => ({
+      src: getHeroImageUrl(image ?? null, 1920, 1080),
+      alt: image?.alt ?? "",
+    }))
+    .filter(
+      (image): image is { src: string; alt: string } =>
+        Boolean(image.src),
+    );
+
+  const [image1, image2, image3, image4] = serviceImages;
+
   return (
     <section className="relative min-h-[68vh] overflow-hidden bg-[#173f2b] text-[#f8f6f0]">
       {/* Decorative circle */}
@@ -36,104 +42,97 @@ export function ServiceHero({ service }: Props) {
         "
       >
         <div className="relative h-full w-full overflow-hidden">
-          {/* -----------------------------------------------
-              UPPER LEFT
-              Triangle created by the hero diagonal
-              ----------------------------------------------- */}
-          <div
-            className="absolute inset-0"
-            style={{
-              clipPath: "polygon(32% 0%, 50% 0%, 50% 50%, 0% 50%)",
-            }}
-          >
-            <Image
-              src={serviceImages[0]}
-              alt=""
-              fill
-              priority
-              sizes="31vw"
-              className="object-cover"
-            />
 
-            <div className="absolute inset-0 bg-black/25" />
-            <div className="absolute inset-0 bg-[#173f2b]/15 mix-blend-multiply" />
-          </div>
+          {/* Upper Left */}
+          {image1 && (
+            <div
+              className="absolute inset-0"
+              style={{
+                clipPath:
+                  "polygon(32% 0%, 50% 0%, 50% 50%, 0% 50%)",
+              }}
+            >
+              <Image
+                src={image1.src}
+                alt={image1.alt}
+                fill
+                priority
+                sizes="31vw"
+                className="object-cover"
+              />
 
-          {/* -----------------------------------------------
-              UPPER RIGHT
-              Full rectangular image
-              ----------------------------------------------- */}
-          <div
-            className="absolute inset-0"
-            style={{
-              clipPath: "polygon(50% 0%, 100% 0%, 100% 50%, 50% 50%)",
-            }}
-          >
-            <Image
-              src={serviceImages[1]}
-              alt=""
-              fill
-              sizes="31vw"
-              className="object-cover"
-            />
+              <div className="absolute inset-0 bg-black/25" />
+              <div className="absolute inset-0 bg-[#173f2b]/15 mix-blend-multiply" />
+            </div>
+          )}
 
-            <div className="absolute inset-0 bg-black/25" />
-            <div className="absolute inset-0 bg-[#173f2b]/15 mix-blend-multiply" />
-          </div>
+          {/* Upper Right */}
+          {image2 && (
+            <div
+              className="absolute inset-0"
+              style={{
+                clipPath:
+                  "polygon(50% 0%, 100% 0%, 100% 50%, 50% 50%)",
+              }}
+            >
+              <Image
+                src={image2.src}
+                alt={image2.alt}
+                fill
+                sizes="31vw"
+                className="object-cover"
+              />
 
-          {/* -----------------------------------------------
-              LOWER LEFT
-              Wide rectangle/trapezoid.
+              <div className="absolute inset-0 bg-black/25" />
+              <div className="absolute inset-0 bg-[#173f2b]/15 mix-blend-multiply" />
+            </div>
+          )}
 
-              The top edge begins at the diagonal,
-              while the bottom remains completely horizontal.
-              ----------------------------------------------- */}
-          <div
-            className="absolute inset-0"
-            style={{
-              clipPath: "polygon(0% 50%, 50% 50%, 50% 100%, 0% 100%)",
-            }}
-          >
-            <Image
-              src={serviceImages[2]}
-              alt=""
-              fill
-              sizes="31vw"
-              className="object-cover"
-            />
+          {/* Lower Left */}
+          {image3 && (
+            <div
+              className="absolute inset-0"
+              style={{
+                clipPath:
+                  "polygon(0% 50%, 50% 50%, 50% 100%, 0% 100%)",
+              }}
+            >
+              <Image
+                src={image3.src}
+                alt={image3.alt}
+                fill
+                sizes="31vw"
+                className="object-cover"
+              />
 
-            <div className="absolute inset-0 bg-black/25" />
-            <div className="absolute inset-0 bg-[#173f2b]/15 mix-blend-multiply" />
-          </div>
+              <div className="absolute inset-0 bg-black/25" />
+              <div className="absolute inset-0 bg-[#173f2b]/15 mix-blend-multiply" />
+            </div>
+          )}
 
-          {/* -----------------------------------------------
-              LOWER RIGHT
-              Full rectangular image
-              ----------------------------------------------- */}
-          <div
-            className="absolute inset-0"
-            style={{
-              clipPath: "polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%)",
-            }}
-          >
-            <Image
-              src={serviceImages[3]}
-              alt=""
-              fill
-              sizes="31vw"
-              className="object-cover"
-            />
+          {/* Lower Right */}
+          {image4 && (
+            <div
+              className="absolute inset-0"
+              style={{
+                clipPath:
+                  "polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%)",
+              }}
+            >
+              <Image
+                src={image4.src}
+                alt={image4.alt}
+                fill
+                sizes="31vw"
+                className="object-cover"
+              />
 
-            <div className="absolute inset-0 bg-black/25" />
-            <div className="absolute inset-0 bg-[#173f2b]/15 mix-blend-multiply" />
-          </div>
+              <div className="absolute inset-0 bg-black/25" />
+              <div className="absolute inset-0 bg-[#173f2b]/15 mix-blend-multiply" />
+            </div>
+          )}
 
-          {/* ------------------------------------------------
-              SINGLE DIAGONAL BLEND
-
-              This gives the left side of the composition
-              the same dark-to-image transition as ContactHero.
-              ------------------------------------------------ */}
+          {/* Image → content blend */}
           <div
             className="absolute inset-0"
             style={{
@@ -148,7 +147,7 @@ export function ServiceHero({ service }: Props) {
           CONTENT
           ===================================================== */}
       <div className="relative z-10 mx-auto flex min-h-[68vh] max-w-[1400px] flex-col px-6 py-10 md:px-10 lg:px-16 lg:py-14">
-        {/* Back navigation */}
+
         <div>
           <Link
             href="/services"
@@ -159,9 +158,9 @@ export function ServiceHero({ service }: Props) {
           </Link>
         </div>
 
-        {/* Hero content */}
         <div className="flex flex-1 items-end pb-6 pt-24 lg:pb-10">
           <div className="max-w-5xl lg:max-w-[62%]">
+
             <span className="mb-6 block font-mono text-sm text-[#b7924a]">
               {service.number}
             </span>
@@ -181,6 +180,7 @@ export function ServiceHero({ service }: Props) {
                 {service.shortDescription}
               </p>
             )}
+
           </div>
         </div>
       </div>
@@ -188,75 +188,86 @@ export function ServiceHero({ service }: Props) {
       {/* =====================================================
           MOBILE
           ===================================================== */}
-      <div className="relative z-10 mx-6 mb-8 h-[420px] overflow-hidden rounded-3xl md:mx-10 lg:hidden">
-        <div className="relative h-full w-full">
-          {/* Upper left */}
-          <div
-            className="absolute inset-0"
-            style={{
-              clipPath: "polygon(0 0, 50% 0, 50% 50%, 0 50%)",
-            }}
-          >
-            <Image
-              src={serviceImages[0]}
-              alt=""
-              fill
-              sizes="50vw"
-              className="object-cover"
-            />
-          </div>
+      {serviceImages.length > 0 && (
+        <div className="relative z-10 mx-6 mb-8 h-[420px] overflow-hidden rounded-3xl md:mx-10 lg:hidden">
+          <div className="relative h-full w-full">
 
-          {/* Upper right */}
-          <div
-            className="absolute inset-0"
-            style={{
-              clipPath: "polygon(50% 0, 100% 0, 100% 50%, 50% 50%)",
-            }}
-          >
-            <Image
-              src={serviceImages[1]}
-              alt=""
-              fill
-              sizes="50vw"
-              className="object-cover"
-            />
-          </div>
+            {image1 && (
+              <div
+                className="absolute inset-0"
+                style={{
+                  clipPath:
+                    "polygon(0 0, 50% 0, 50% 50%, 0 50%)",
+                }}
+              >
+                <Image
+                  src={image1.src}
+                  alt={image1.alt}
+                  fill
+                  sizes="50vw"
+                  className="object-cover"
+                />
+              </div>
+            )}
 
-          {/* Lower left */}
-          <div
-            className="absolute inset-0"
-            style={{
-              clipPath: "polygon(0 50%, 50% 50%, 50% 100%, 0 100%)",
-            }}
-          >
-            <Image
-              src={serviceImages[2]}
-              alt=""
-              fill
-              sizes="50vw"
-              className="object-cover"
-            />
-          </div>
+            {image2 && (
+              <div
+                className="absolute inset-0"
+                style={{
+                  clipPath:
+                    "polygon(50% 0, 100% 0, 100% 50%, 50% 50%)",
+                }}
+              >
+                <Image
+                  src={image2.src}
+                  alt={image2.alt}
+                  fill
+                  sizes="50vw"
+                  className="object-cover"
+                />
+              </div>
+            )}
 
-          {/* Lower right */}
-          <div
-            className="absolute inset-0"
-            style={{
-              clipPath: "polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%)",
-            }}
-          >
-            <Image
-              src={serviceImages[3]}
-              alt=""
-              fill
-              sizes="50vw"
-              className="object-cover"
-            />
-          </div>
+            {image3 && (
+              <div
+                className="absolute inset-0"
+                style={{
+                  clipPath:
+                    "polygon(0 50%, 50% 50%, 50% 100%, 0 100%)",
+                }}
+              >
+                <Image
+                  src={image3.src}
+                  alt={image3.alt}
+                  fill
+                  sizes="50vw"
+                  className="object-cover"
+                />
+              </div>
+            )}
 
-          <div className="absolute inset-0 bg-gradient-to-t from-[#173f2b]/40 to-transparent" />
+            {image4 && (
+              <div
+                className="absolute inset-0"
+                style={{
+                  clipPath:
+                    "polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%)",
+                }}
+              >
+                <Image
+                  src={image4.src}
+                  alt={image4.alt}
+                  fill
+                  sizes="50vw"
+                  className="object-cover"
+                />
+              </div>
+            )}
+
+            <div className="absolute inset-0 bg-gradient-to-t from-[#173f2b]/40 to-transparent" />
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }

@@ -72,9 +72,18 @@ export const SERVICES_PAGE_QUERY = defineQuery(`
   *[_type == "servicesPage"][0] {
     title,
     heroEyebrow,
-    heroTitle,
+    heroTitle1,
+    heroTitle2,
+    heroTitle3,
     heroDescription,
-    intro,
+    heroImages[] {
+      asset,
+      alt,
+      hotspot,
+      crop,
+    },
+    servicesIntroEyebrow,
+    servicesIntroDescription,
 
     seo {
       metaTitle,
@@ -109,6 +118,13 @@ export const SERVICE_BY_SLUG_QUERY = defineQuery(`
     category,
     shortDescription,
     description,
+
+    heroImages[] {
+      asset,
+      alt,
+      hotspot,
+      crop,
+    },
 
     coverImage {
       asset->{
