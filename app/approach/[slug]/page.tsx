@@ -58,7 +58,7 @@ export default async function ApproachDetailPage({
   }
 
   const coverImageUrl = getHeroImageUrl(
-    approach?.heroImage ?? null,
+    sanityApproach?.coverImage ?? null,
     1920,
     1080,
   );
@@ -88,7 +88,7 @@ export default async function ApproachDetailPage({
               }}
             >
               <Image
-                image={coverImageUrl}
+                src={coverImageUrl}
                 alt=""
                 fill
                 priority
@@ -145,7 +145,7 @@ export default async function ApproachDetailPage({
             {coverImageUrl && (
               <div className="relative mx-0 mb-12 aspect-[16/9] overflow-hidden rounded-3xl lg:hidden">
                 <Image
-                  image={coverImageUrl}
+                  src={coverImageUrl}
                   alt=""
                   fill
                   priority
