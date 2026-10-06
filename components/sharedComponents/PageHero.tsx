@@ -1,10 +1,12 @@
 import Image from "next/image";
+import type { SanityImageSource } from "@sanity/image-url";
+import { getHeroImageUrl } from "@/content/shared/getHeroImageUrl";
 
 type PageHeroProps = {
   eyebrow: string;
   title: string;
   description?: string;
-  image?: string;
+  image?: SanityImageSource | null;
 };
 
 export default function PageHero({
@@ -13,6 +15,13 @@ export default function PageHero({
   description,
   image,
 }: PageHeroProps) {
+
+  const imageUrl = getHeroImageUrl(
+    image ?? null,
+    1920,
+    1080,
+  );
+  
   return (
     <section className="relative isolate overflow-hidden bg-[#173f2b] pt-36 pb-24 text-white lg:min-h-[560px]">
       {/* Background glow */}
@@ -27,7 +36,7 @@ export default function PageHero({
       />
 
       {/* Desktop diagonal image */}
-      {image && (
+      {imageUrl && (
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 hidden lg:block"
@@ -47,7 +56,7 @@ export default function PageHero({
             }}
           >
             <Image
-              src={image}
+              src={imageUrl}
               alt=""
               fill
               priority
@@ -86,10 +95,10 @@ export default function PageHero({
         </div>
 
         {/* Mobile image */}
-        {image && (
+        {imageUrl && (
           <div className="relative mt-12 aspect-[16/9] overflow-hidden rounded-2xl border border-white/10 lg:hidden">
             <Image
-              src={image}
+              src={imageUrl}
               alt=""
               fill
               priority
