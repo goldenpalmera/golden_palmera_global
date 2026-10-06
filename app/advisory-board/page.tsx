@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import LinkedInIcon from '@/components/sharedComponents/LinkedInIcon';
 import { SanityImg } from "@/components/sharedComponents/SanityImg";
@@ -12,6 +13,7 @@ import {
   getActiveMembers,
 } from "@/content/advisory-board/sanity";
 import { getAdvisoryBoardMetadata } from "@/content/advisory-board/metadata"
+import { getHeroImageUrl } from "@/content/shared/getHeroImageUrl";
 
 export async function generateMetadata(): Promise<Metadata> {
   return getAdvisoryBoardMetadata();
@@ -30,27 +32,96 @@ export default async function AdvisoryBoardPage() {
     return name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
   }
 
+  const heroImageUrl = getHeroImageUrl(
+    page?.heroImage ?? null,
+    1920,
+    1080,
+  );
+
   return (
     <main className="bg-[#f7f6f1] text-[#182018]">
       {/* HERO */}
-      <section className="relative overflow-hidden px-6 pb-24 pt-32 md:px-12 lg:px-20">
-        <div className="mx-auto max-w-7xl">
-          <div className="max-w-4xl">
-            <p className="mb-6 text-sm font-medium uppercase tracking-[0.25em] text-[#a07a3d]">
-              {page.heroEyebrow}
-            </p>
+      <section className="relative overflow-hidden bg-[#f7f6f1]">
+        <div className="relative min-h-[680px]">
 
-            <h1 className="text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl">
-              {page.heroTitle}
-            </h1>
+          {/* Desktop hero image */}
+          {heroImageUrl && (
+            <div
+              className="
+                pointer-events-none
+                absolute
+                inset-y-0
+                right-0
+                hidden
+                w-[52%]
+                lg:block
+              "
+              style={{
+                clipPath:
+                  "polygon(38% 0%, 100% 0%, 100% 100%, 0% 100%)",
+              }}
+            >
+              <Image
+                src={heroImageUrl}
+                alt=""
+                fill
+                priority
+                sizes="52vw"
+                className="object-cover"
+              />
 
-            <p className="mt-8 max-w-2xl text-lg leading-8 text-[#5d655d] md:text-xl">
-              {page.heroDescription}
-            </p>
+              {/* Image treatment */}
+              <div className="absolute inset-0 bg-[#182018]/15" />
+
+              {/* Fade into page */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#f7f6f1]/95 via-[#f7f6f1]/20 to-transparent" />
+
+              {/* Subtle brand tone */}
+              <div className="absolute inset-0 bg-[#173f2b]/10 mix-blend-multiply" />
+            </div>
+          )}
+
+          {/* Content */}
+          <div className="mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
+            <div className="relative z-10 flex min-h-[680px] items-center">
+              <div className="w-full max-w-3xl py-32 lg:w-[58%] lg:py-36">
+
+                <p className="mb-6 text-sm font-medium uppercase tracking-[0.25em] text-[#a07a3d]">
+                  {page.heroEyebrow}
+                </p>
+
+                <h1 className="text-5xl font-semibold leading-[1.05] tracking-tight text-[#182018] md:text-7xl">
+                  {page.heroTitle}
+                </h1>
+
+                <p className="mt-8 max-w-2xl text-lg leading-8 text-[#5d655d] md:text-xl">
+                  {page.heroDescription}
+                </p>
+
+              </div>
+            </div>
+
+            {/* Mobile hero image */}
+            {heroImageUrl && (
+              <div className="relative mx-0 mb-12 aspect-[16/9] overflow-hidden rounded-3xl lg:hidden">
+                <Image
+                  src={heroImageUrl}
+                  alt=""
+                  fill
+                  priority
+                  sizes="100vw"
+                  className="object-cover"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-[#182018]/45 to-transparent" />
+              </div>
+            )}
           </div>
-        </div>
 
-        <div className="pointer-events-none absolute -right-24 top-20 h-72 w-72 rounded-full bg-[#d7c49a]/20 blur-3xl" />
+          {/* Decorative glow */}
+          <div className="pointer-events-none absolute -right-24 top-20 h-72 w-72 rounded-full bg-[#d7c49a]/20 blur-3xl" />
+
+        </div>
       </section>
 
          {/* STATS */}

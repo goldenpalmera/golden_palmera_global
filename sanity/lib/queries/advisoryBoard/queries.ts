@@ -7,6 +7,7 @@ export const advisoryBoardPageQuery = defineQuery(`
     heroEyebrow,
     heroTitle,
     heroDescription,
+    heroImage,
 
     stats[] {
       value,

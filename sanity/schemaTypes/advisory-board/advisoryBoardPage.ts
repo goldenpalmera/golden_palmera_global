@@ -37,6 +37,24 @@ export const advisoryBoardPage = defineType({
       validation: (Rule) => Rule.max(300),
     }),
 
+    defineField({
+      name: "heroImage",
+      title: "Hero Image",
+      type: "image",
+      options: {
+        hotspot: true,
+      },
+      fields: [
+        defineField({
+          name: "alt",
+          title: "Alternative Text",
+          type: "string",
+          description:
+            "Describe the image for accessibility. Leave empty if the image is purely decorative.",
+        }),
+      ],
+    }),
+
     // Statistics
     defineField({
       name: "stats",

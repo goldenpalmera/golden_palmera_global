@@ -1,4 +1,5 @@
 import { PageCTA, SeoData } from "@/sanity/lib/types";
+import { SanityImageSource } from "@sanity/image-url";
 
 export type BoardMember = {
   _id: string;
@@ -30,6 +31,7 @@ export type AdvisoryBoardPageData = {
   heroEyebrow?: string;
   heroTitle?: string;
   heroDescription?: string;
+  heroImage?: SanityImageSource | null
   stats?: AdvisoryBoardStat[];
   members?: BoardMember[];
   philosophyEyebrow?: string;
@@ -52,6 +54,7 @@ export type AdvisoryBoardResponse = {
   heroEyebrow?: string;
   heroTitle?: string;
   heroDescription?: string;
+  heroImage?: SanityImageSource | null;
 
   stats?: AdvisoryBoardStat[];
 
