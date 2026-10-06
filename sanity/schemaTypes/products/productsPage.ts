@@ -35,6 +35,18 @@ export const productsPage = defineType({
     }),
 
     defineField({
+      name: "heroImage",
+      title: "Hero Image",
+      type: "image",
+      options: {
+        hotspot: true,
+      },
+      description:
+        "Main image displayed on the Contact page hero.",
+      validation: (Rule) => Rule.required(),
+    }),
+
+    defineField({
       name: "portfolioEyebrow",
       title: "Portfolio Eyebrow",
       type: "string",

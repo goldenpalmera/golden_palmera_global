@@ -1,4 +1,5 @@
 import { SanityImage, SeoData } from "@/sanity/lib/types";
+import { SanityImageSource } from "@sanity/image-url";
 import type { PortableTextBlock } from "@portabletext/types";
 import { PageCTA } from "@/sanity/lib/types";
 
@@ -53,6 +54,7 @@ export type ProductsPage = {
     eyebrow: string;
     title: string;
     description: string;
+    image?: SanityImageSource | null;
   };
 
   portfolio: {

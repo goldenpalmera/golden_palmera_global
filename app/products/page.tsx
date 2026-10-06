@@ -18,7 +18,6 @@ export default async function ProductsPage() {
   ])
 
   const page = mapProductsPage(rawPage);
-  console.log("prodts>>", products)
   
   return (
     <>
@@ -27,6 +26,7 @@ export default async function ProductsPage() {
           eyebrow={ page.hero.eyebrow }
           title={ page.hero.title }
           description={ page.hero.description }
+          image={page.hero.image}
         />
 
         <section className="bg-white py-24">

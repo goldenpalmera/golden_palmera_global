@@ -78,12 +78,15 @@ export function mapProductsPage(
         FALLBACK.hero.eyebrow,
 
       title:
-        page?.hero.title ??
+        page?.title ??
         FALLBACK.hero.title,
 
       description:
         page?.hero.description ??
         FALLBACK.hero.description,
+
+      image:
+        page?.hero.image,
     },
 
     portfolio: {

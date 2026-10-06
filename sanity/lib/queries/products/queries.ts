@@ -132,6 +132,7 @@ export const PRODUCTS_PAGE_QUERY = defineQuery(`
     heroEyebrow,
     heroTitle,
     heroDescription,
+    heroImage,
 
     portfolioEyebrow,
     portfolioTitle,
