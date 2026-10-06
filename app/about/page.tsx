@@ -60,6 +60,7 @@ export default async function AboutPage() {
             page?.heroDescription ||
             "Golden Palmera Global is an agricultural commodities and international trade company focused on sourcing, processing, packaging, and exporting quality products to markets around the world."
           }
+          image={page?.heroImage}
         />
 
         {/* Who We Are */}

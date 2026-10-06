@@ -9,6 +9,7 @@ export const ABOUT_PAGE_QUERY = defineQuery(`
     heroEyebrow,
     heroTitle,
     heroDescription,
+    heroImage,
 
     whoWeAreEyebrow,
     whoWeAreTitle,

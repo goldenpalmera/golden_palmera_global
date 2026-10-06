@@ -46,6 +46,7 @@ export type AboutPageData = {
   heroEyebrow?: string;
   heroTitle?: string;
   heroDescription?: string;
+  heroImage?: string;
 
   whoWeAreEyebrow?: string;
   whoWeAreTitle?: string;
