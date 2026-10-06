@@ -4,16 +4,17 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { 
   FALLBACK_BLOG_POSTS,
-  FALLBACK_IMAGE_BY_SLUG,
 } from "@/content/blog/fallbacks";
 import { getArticleImageUrl } from "@/content/blog/images";
 import type { BlogPageProps } from "@/content/blog/types";
 import {
+  getBlogPageHero,
   getBlogPosts,
   PAGE_SIZE,
 } from "@/content/blog/sanity";
 import { getBlogsMetadata } from "@/content/blog/metadata";
 import { formatDate } from "@/content/blog/utils";
+import { getHeroImageUrl } from "@/content/shared/getHeroImageUrl";
 
 export async function generateMetadata(): Promise<Metadata> {
   return getBlogsMetadata();
@@ -32,7 +33,11 @@ export default async function BlogPage({
 
   const search = params.q?.trim() ?? "";
 
-  const result = await getBlogPosts(page, search);
+  const [result, hero] = await Promise.all([
+    getBlogPosts(page, search),
+    getBlogPageHero(),
+  ]);
+  getBlogPosts(page, search);
 
   const hasSanityPosts = result.posts.length > 0;
 
@@ -63,13 +68,11 @@ export default async function BlogPage({
     total / PAGE_SIZE,
   );
 
-  console.log("BLOG DEBUG", {
-  search,
-  page,
-  posts: result.posts.length,
-  total: result.total,
-  postsData: result.posts,
-});
+  const heroImage = getHeroImageUrl(
+    hero?.heroImage ?? null,
+    1920,
+    1080,
+  );
 
 
   if (totalPages > 0 && page > totalPages) {
@@ -97,7 +100,7 @@ export default async function BlogPage({
               {/* Content */}
               <div className="w-full max-w-3xl py-32 lg:w-[58%] lg:py-36">
                 <p className="mb-6 text-sm font-medium uppercase tracking-[0.25em] text-[#a07a3d]">
-                  GPG Insights
+                  {hero?.heroEyebrow ||`GPG Insights`}
                 </p>
 
                 <h1 className="text-5xl font-semibold leading-[1.02] tracking-tight text-[#182018] md:text-6xl lg:text-7xl">
@@ -111,9 +114,9 @@ export default async function BlogPage({
                 </h1>
 
                 <p className="mt-8 max-w-2xl text-lg leading-8 text-[#5d655d] md:text-xl">
-                  Perspectives on agricultural commodities,
+                  { hero?.heroDescription || `Perspectives on agricultural commodities,
                   African supply chains, export markets,
-                  sustainability, and international trade.
+                  sustainability, and international trade.`}
                 </p>
 
                 {/* Search */}
@@ -151,6 +154,7 @@ export default async function BlogPage({
           </div>
 
           {/* Desktop diagonal image */}
+          {heroImage && (
           <div
             className="
               pointer-events-none
@@ -168,10 +172,7 @@ export default async function BlogPage({
             }}
           >
             <Image
-              src={
-                FALLBACK_IMAGE_BY_SLUG["future-of-agricultural-trade"] ??
-                Object.values(FALLBACK_IMAGE_BY_SLUG)[0]
-              }
+              src={heroImage}
               alt="Agricultural commodities and global trade"
               fill
               priority
@@ -188,14 +189,13 @@ export default async function BlogPage({
             {/* Subtle green overlay */}
             <div className="absolute inset-0 bg-[#173f2b]/10 mix-blend-multiply" />
           </div>
+          )}
 
           {/* Mobile image */}
+          {heroImage && (
           <div className="relative mx-6 mb-12 aspect-[16/9] overflow-hidden rounded-3xl md:mx-12 lg:hidden">
             <Image
-              src={
-                FALLBACK_IMAGE_BY_SLUG["future-of-agricultural-trade"] ??
-                Object.values(FALLBACK_IMAGE_BY_SLUG)[0]
-              }
+              src={heroImage}
               alt="Agricultural commodities and global trade"
               fill
               sizes="100vw"
@@ -204,6 +204,7 @@ export default async function BlogPage({
 
             <div className="absolute inset-0 bg-gradient-to-t from-[#182018]/40 to-transparent" />
           </div>
+          )}
         </div>
       </section>
 
@@ -233,9 +234,7 @@ export default async function BlogPage({
                   <div className="relative -mx-8 -mt-8 mb-8 aspect-[16/9] overflow-hidden rounded-t-3xl bg-[#182018]">
                     {(() => {
                       const image = 
-                        getArticleImageUrl(article.coverImage) ??
-                        FALLBACK_IMAGE_BY_SLUG[article.slug];
-
+                        getArticleImageUrl(article.coverImage);
                       return image ? (
                         <Image
                           src={image}

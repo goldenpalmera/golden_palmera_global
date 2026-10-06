@@ -1,5 +1,18 @@
 import { defineQuery } from "next-sanity";
 
+export const BLOG_PAGEHERO_QUERY = defineQuery(`
+  *[
+    _type == "blogPage"
+  ][0] {
+    _id,
+    title,
+    heroEyebrow,
+    heroTitle,
+    heroDescription,
+    heroImage
+  }
+`);
+
 /**
  * Published blog posts with pagination and optional search.
  */

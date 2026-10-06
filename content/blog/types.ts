@@ -58,3 +58,12 @@ export type BlogPostSEO = {
   slug: string;
   seo?: SeoData;
 };
+
+export type BlogPageHero = {
+  _id: string;
+  title?: string;
+  heroEyebrow?: string;
+  heroTitle?: string;
+  heroDescription?: string;
+  heroImage?: SanityImageSource | null;
+};

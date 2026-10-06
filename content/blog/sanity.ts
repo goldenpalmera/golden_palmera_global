@@ -8,6 +8,7 @@ import {
   RELATED_BLOG_POSTS_QUERY,
   RECENT_BLOG_POSTS_QUERY,
   BLOG_POST_SLUGS_QUERY,
+  BLOG_PAGEHERO_QUERY,
 } from "@/sanity/lib/queries/blog/queries";
 
 import type {
@@ -15,6 +16,7 @@ import type {
   BlogPostSEO,
   BlogPostsResult,
   RelatedPost,
+  BlogPageHero,
 } from "./types";
 
 import type { SeoData } from "@/sanity/lib/types";
@@ -24,6 +26,16 @@ const SANITY_OPTIONS = {
     revalidate: 60,
   },
 };
+
+export async function getBlogPageHero(): Promise<BlogPageHero | null> {
+  const client = getSanityClient();
+
+  return client.fetch<BlogPageHero | null>(
+    BLOG_PAGEHERO_QUERY,
+    {},
+    SANITY_OPTIONS,
+  );
+}
 
 export const PAGE_SIZE = 9;
 
