@@ -968,3 +968,7 @@ MVP:
 ├── human-review states
 ├── JSON + Markdown reports
 └── --ci exit-code policy
+
+duplicate or unused css
+nextjs use client
+<Link></Link> and <a></a> appropate use

@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import type { HomeHeroContent } from "@/content/home/types";
 import { whatsappLink } from "@/lib/utils";
+import { BrandSeal } from "@/components/sharedComponents/BrandSeal";
 
 type HeroSectionProps = {
   content: HomeHeroContent;
@@ -191,21 +192,12 @@ export function HeroSection({
           className="hero-brand-seal"
           aria-label="GPG Africa Global Trade"
         >
-          <div className="hero-brand-seal-ring hero-brand-seal-ring-outer">
-            <span className="hero-seal-marker hero-seal-marker-top">
-              AFRICA
-            </span>
-
-            <span className="hero-seal-marker hero-seal-marker-bottom">
-              GLOBAL TRADE
-            </span>
-          </div>
-
-          <div className="hero-brand-seal-ring hero-brand-seal-ring-inner">
-            <span className="hero-brand-seal-main">
-              GPG
-            </span>
-          </div>
+          <BrandSeal
+            size="md"
+            float
+            ripple
+            className="hero-brand-seal"
+          />
         </div>
 
         {/* =========================================

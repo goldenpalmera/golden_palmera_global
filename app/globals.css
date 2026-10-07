@@ -1245,6 +1245,7 @@ a {
   display: grid;
   place-items: center;
   justify-self: center;
+  background: transparent;
 }
 
 .contact-circle span {
@@ -1525,4 +1526,338 @@ a {
   .hero-brand-seal {
     transform: none;
   }
+}
+
+/* =========================================================
+   BRAND SEAL
+   Reusable Golden Palmera Global brand mark
+   ========================================================= */
+
+.brand-seal {
+  --seal-size: 150px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  isolation: isolate;
+}
+
+.brand-seal--sm {
+  --seal-size: 100px;
+  width: 72px;
+  height: 72px;
+}
+
+.brand-seal--md {
+  --seal-size: 150px;
+  width: 126px;
+  height: 126px;
+}
+
+.brand-seal--lg {
+  --seal-size: 210px;
+  width: 190px;
+  height: 190px;
+}
+
+
+/* Outer ring */
+.brand-seal__outer {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(232, 208, 122, 0.65);
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle at 35% 25%,
+      rgba(255, 255, 255, 0.08),
+      transparent 40%
+    ),
+    rgba(10, 26, 16, 0.54);
+    
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  box-shadow:
+    0 15px 45px rgba(0, 0, 0, 0.28),
+    0 0 30px rgba(201, 168, 76, 0.1),
+    inset 0 0 25px rgba(201, 168, 76, 0.08);
+
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+
+/* Inner ring */
+.brand-seal__inner {
+  position: absolute;
+  inset: 13px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(232, 208, 122, 0.25);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Ripple effect */
+.brand-seal__ripples {
+  position: absolute;
+  inset: -35%;
+  z-index: -1;
+
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+}
+
+.brand-seal__ripples span {
+  position: absolute;
+
+  width: 70%;
+  height: 70%;
+
+  border: 1px solid rgba(201, 168, 76, 0.45);
+  border-radius: 50%;
+
+  transform: scale(0.55);
+  opacity: 0;
+
+  animation: brandSealRipple 3.6s ease-out infinite;
+}
+
+.brand-seal__ripples span:nth-child(2) {
+  animation-delay: 1.2s;
+}
+
+.brand-seal__ripples span:nth-child(3) {
+  animation-delay: 2.4s;
+}
+
+@keyframes brandSealRipple {
+  0% {
+    transform: scale(0.55);
+    opacity: 0;
+  }
+
+  12% {
+    opacity: 0.5;
+  }
+
+  70% {
+    opacity: 0.18;
+  }
+
+  100% {
+    transform: scale(1.65);
+    opacity: 0;
+  }
+}
+
+/* GPG */
+.brand-seal__mark {
+  color: var(--gold-300);
+  font-family: Georgia, serif;
+  font-size: 31px;
+  line-height: 1;
+  letter-spacing: -1px;
+  text-shadow:
+    0 0 18px rgba(232, 208, 122, 0.2);
+}
+
+
+/* Labels */
+.brand-seal__label {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(245, 240, 232, 0.52);
+  font-family: var(--font-ibm-mono);
+  font-size: 5px;
+  letter-spacing: 2px;
+  white-space: nowrap;
+}
+
+.brand-seal__label--top {
+  top: 12px;
+}
+
+.brand-seal__label--bottom {
+  bottom: 12px;
+}
+
+
+/* =========================================================
+   SIZE ADJUSTMENTS
+   ========================================================= */
+
+.brand-seal--sm .brand-seal__inner {
+  inset: 8px;
+}
+
+.brand-seal--sm .brand-seal__mark {
+  font-size: 19px;
+}
+
+.brand-seal--sm .brand-seal__label {
+  font-size: 3.5px;
+  letter-spacing: 1.2px;
+}
+
+.brand-seal--sm .brand-seal__label--top {
+  top: 8px;
+}
+
+.brand-seal--sm .brand-seal__label--bottom {
+  bottom: 8px;
+}
+
+
+.brand-seal--lg .brand-seal__inner {
+  inset: 19px;
+}
+
+.brand-seal--lg .brand-seal__mark {
+  font-size: 46px;
+}
+
+.brand-seal--lg .brand-seal__label {
+  font-size: 7px;
+  letter-spacing: 2.5px;
+}
+
+.brand-seal--lg .brand-seal__label--top {
+  top: 18px;
+}
+
+.brand-seal--lg .brand-seal__label--bottom {
+  bottom: 18px;
+}
+
+
+/* =========================================================
+   FLOATING
+   ========================================================= */
+
+.brand-seal--float {
+  animation: brandSealFloat 7s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   LOADING SPIN
+   ========================================================= */
+
+.brand-seal--spin .brand-seal__outer {
+  animation: brandSealSpin 2.8s linear infinite;
+}
+
+.brand-seal--spin .brand-seal__inner {
+  animation: brandSealCounterSpin 2.8s linear infinite;
+}
+
+
+/*
+ * The GPG mark stays readable while
+ * the outer/inner rings move.
+ */
+.brand-seal--spin .brand-seal__mark {
+  animation: brandSealCounterSpin 2.8s linear infinite;
+}
+
+
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
+
+@keyframes brandSealFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-9px) rotate(1deg);
+  }
+}
+
+@keyframes brandSealSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes brandSealCounterSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-seal--float,
+  .brand-seal--spin .brand-seal__outer,
+  .brand-seal--spin .brand-seal__inner,
+  .brand-seal--spin .brand-seal__mark {
+    animation: none;
+  }
+  .brand-seal__ripples span {
+    animation: none;
+  }
+}
+
+/* =========================================================
+   SYSTEM PAGES
+   Loading / Error / 404 / Global Error
+   ========================================================= */
+
+.gpg-system-page {
+  position: relative;
+
+  min-height: 100svh;
+
+  display: grid;
+  place-items: center;
+
+  padding: 8rem 1.5rem 5rem;
+
+  overflow: hidden;
+
+  background: var(--forest-950);
+  color: var(--ivory-100);
+}
+
+.gpg-system-content {
+  position: relative;
+  z-index: 2;
+
+  width: min(100%, 720px);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+}
+
+.gpg-system-seal {
+  position: relative;
+  z-index: 1;
+
+  margin-bottom: 2.5rem;
 }

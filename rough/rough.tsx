@@ -626,3 +626,6 @@ heading hierarchy
 reduced motion
 touch target sizing
 horizontal overflow
+
+
+FIX --> CSS BRAND SEAL DUPLICATE
