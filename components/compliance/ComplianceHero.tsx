@@ -1,10 +1,12 @@
 import Image from "next/image";
+import { getHeroImageUrl } from "@/content/shared/getHeroImageUrl";
+import { SanityImageSource } from "@sanity/image-url";
 
 type ComplianceHeroProps = {
   eyebrow?: string;
   title?: string;
   description?: string;
-  image?: string;
+  image?: SanityImageSource | null;
 };
 
 export function ComplianceHero({
@@ -13,6 +15,13 @@ export function ComplianceHero({
   description,
   image,
 }: ComplianceHeroProps) {
+
+  const heroImageUrl = getHeroImageUrl(
+    image ?? null,
+    1920,
+    1080,
+  );
+
   return (
     <section className="relative isolate overflow-hidden bg-forest-900 px-6 pb-28 pt-32 text-ivory-100 md:px-12 lg:min-h-[560px] lg:px-20 lg:pb-36">
       {/* Background glow */}
@@ -27,7 +36,7 @@ export function ComplianceHero({
       />
 
       {/* Diagonal image */}
-      {image && (
+      {heroImageUrl && (
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 hidden lg:block"
@@ -47,7 +56,7 @@ export function ComplianceHero({
             }}
           >
             <Image
-              src={image}
+              src={heroImageUrl}
               alt=""
               fill
               priority
@@ -90,10 +99,10 @@ export function ComplianceHero({
         </div>
 
         {/* Mobile image */}
-        {image && (
+        {heroImageUrl && (
           <div className="relative mt-12 aspect-[16/9] overflow-hidden rounded-2xl border border-white/10 lg:hidden">
             <Image
-              src={image}
+              src={heroImageUrl}
               alt=""
               fill
               priority

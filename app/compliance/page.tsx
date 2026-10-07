@@ -11,7 +11,7 @@ import {
 } from "@/components/compliance/CompliancePage";
 
 export async function generateMetadata(): Promise<Metadata> {
-  return getComplianceMetadata();
+  return await getComplianceMetadata();
 }
 
 export default async function CompliancePage() {

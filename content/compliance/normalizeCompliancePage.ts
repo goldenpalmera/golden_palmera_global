@@ -15,6 +15,7 @@ export function normalizeCompliancePage(
       description:
         page.hero?.description ??
         "Our approach to quality assurance, certification, traceability, and responsible agricultural trade.",
+      image: page.hero?.image ?? null,
     },
 
     certifications: {

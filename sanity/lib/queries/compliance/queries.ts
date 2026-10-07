@@ -8,7 +8,8 @@ export const COMPLIANCE_PAGE_QUERY = defineQuery(`
     hero {
       eyebrow,
       title,
-      description
+      description,
+      image,
     },
 
     certificationsSection {

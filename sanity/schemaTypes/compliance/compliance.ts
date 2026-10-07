@@ -32,6 +32,17 @@ export const compliancePage = defineType({
           type: "text",
           rows: 4,
         },
+        {
+          name: "image",
+          title: "Hero Image",
+          type: "image",
+          options: {
+            hotspot: true,
+          },
+          description:
+            "Main image displayed on the Contact page hero.",
+          validation: (Rule) => Rule.required(),
+        }
       ],
     },
 

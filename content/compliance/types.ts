@@ -1,4 +1,5 @@
 import type { SeoData, SanityImage } from "@/sanity/lib/types";
+import { SanityImageSource } from "@sanity/image-url";
 
 export type CertificationStatus =
   | "Active"
@@ -100,6 +101,7 @@ export type CompliancePageData = {
     eyebrow?: string;
     title?: string;
     description?: string;
+    image?: SanityImageSource | null;
   };
 
   certificationsSection?: {
@@ -152,6 +154,7 @@ export type CompliancePageViewData = {
     eyebrow: string;
     title: string;
     description: string;
+    image: SanityImageSource | null;
   };
 
   certifications: {

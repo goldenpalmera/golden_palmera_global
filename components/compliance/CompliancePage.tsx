@@ -22,6 +22,7 @@ export function CompliancePageView({ page }: Props) {
         eyebrow={data.hero.eyebrow}
         title={data.hero.title}
         description={data.hero.description}
+        image={data.hero.image}
       />
 
       <CertificationGrid
