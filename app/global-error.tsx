@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { BrandSeal } from "@/components/sharedComponents/BrandSeal";
 
 type GlobalErrorProps = {
@@ -46,12 +47,12 @@ export default function GlobalError({
                 Try again
               </button>
 
-              <a
+              <Link
                 href="/"
                 className="inline-flex min-h-11 items-center justify-center rounded-md border border-white/15 px-6 py-3 text-sm font-medium transition-colors hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-[var(--gold-500)] focus:ring-offset-2 focus:ring-offset-[var(--forest-950)]"
               >
                 Return home
-              </a>
+              </Link>
             </div>
           </div>
         </main>

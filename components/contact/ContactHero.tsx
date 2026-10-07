@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import type { SanityImageSource } from "@sanity/image-url";
 
 type ContactPageProps = {
   eyebrow?: string;

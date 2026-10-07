@@ -28,7 +28,7 @@ export default function ErrorPage({
         </p>
 
         <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-          We couldn't complete that request
+          We couldn&apos;t complete that request
         </h1>
 
         <p className="mt-4 max-w-lg text-base leading-7 text-muted-foreground">
