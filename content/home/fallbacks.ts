@@ -6,7 +6,7 @@ export const HOME_FALLBACKS: HomePageContent = {
 
   hero: {
     eyebrow: "West Africa's Premier Agribusiness Export House",
-    title: "From trusted",
+    title: "From trusted ",
     titleAccent: "origins",
     titleEnd: "to global markets.",
     description:

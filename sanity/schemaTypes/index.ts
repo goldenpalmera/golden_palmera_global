@@ -2,11 +2,15 @@ import { type SchemaTypeDefinition } from 'sanity'
 import { homePage } from "./home/homePage";
 import { product } from "./products/product";
 import { productsPage } from "./products/productsPage";
-import { blogPost } from './blogPost';
-import { author } from './author';
-import { approach } from './approach'
+import { blogPost } from './blog/blogPost';
+import { blogPage } from "./blog/blogHomePage";
+import { author } from './blog/author';
+import { approach } from './approaches/approach'
 import { inquiry } from "./inquiry";
-import { contact } from "./contact";
+import { contact } from "./contact/contact";
+import { contactPage } from "./contact/contactPage";
+import { exportBuyerPage } from "./contact/export-buyer";
+import { partnershipPage } from "./contact/partnership";
 import { aboutPage } from "./about/aboutPage";
 import { teamMember } from "./about/team";
 import { service } from './services/service';
@@ -31,17 +35,17 @@ import { inspectionPartner } from './objects/inspectionPartner';
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
     homePage,
+    approach,
 
     product,
     productsPage,
 
+    blogPage,
     blogPost,
     author,
 
     service,
     servicesPage,
-
-    approach,
 
     aboutPage,
     teamMember,
@@ -63,6 +67,11 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     
     inquiry,
     contact,
+
+    contactPage,
+    partnershipPage,
+    exportBuyerPage,
+
     floatingButtons,
 
     siteSettings,
