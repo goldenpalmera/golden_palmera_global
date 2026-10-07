@@ -1,16 +1,28 @@
 import type { Metadata } from "next";
 import InquiryForm from "@/components/inquiry/InquiryForm";
 import Image from "next/image";
+import { getHeroImageUrl } from "@/content/shared/getHeroImageUrl";
+import { getExportBuyerPage } from "@/content/contact/getExportBuyerPage";
+import { getContactMetadata } from "@/content/contact/metadata";
+import { mapExportBuyerPage } from "@/content/contact/mappers";
 
-export const metadata: Metadata = {
-  title:
-    "Export & Buyer Inquiry | Golden Palmera Global",
+export async function generateMetadata(): Promise<Metadata> {
+  const sanityPage = await getExportBuyerPage();
+  const page = mapExportBuyerPage(sanityPage);
 
-  description:
-    "Submit an export or international buyer inquiry for agricultural commodities from Golden Palmera Global.",
+  return getContactMetadata(page.seo);
 };
 
-export default function ExportBuyerPage() {
+export default async function ExportBuyerPage() {
+  const sanityPage = await getExportBuyerPage();
+  const page = mapExportBuyerPage(sanityPage);
+
+  const heroImage = getHeroImageUrl(
+    page?.heroImage ?? null,
+    1920,
+    1080,
+  );
+
   return (
     <main className="bg-[#f8f6f0] text-[#171717]">
     
@@ -21,69 +33,74 @@ export default function ExportBuyerPage() {
 
         <div className="relative min-h-[680px]">
           {/* Diagonal hero image */}
-          <div
-            className="
-              pointer-events-none
-              absolute
-              inset-y-0
-              right-0
-              hidden
-              w-[56%]
-              lg:block
-            "
-            style={{
-              clipPath:
-                "polygon(38% 0%, 100% 0%, 100% 100%, 0% 100%)",
-            }}
-          >
-            <Image
-              src="/images/agriculture/export.jpg"
-              alt=""
-              className="absolute inset-0 h-full w-full object-cover"
-            />
+          {heroImage && (
+            <div
+              className="
+                pointer-events-none
+                absolute
+                inset-y-0
+                right-0
+                hidden
+                w-[56%]
+                lg:block
+              "
+              style={{
+                clipPath:
+                  "polygon(38% 0%, 100% 0%, 100% 100%, 0% 100%)",
+              }}
+            >
+              <Image
+                src={heroImage}
+                alt="Agricultural commodities prepared for international export"
+                fill
+                priority
+                className="absolute inset-0 h-full w-full object-cover"
+              />
 
-            {/* Dark image treatment */}
-            <div className="absolute inset-0 bg-black/20" />
+              {/* Dark image treatment */}
+              <div className="absolute inset-0 bg-black/20" />
 
-            {/* Fade image into the text */}
-            <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/35 to-transparent" />
+              {/* Fade image into the text */}
+              <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/35 to-transparent" />
 
-            {/* Subtle green tone */}
-            <div className="absolute inset-0 bg-[#173f2b]/20 mix-blend-multiply" />
-          </div>
+              {/* Subtle green tone */}
+              <div className="absolute inset-0 bg-[#173f2b]/20 mix-blend-multiply" />
+            </div>
+          )}
 
           {/* Content */}
           <div className="relative z-10 mx-auto flex min-h-[680px] max-w-[1400px] items-center px-6 md:px-10 lg:px-16">
             <div className="max-w-3xl py-28 lg:w-[58%]">
               <p className="text-xs uppercase tracking-[0.3em] text-[#d6b45c]">
-                International buyers
+                { page?.heroEyebrow }
               </p>
 
               <h1 className="mt-6 max-w-5xl text-5xl font-medium leading-[0.92] tracking-[-0.06em] md:text-7xl lg:text-8xl">
-                Tell us what
+                { page?.heroTitleLine1 }
                 <br />
-                you need.
+                { page?.heroTitleLine2 }
               </h1>
 
               <p className="mt-8 max-w-2xl text-lg leading-8 text-white/60">
-                Share your commodity, quantity, specifications,
-                destination and packaging requirements. We&apos;ll
-                review your request and respond with the next
-                steps.
+                { page?.heroDescription }
               </p>
             </div>
           </div>
 
           {/* Mobile image */}
-          <div className="relative mx-6 mb-10 aspect-[16/9] overflow-hidden rounded-3xl md:mx-10 lg:hidden">
-            <Image
-              src="/images/agriculture/export.jpg"
-              alt="Agricultural commodities prepared for international export"
-              className="h-full w-full object-cover"
-            />
+          {heroImage && (
+            <div className="relative mx-6 mb-10 aspect-[16/9] overflow-hidden rounded-3xl md:mx-10 lg:hidden">
+              <Image
+                src={heroImage}
+                alt="Agricultural commodities prepared for international export"
+                fill
+                sizes="100vw"
+                className="h-full w-full object-cover"
+              />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/50 to-transparent" />
-          </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/50 to-transparent" />
+            </div>
+          )}
         </div>
       </section>
 
@@ -93,49 +110,34 @@ export default function ExportBuyerPage() {
           {/* Left */}
           <div className="lg:sticky lg:top-24 lg:self-start">
             <p className="text-xs uppercase tracking-[0.3em] text-[#8c6d35]">
-              Source from Africa
+              { page?.sourceEyebrow }
             </p>
 
             <h2 className="mt-7 max-w-lg text-4xl font-medium leading-[0.98] tracking-[-0.05em] md:text-5xl">
-              Reliable commodities. Clear requirements. Global delivery.
+              { page?.sourceTitle }
             </h2>
 
             <p className="mt-7 max-w-md text-sm leading-7 text-black/55">
-              Tell us exactly what you are looking for and
-              our team can assess the product, quantity,
-              specifications and destination before moving
-              forward.
+              { page?.sourceDescription }
             </p>
 
             <div className="mt-12 border-t border-black/10 pt-8">
-              <BuyerStep
-                number="01"
-                title="Tell us what you need"
-                text="Product, quantity, packaging and destination."
+            {page?.buyerSteps?.map((step) => (
+              <BuyerStep key={step.number}
+                number={step.number}
+                title={step.title}
+                text={step.text}
               />
-
-              <BuyerStep
-                number="02"
-                title="We review your requirements"
-                text="Our team assesses sourcing, specifications and availability."
-              />
-
-              <BuyerStep
-                number="03"
-                title="We come back with next steps"
-                text="We discuss pricing, documentation, logistics and delivery."
-              />
+            ))}
             </div>
 
             <div className="mt-12 border-l-2 border-[#b7924a] pl-5">
               <p className="text-sm font-medium">
-                Agricultural commodities sourced from
-                Nigeria and West Africa.
+                { page?.availabilityTitle }
               </p>
 
               <p className="mt-2 text-xs leading-5 text-black/45">
-                Subject to product availability,
-                specifications and destination requirements.
+                { page?.availabilityDescription }
               </p>
             </div>
           </div>
@@ -151,13 +153,13 @@ export default function ExportBuyerPage() {
       <section className="bg-[#173f2b] px-6 py-24 text-white md:px-10 lg:px-16 lg:py-32">
         <div className="mx-auto max-w-[1400px]">
           <p className="text-xs uppercase tracking-[0.3em] text-[#d6b45c]">
-            Global trade
+            { page?.bottomEyebrow }
           </p>
 
           <h2 className="mt-7 max-w-5xl text-5xl font-medium leading-[0.95] tracking-[-0.05em] md:text-7xl">
-            From African origin
+            { page?.bottomTitleLine1 }
             <br />
-            to global destination.
+            { page?.bottomTitleLine2 }
           </h2>
         </div>
       </section>

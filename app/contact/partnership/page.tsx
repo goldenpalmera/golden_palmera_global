@@ -1,18 +1,30 @@
 import type { Metadata } from "next";
 import InquiryForm from "@/components/inquiry/InquiryForm";
 import Image from "next/image";
+import { getPartnershipPage } from "@/content/contact/getPartnershipPage";
+import { getHeroImageUrl } from "@/content/shared/getHeroImageUrl";
+import { mapPartnershipPage } from "@/content/contact/mappers";
+import { getContactMetadata } from "@/content/contact/metadata";
 
-export const metadata: Metadata = {
-  title:
-    "Partnership Inquiry | Golden Palmera Global",
-  description:
-    "Discuss partnership opportunities with Golden Palmera Global.",
+export async function generateMetadata(): Promise<Metadata> {
+  const sanityPage = await getPartnershipPage();
+  const page = mapPartnershipPage(sanityPage);
+
+  return getContactMetadata(page.seo);
 };
 
-export default function PartnershipPage() {
+export default async function PartnershipPage() {
+  const sanityPage = await getPartnershipPage();
+
+  const page = mapPartnershipPage(sanityPage)
+
+  const heroImage = getHeroImageUrl(
+    page?.heroImage ?? null,
+    1920,
+    1080,
+  );
   return (
     <main className="bg-[#f8f6f0] text-[#171717]">
-      {/* Hero */}
       {/* Hero */}
       <section className="relative isolate overflow-hidden bg-[#173f2b] px-6 py-24 text-white md:px-10 lg:min-h-[620px] lg:px-16 lg:py-14">
         {/* Background grid */}
@@ -37,92 +49,83 @@ export default function PartnershipPage() {
         />
 
         {/* Diagonal image */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 hidden lg:block"
-        >
+        {heroImage && (
           <div
-            className="
-              absolute
-              -right-[6%]
-              -top-[10%]
-              h-[125%]
-              w-[58%]
-              overflow-hidden
-            "
-            style={{
-              clipPath:
-                "polygon(32% 0%, 100% 0%, 70% 100%, 0% 100%)",
-            }}
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 hidden lg:block"
           >
-            <Image
-              src="/images/partnership-hero.jpg"
-              alt=""
-              fill
-              priority
-              sizes="58vw"
-              className="object-cover object-center"
-            />
+            <div
+              className="
+                absolute
+                -right-[6%]
+                -top-[10%]
+                h-[125%]
+                w-[58%]
+                overflow-hidden
+              "
+              style={{
+                clipPath:
+                  "polygon(32% 0%, 100% 0%, 70% 100%, 0% 100%)",
+              }}
+            >
+              <Image
+                src={heroImage}
+                alt="Partnership with Africans premium agriculture international trade house"
+                fill
+                priority
+                sizes="58vw"
+                className="object-cover object-center"
+              />
 
-            {/* Green brand tint */}
-            <div className="absolute inset-0 bg-[#173f2b]/25" />
+              {/* Green brand tint */}
+              <div className="absolute inset-0 bg-[#173f2b]/25" />
 
-            {/* Fade image into the text */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#173f2b]/85 via-[#173f2b]/30 to-transparent" />
+              {/* Fade image into the text */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#173f2b]/85 via-[#173f2b]/30 to-transparent" />
 
-            {/* Very subtle gold tone */}
-            <div className="absolute inset-0 bg-[#b78628]/5 mix-blend-screen" />
+              {/* Very subtle gold tone */}
+              <div className="absolute inset-0 bg-[#b78628]/5 mix-blend-screen" />
+            </div>
           </div>
-        </div>
+          )}
 
         {/* Content */}
         <div className="relative z-10 mx-auto max-w-[1400px]">
-          <div className="flex items-center justify-between">
-            <p className="text-xs uppercase tracking-[0.3em] text-white/45">
-              Golden Palmera Global
-            </p>
-
-            <span className="font-mono text-xs text-[#d6b45c]">
-              PARTNERSHIP / 01
-            </span>
-          </div>
-
           <div className="mt-10 max-w-6xl lg:min-h-[470px] lg:flex lg:flex-col lg:justify-center">
             <p className="text-xs uppercase tracking-[0.35em] text-[#d6b45c]">
-              Strategic partnerships
+               { page?.heroEyebrow }
             </p>
 
             <h1 className="mt-7 max-w-5xl text-[clamp(4rem,9vw,8.5rem)] font-medium leading-[0.85] tracking-[-0.07em]">
-              Let&apos;s build
+              { page?.heroTitleLine1 }
               <br />
               <span className="text-gold-500">
-                something together.
+                { page?.heroTitleAccent }
               </span>
             </h1>
 
             <p className="mt-10 max-w-2xl text-lg leading-8 text-white/60 md:text-xl">
-              We believe the strongest businesses are
-              built through the right relationships.
-              Tell us where you see an opportunity to
-              work together.
+              { page?.heroDescription }
             </p>
           </div>
 
           {/* Mobile image */}
-          <div className="relative mt-12 aspect-[16/9] overflow-hidden rounded-2xl border border-white/10 lg:hidden">
-            <Image
-              src="/images/partnership-hero.jpg"
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover"
-            />
+          {heroImage && (
+            <div className="relative mt-12 aspect-[16/9] overflow-hidden rounded-2xl border border-white/10 lg:hidden">
+              <Image
+                src={heroImage}
+                alt="Partnership with Africans premium agriculture international trade house"
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover"
+              />
 
-            <div className="absolute inset-0 bg-[#173f2b]/20" />
+              <div className="absolute inset-0 bg-[#173f2b]/20" />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-[#173f2b]/50 to-transparent" />
-          </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#173f2b]/50 to-transparent" />
+            </div>
+          )}
         </div>
       </section>
 
@@ -133,62 +136,40 @@ export default function PartnershipPage() {
           {/* Left content */}
           <div className="lg:sticky lg:top-24 lg:self-start">
             <p className="text-xs uppercase tracking-[0.3em] text-[#8c6d35]">
-              Work with us
+              { page?.contentEyebrow }
             </p>
 
             <h2 className="mt-6 max-w-xl text-4xl font-medium leading-[0.95] tracking-[-0.05em] md:text-6xl">
-              Good partnerships
+              { page?.contentTitleLine1 }
               <br />
-              create lasting value.
+              { page?.contentTitleLine2 }
             </h2>
 
             <p className="mt-8 max-w-lg text-sm leading-7 text-black/55">
-              Golden Palmera Global works across
-              agricultural sourcing, processing,
-              export and international trade. We are
-              open to relationships that strengthen
-              our supply chain, expand market access
-              and create long-term commercial value.
+              { page?.contentDescription }
             </p>
 
             <div className="mt-12 border-t border-black/10 pt-8">
               <p className="text-xs uppercase tracking-[0.2em] text-black/35">
-                Potential partnerships
+                { page?.partnershipTypesEyebrow }
               </p>
 
               <div className="mt-6 space-y-4">
-                <PartnerPoint>
-                  Supply & sourcing relationships
-                </PartnerPoint>
-
-                <PartnerPoint>
-                  International distribution
-                </PartnerPoint>
-
-                <PartnerPoint>
-                  Strategic commercial partnerships
-                </PartnerPoint>
-
-                <PartnerPoint>
-                  Processing & value addition
-                </PartnerPoint>
-
-                <PartnerPoint>
-                  Market development
-                </PartnerPoint>
+                {page?.partnershipTypes?.map((item) => (
+                  <PartnerPoint key={item}>
+                    {item}
+                  </PartnerPoint>
+                ))}
               </div>
             </div>
 
             <div className="mt-12 border-l-2 border-[#b7924a] pl-5">
               <p className="text-xs uppercase tracking-[0.2em] text-black/35">
-                What happens next
+                { page?.nextStepsEyebrow }
               </p>
 
               <p className="mt-4 text-sm leading-7 text-black/55">
-                Share a little about your organization
-                and the opportunity. Our team will
-                review your proposal and get back to
-                you directly.
+                { page?.nextStepsDescription }
               </p>
             </div>
           </div>
@@ -197,20 +178,17 @@ export default function PartnershipPage() {
           <div className="rounded-3xl border border-black/10 bg-white p-6 shadow-[0_20px_70px_rgba(0,0,0,0.04)] sm:p-10 lg:p-12">
             <div className="mb-10 border-b border-black/10 pb-8">
               <p className="text-xs uppercase tracking-[0.3em] text-[#8c6d35]">
-                Start the conversation
+                { page?.formEyebrow }
               </p>
 
               <h3 className="mt-4 text-3xl font-medium tracking-[-0.04em] md:text-4xl">
-                Tell us about
+                { page?.formTitleLine1 }
                 <br />
-                your opportunity.
+                { page?.formTitleLine2 }
               </h3>
 
               <p className="mt-4 max-w-xl text-sm leading-7 text-black/50">
-                Give us enough information to
-                understand your organization,
-                objectives and how we might work
-                together.
+                { page?.formDescription }
               </p>
             </div>
 
@@ -223,13 +201,13 @@ export default function PartnershipPage() {
       <section className="bg-[#b7924a] px-6 py-24 md:px-10 lg:px-16 lg:py-32">
         <div className="mx-auto max-w-[1400px]">
           <p className="text-xs uppercase tracking-[0.3em] text-black/45">
-            Long-term thinking
+            { page?.closingEyebrow }
           </p>
 
           <h2 className="mt-8 max-w-5xl text-5xl font-medium leading-[0.95] tracking-[-0.05em] md:text-7xl">
-            Built on relationships.
+            { page?.closingTitleLine1 }
             <br />
-            Driven by opportunity.
+            { page?.closingTitleLine2 }
           </h2>
         </div>
       </section>

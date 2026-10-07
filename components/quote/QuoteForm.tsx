@@ -32,8 +32,6 @@ type FormState = {
 export default function QuoteForm({
   product = "",
 }: QuoteFormProps) {
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [state, setState] = useState<FormState>({
     status: "idle",
   });
@@ -49,11 +47,9 @@ export default function QuoteForm({
   async function handleSubmit( event: SubmitEvent<HTMLFormElement> ) {
     event.preventDefault();
 
-    if (loading) {
+    if (state.status === "submitting") {
       return;
     }
-
-    setLoading(true);
 
     setState({
       status: "submitting",
@@ -77,15 +73,17 @@ export default function QuoteForm({
     };
 
     try {
-      const response = await fetch("/api/quote", {
-        method: "POST",
-        headers: {
-          "Content-Type":
-          "application/json",
-        },
+      const response = await fetch(
+        "/api/inquiry", {
+          method: "POST",
+          headers: {
+            "Content-Type":
+            "application/json",
+          },
 
-        body: JSON.stringify(payload),
-      });
+          body: JSON.stringify(payload),
+        }
+      );
 
       const contentType = response.headers.get("content-type");
 
@@ -97,14 +95,12 @@ export default function QuoteForm({
 
       const result = await response.json();
 
-      if (!response.ok) {
+      if (!response.ok || result.status === "error") {
         setState({
           status: "error",
           message: result.message || "Unable to submit your enquiry.",
           errors: result.fields,
         });
-
-        setLoading(false);
 
         return;
       }
@@ -116,8 +112,6 @@ export default function QuoteForm({
       });
 
       form.reset();
-      setSubmitted(true);
-
     } catch (error) {
       console.error(
         "Inquiry submission failed:",
@@ -130,15 +124,15 @@ export default function QuoteForm({
           "Unable to submit your enquiry right now. Please try again.",
       });
 
-    } finally {
-      setLoading(false);
     }
   }
 
-  if (submitted) {
+  if (state.status === "success") {
     return (
-      <div className=" rounded-3xl border border-emerald-200 bg-emerald-50 p-8 text-center">
-        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-600 text-2xl text-white">
+      <div role="status" araia-live="polite"
+        className=" rounded-3xl border border-emerald-200 bg-emerald-50 p-8 text-center">
+        <div aria-hidden="true"
+          className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-600 text-2xl text-white">
           ✓
         </div>
 
@@ -167,7 +161,6 @@ export default function QuoteForm({
         <button className=" mt-6 text-sm font-semibold text-emerald-700 hover:text-emerald-900"
           type="button"
           onClick={() => {
-            setSubmitted(false);
             setState({
               status: "idle",
             });
@@ -179,14 +172,42 @@ export default function QuoteForm({
     );
   }
 
+  const error = (field: string) => state.errors?.[field]?.[0];
+
   return (
     <form className="space-y-6"
       onSubmit={handleSubmit}
       noValidate 
+      aria-live="polite"
+      aria-busy={state.status === "submitting"}
     >
+      <input type="hidden"
+        name="type"
+        value="product"
+      />
+
+      {/**Honeypot field */}
+      <div
+        aria-hidden="true"
+        className="absolute left-[-9999px] h-0 w-0 overflow-hidden"
+      >
+        <label htmlFor="website">
+          Website
+        </label>
+
+        {/* Honeypot field to catch bots */}
+        <input
+          id="website"
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
+
       {state.status === "error" && state.message && (
         <div className=" rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
-          role="alert"
+          role="alert" aria-live="assertive"
         >
             {state.message}
         </div>
@@ -194,68 +215,92 @@ export default function QuoteForm({
 
       <div className="grid gap-6 sm:grid-cols-2">
         <Field
+          id="name"
           label="Full Name"
           name="name"
+          autoComplete="name"
+          disabled={state.status === "submitting"}
           placeholder="Your full name"
           required
-          error={state.errors?.name?.[0]}
+          error={error("name")}
         />
 
         <Field
+          id="company"
           label="Company Name"
           name="company"
+          autoComplete="organization"
+          disabled={state.status === "submitting"}
           placeholder="Company name"
-          error={state.errors?.company?.[0]}
+          error={error("company")}
         />
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2">
         <Field
+          id="email"
           label="Email Address"
           name="email"
           type="email"
+          autoComplete="email"
+          inputMode="email"
           placeholder="you@company.com"
           required
-          error={state.errors?.email?.[0]}
+          disabled={state.status === "submitting"}
+          error={error("email")}
         />
        
         <Field
+          id="phone"
           label="Phone / WhatsApp"
           name="phone"
           type="tel"
+          autoComplete="tel"
+          inputMode="tel"
           placeholder="+234..."
           required
-          error={state.errors?.phone?.[0]}
+          disabled={state.status === "submitting"}
+          error={error("phone")}
         />
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2">
         <Field
+          id="country"
           label="Country"
           name="country"
+          autoComplete="country"
           placeholder="Country"
           required
-          error={state.errors?.country?.[0]}
+          error={error("country")}
         />
 
         <Field
+          id="product"
           label="Product"
           name="product"
+          inputMode="text"
+          autoComplete="off"
+          disabled={state.status === "submitting"}
           defaultValue={selectedProduct}
           placeholder="Product you're interested in"
           required
-          error={state.errors?.product?.[0]}
+          error={error("product")}
         />
 
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2">
         <Field
+          id="quantity"
           label="Quantity Required"
           name="quantity"
+          inputMode="numeric"
+          autoComplete="off"
+          disabled={state.status === "submitting"}
           placeholder="e.g. 20 MT"
           required
-          error={state.errors?.quantity?.[0]}
+          error={error("quantity")}
         />
 
         <div>
@@ -313,18 +358,19 @@ export default function QuoteForm({
 
           <FieldError
             message={
-              state.errors?.packaging?.[0]
+              error("packaging")
             }
           />
         </div>
       </div>
 
       <Field
+        id="destination"
         label="Destination Port / Country"
         name="destination"
         placeholder="e.g. Rotterdam, Netherlands"
         required
-        error={state.errors?.destination?.[0]}
+        error={error("destination")}
       />
 
       <div>
@@ -361,7 +407,7 @@ export default function QuoteForm({
         />
 
         <FieldError
-          message={state.errors?.message?.[0]}
+          message={error("message")}
         />
       </div>
 
@@ -382,8 +428,8 @@ export default function QuoteForm({
       </div>
 
       <button type="submit"
-        disabled={loading}
-        aria-disabled={loading}
+        disabled={state.status === "submitting"}
+        aria-disabled={state.status === "submitting"}
         className="
           inline-flex
           h-13
@@ -403,7 +449,7 @@ export default function QuoteForm({
           sm:w-auto
         "
       >
-        {loading ? "Sending..." : "Submit Enquiry"}
+        {state.status === "submitting" ? "Sending..." : "Submit Enquiry"}
       </button>
 
       <p className=" text-xs leading-5 text-zinc-500">
@@ -416,47 +462,60 @@ export default function QuoteForm({
 }
 
 function Field({
+  id,
   label,
   name,
   type = "text",
+  inputMode,
+  autoComplete,
+  disabled,
   placeholder,
   defaultValue,
   required = false,
   error,
 }: {
+  id: string;
   label: string;
   name: string;
-  type?: string;
+  type?: "text" | "email" | "tel" | "number";
   placeholder?: string;
   defaultValue?: string;
+  inputMode?: "none" | "text" | "decimal" | "numeric" | "tel" | "search" | "email" | "url";
+  autoComplete?: string;
+  disabled?: boolean;
   required?: boolean;
   error?: string;
 }) {
+  const errorId = `${id}-error`;
+
   return (
     <div>
       <label className=" mb-2 block text-sm font-medium text-zinc-800"
-        htmlFor={name}
+        htmlFor={id}
       >
         {label}
 
         {required && (
-          <span className="ml-1 text-emerald-700">
+          <span aria-hidden="true" className="ml-1 text-emerald-700">
             *
           </span>
         )}
       </label>
 
       <input
-        id={name}
+        id={id}
         name={name}
         type={type}
+        inputMode={inputMode}
+        autoComplete={autoComplete}
+        disabled={disabled}
         placeholder={placeholder}
         defaultValue={defaultValue}
         required={required}
         aria-invalid={!!error}
         aria-describedby={
           error
-            ? `${name}-error`
+            ? errorId
             : undefined
         }
         className={`
@@ -480,7 +539,7 @@ function Field({
       />
 
       <FieldError
-        id={`${name}-error`}
+        id={errorId}
         message={error}
       />
     </div>

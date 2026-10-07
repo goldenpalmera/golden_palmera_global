@@ -2,8 +2,21 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import type { SanityImageSource } from "@sanity/image-url";
 
-export default function ContactHero() {
+type ContactPageProps = {
+  eyebrow?: string;
+  titleLine1?: string;
+  titleLine2?: string;
+  image?: string | null;
+}
+
+export default function ContactHero({
+  eyebrow,
+  titleLine1,
+  titleLine2,
+  image,
+}: ContactPageProps) {
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -41,40 +54,42 @@ export default function ContactHero() {
       </div>
 
       {/* Diagonal image */}
-      <div
-        className="
-          pointer-events-none
-          absolute
-          inset-y-0
-          right-0
-          z-[1]
-          hidden
-          w-[58%]
-          lg:block
-        "
-        style={{
-          clipPath:
-            "polygon(42% 0%, 100% 0%, 100% 100%, 0% 100%)",
-        }}
-      >
-        <Image
-          src="/images/agriculture/contact.jpg"
-          alt=""
-          fill
-          priority
-          sizes="58vw"
-          className="object-cover"
-        />
+      {image && (
+        <div
+          className="
+            pointer-events-none
+            absolute
+            inset-y-0
+            right-0
+            z-[1]
+            hidden
+            w-[58%]
+            lg:block
+          "
+          style={{
+            clipPath:
+              "polygon(42% 0%, 100% 0%, 100% 100%, 0% 100%)",
+          }}
+        >
+          <Image
+            src={image}
+            alt=""
+            fill
+            priority
+            sizes="58vw"
+            className="object-cover"
+          />
 
-        {/* Dark treatment */}
-        <div className="absolute inset-0 bg-black/25" />
+          {/* Dark treatment */}
+          <div className="absolute inset-0 bg-black/25" />
 
-        {/* Blend image into dark hero */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#171717] via-[#171717]/45 to-transparent" />
+          {/* Blend image into dark hero */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#171717] via-[#171717]/45 to-transparent" />
 
-        {/* Subtle brand colour */}
-        <div className="absolute inset-0 bg-[#173f2b]/20 mix-blend-multiply" />
-      </div>
+          {/* Subtle brand colour */}
+          <div className="absolute inset-0 bg-[#173f2b]/20 mix-blend-multiply" />
+        </div>
+      )}
 
       {/* Content */}
       <div className="relative z-10 mx-auto flex min-h-[68vh] max-w-[1400px] flex-col justify-between px-6 py-10 md:px-10 lg:px-16 lg:py-14">
@@ -92,29 +107,31 @@ export default function ContactHero() {
         {/* Heading */}
         <div className="max-w-5xl pb-6 lg:max-w-[62%]">
           <p className="mb-7 text-xs uppercase tracking-[0.35em] text-[#b7924a]">
-            Start a conversation
+            {eyebrow}
           </p>
 
           <h1 className="text-[clamp(4rem,10vw,9.5rem)] font-medium leading-[0.84] tracking-[-0.07em]">
-            Let&apos;s
+            {titleLine1}
             <br />
-            <span className="text-white/35">connect.</span>
+            <span className="text-white/35">{titleLine2}</span>
           </h1>
         </div>
       </div>
 
       {/* Mobile image */}
-      <div className="relative z-10 mx-6 mb-8 aspect-[16/9] overflow-hidden rounded-3xl md:mx-10 lg:hidden">
-        <Image
-          src="/images/agriculture/contact.jpg"
-          alt="Golden Palmera Global"
-          fill
-          sizes="100vw"
-          className="object-cover"
-        />
+      {image && (
+        <div className="relative z-10 mx-6 mb-8 aspect-[16/9] overflow-hidden rounded-3xl md:mx-10 lg:hidden">
+          <Image
+            src={image}
+            alt="Golden Palmera Global"
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-[#171717]/50 to-transparent" />
-      </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#171717]/50 to-transparent" />
+        </div>
+      )}
     </section>
   );
 }
