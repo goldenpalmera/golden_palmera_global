@@ -17,6 +17,7 @@ export type ContactEmailType =
 
 export type Contact = {
   _id: string;
+  requestId: string,
   name: string;
   email: string;
   phone?: string;

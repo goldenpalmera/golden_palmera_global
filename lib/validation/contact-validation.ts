@@ -4,31 +4,34 @@ export const contactSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(2, "Please enter your name."),
+    .min(2, "Please enter your name.")
+    .max(100, "Name is too long."),
 
   email: z
     .string()
     .trim()
-    .email("Please enter a valid email address."),
+    .toLowerCase()
+    .email("Please enter a valid email address.")
+    .max(254),
 
   phone: z
     .string()
     .trim()
-    .max(200, "phone nummber is too long.")
+    .max(30, "Phone nummber is too long.")
     .optional()
     .or(z.literal("")),
 
   country: z
     .string()
     .trim()
-    .max(200, "Counry name is too long.")
+    .max(200, "Country name is too long.")
     .optional()
     .or(z.literal("")),
 
   company: z
     .string()
     .trim()
-    .max(200, "Company name is too long.")
+    .max(150, "Company name is too long.")
     .optional()
     .or(z.literal("")),
 
@@ -46,6 +49,7 @@ export const contactSchema = z.object({
 
   website: z
     .string()
+    .max(0)
     .optional()
     .or(z.literal("")),
 });

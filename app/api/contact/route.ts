@@ -1,5 +1,3 @@
-// app/api/quote/route.ts
-
 import {
   NextResponse,
 } from "next/server";
@@ -47,6 +45,21 @@ export async function POST(request: Request) {
     }
 
     // Parse request body
+    try {
+      await request.json();
+    } catch (error) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Invalid request body.",
+          requestId,
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
     const body = await request.json();
 
     // validate input

@@ -1,32 +1,10 @@
-// app/api/quote/route.ts
-
-import {
-  NextResponse,
-} from "next/server";
-
-import {
-  inquirySchema,
-} from "@/lib/validation/inquiry-validation";
-
-import {
-  createInquiry,
-} from "@/lib/inquiries/create-inquiry";
-
-import {
-  generateRequestId,
-} from "@/lib/security/request-id";
-
-import {
-  validateOrigin,
-} from "@/lib/security/validate-origin";
-
-import {
-  getClientIp,
-} from "@/lib/security/client-ip";
-
-import {
-  checkRateLimit,
-} from "@/lib/security/rate-limit";
+import {NextResponse } from "next/server";
+import {inquirySchema } from "@/lib/validation/inquiry-validation";
+import { createInquiry } from "@/lib/inquiries/create-inquiry";
+import { generateRequestId } from "@/lib/security/request-id";
+import { validateOrigin } from "@/lib/security/validate-origin";
+import { getClientIp } from "@/lib/security/client-ip";
+import {checkRateLimit } from "@/lib/security/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -50,6 +28,21 @@ export async function POST(request: Request) {
     }
 
     // Parse request body
+    try {
+      await request.json();
+    } catch (error) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Invalid request body.",
+          requestId,
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
     const body = await request.json();
 
     // validate input
@@ -64,7 +57,6 @@ export async function POST(request: Request) {
 
           fields:
             parsed.error.flatten().fieldErrors,
-
           requestId,
         },
         {
@@ -108,6 +100,7 @@ export async function POST(request: Request) {
           success: false,
           message:
             "Too many submissions. Please try again later.",
+          requestId,
         },
         {
           status: 429,
@@ -129,8 +122,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          message:
-            result.error,
+          message: result.error,
           requestId,
         },
         {

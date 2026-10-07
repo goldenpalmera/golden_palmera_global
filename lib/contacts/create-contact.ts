@@ -48,6 +48,7 @@ export async function createContact(
     createdContact =
       await client.create({
         _type: "contact",
+        requestId: context.requestId,
 
         reference,
         name: data.name,
@@ -151,6 +152,7 @@ export async function createContact(
     await client
     .patch(createdContact._id)
     .set({
+      confirmationEmailStatus: "pending",
       confirmationEmailLastAttemptAt: new Date().toISOString(),
     })
     .commit();
