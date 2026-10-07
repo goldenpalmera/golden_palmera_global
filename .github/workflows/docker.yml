@@ -14,6 +14,9 @@ on:
       - staging 
       - develop 
 
+    tags:
+      - "v*.*.*"
+
   workflow_dispatch: 
         
 permissions: 
