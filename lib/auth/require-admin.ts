@@ -1,6 +1,8 @@
-import { redirect } from "next/navigation";
+import "server-only";
 
+import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { isAdminEmail } from "./adminEmail";
 
 export async function requireAdmin() {
   const session = await auth();
@@ -9,14 +11,7 @@ export async function requireAdmin() {
     redirect("/admin/login");
   }
 
-  const adminEmail =
-    process.env.ADMIN_EMAIL?.toLowerCase();
-
-  if (
-    !adminEmail ||
-    session.user.email.toLowerCase() !==
-      adminEmail
-  ) {
+  if (!isAdminEmail(session.user.email)) {
     redirect("/unauthorized");
   }
 
