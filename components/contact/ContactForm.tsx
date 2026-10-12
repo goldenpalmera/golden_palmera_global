@@ -17,7 +17,6 @@ type FormState = {
 
 
 export default function ContactForm() {
-  const [submitted, setSubmitted] = useState(false);
   const [state, setState] = useState<FormState>({ status: "idle" })
 
   const handleSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
@@ -42,6 +41,7 @@ export default function ContactForm() {
       company: getValue("company"),
       country: getValue("country"),
       message: getValue("message"),
+      website: getValue("website"), // honeypot 
     };
 
     try {
@@ -80,7 +80,6 @@ export default function ContactForm() {
       });
 
       form.reset();
-      setSubmitted(true);
     } catch (error) {
       console.error("Contact form error:", error);
 
@@ -91,12 +90,10 @@ export default function ContactForm() {
       });
     }
   };
-  console.log("contact form", state.reference)
+
   const fieldError = (field: string) => state.errors?.[field]?.[0];
-  console.log(state)
-  if (submitted) {
-    console.log(state)
-    console.log("submi")
+  
+  if (state.status === "success") {
     return (
       <div className="border border-black/10 bg-[#f5f1e8] p-8 md:p-12">
         <span className="font-mono text-xs text-[#8c6d35]">
@@ -127,7 +124,6 @@ export default function ContactForm() {
         <button
           type="button"
           onClick={() => {
-            setSubmitted(false);
             setState({
               status: "idle",
             })
@@ -187,7 +183,7 @@ export default function ContactForm() {
           />
           {fieldError("name") && (
             <p 
-              className="mt-2" text-xs text-red-600 
+              className="mt-2 text-xs text-red-600" 
               id="name-error"
             >
               {fieldError("name")}
@@ -235,7 +231,7 @@ export default function ContactForm() {
           <input
             id="phone"
             name="phone"
-            type="phone"
+            type="tel"
             required
             disabled={state.status === "submitting"}
             aria-invalid={!!fieldError("phone")}
@@ -246,7 +242,7 @@ export default function ContactForm() {
           {fieldError("phone") && (
             <p
               className="mt-2 text-xs text-red-600"
-              id="email-error"
+              id="phone-error"
             >
               {fieldError("phone")}
             </p>
@@ -274,7 +270,7 @@ export default function ContactForm() {
           {fieldError("company") && (
             <p
               className="mt-2 text-xs text-red-600"
-              id="email-error"
+              id="company-error"
             >
               {fieldError("company")}
             </p>
@@ -302,7 +298,7 @@ export default function ContactForm() {
           {fieldError("country") && (
             <p
               className="mt-2 text-xs text-red-600"
-              id="email-error"
+              id="country-error"
             >
               {fieldError("country")}
             </p>
@@ -331,7 +327,7 @@ export default function ContactForm() {
           {fieldError("message") && (
             <p
               className="mt-2 text-xs text-red-600"
-              id="email-error"
+              id="message-error"
             >
               {fieldError("message")}
             </p>
@@ -353,13 +349,26 @@ export default function ContactForm() {
             type="text"
             tabIndex={-1}
             autoComplete="off"
+            disabled={state.status === "submitting"}
           />
         </div>
 
         <button
           type="submit"
           disabled={state.status === "submitting"}
-          className="group inline-flex items-center gap-5 bg-[#171717] px-7 py-4 text-xs uppercase tracking-[0.2em] text-white transition-colors hover:bg-[#8c6d35] disabled:cursor-not-allowed disabled:opacity-60"
+          className="
+            group inline-flex 
+            items-center gap-5 
+            bg-[#171717] px-7 
+            py-4 text-xs uppercase tracking-[0.2em] 
+            text-white transition-colors 
+            text-3xl sm:text-4xl md:text-4xl lg:text-5xl
+            hover:bg-[#8c6d35] min-w-[200px] justify-center min-h-[50px] rounded-lg
+            w-full md:w-auto sm:w-auto
+            disabled:cursor-not-allowed disabled:opacity-60
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8c6d35] focus-visible:ring-offset-2
+            focus-visible:ring-offset-[#f5f1e8]
+          "
         >
           {state.status === "submitting" ? "Sending..." : "Send enquiry"}
 

@@ -6,8 +6,6 @@ import {
 } from "react";
 
 type InquiryType =
-  | "product"
-  | "general"
   | "partnership"
   | "export_buyer";
 
@@ -125,7 +123,7 @@ export default function InquiryForm({
 
     try {
       const response = await fetch(
-        "/api/quote",
+        "/api/inquiry",
         {
           method: "POST",
 
@@ -150,7 +148,7 @@ export default function InquiryForm({
 
       const result = await response.json();
 
-      if (!response.ok) {
+      if (!response.ok || result.status === "error") {
         setState({
           status: "error",
           message:
@@ -186,10 +184,13 @@ export default function InquiryForm({
     }
   }
 
+  {/** Success Message */}
   if (state.status === "success") {
     return (
-      <div className="min-h-[500px] border border-emerald-200 bg-emerald-50 p-8 md:p-12">
-        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#173f2b] text-xl text-white">
+      <div role="status" aria-live="polite"
+        className="min-h-[500px] border border-emerald-200 bg-emerald-50 p-8 md:p-12">
+        <div aria-hidden="true"
+          className="flex h-14 w-14 items-center justify-center rounded-full bg-[#173f2b] text-xl text-white">
           ✓
         </div>
 
@@ -240,6 +241,9 @@ export default function InquiryForm({
   return (
     <form
       onSubmit={handleSubmit}
+      noValidate
+      aria-live="polite"
+      aria-busy={state.status === "submitting"}
       className="border border-black/10 bg-[#f5f1e8] p-6 md:p-10 lg:p-12"
     >
       {/* Header */}
@@ -263,14 +267,6 @@ export default function InquiryForm({
         value={type}
       />
 
-      {product && (
-        <input
-          type="hidden"
-          name="product"
-          value={product}
-        />
-      )}
-
       {/* Honeypot */}
       <div
         aria-hidden="true"
@@ -280,20 +276,32 @@ export default function InquiryForm({
           Website
         </label>
 
+        {/* Honeypot field to catch bots */}
         <input
           id="website"
           name="website"
+          type="text"
           tabIndex={-1}
           autoComplete="off"
         />
       </div>
 
+      {/** Server Error message */}
       {state.status === "error" &&
         state.message && (
-          <div className="mt-8 border border-red-200 bg-red-50 p-5 text-sm leading-6 text-red-700">
+          <div 
+            role="alert" aria-live="assertive"
+            className="mt-8 border border-red-200 bg-red-50 p-5 text-sm leading-6 text-red-700">
             {state.message}
           </div>
         )}
+
+        {/** Hidden type field */}
+        <input
+          type="hidden"
+          name="type"
+          value={type}
+        />
 
       {/* Contact details */}
       <div className="mt-10">
@@ -303,63 +311,80 @@ export default function InquiryForm({
 
         <div className="mt-6 grid gap-x-6 gap-y-7 sm:grid-cols-2">
           <Field
+            id="name"
             label="Full name"
             name="name"
+            autoComplete="name"
             required
+            disabled={state.status === "submitting"}
             error={error("name")}
             placeholder="Your full name"
           />
 
           <Field
+            id="email"
             label="Email"
             name="email"
             type="email"
+            inputMode="email"
+            autoComplete="email"
+            disabled={state.status === "submitting"}
             required
             error={error("email")}
             placeholder="you@company.com"
           />
 
           <Field
+            id="phone"
             label="Phone / WhatsApp"
             name="phone"
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
+            disabled={state.status === "submitting"}
             error={error("phone")}
             placeholder="+234..."
           />
 
           <Field
+            id="company"
             label="Company"
             name="company"
+            disabled={state.status === "submitting"}
+            autoComplete="organization"
             error={error("company")}
             placeholder="Company name"
           />
 
           <Field
+            id="country"
             label="Country"
             name="country"
+            autoComplete="country-name"
+            disabled
             error={error("country")}
             placeholder="Country"
           />
 
-          {type !== "product" && (
-            <Field
-              label="Subject"
-              name="subject"
-              error={error("subject")}
-              placeholder={
-                type === "partnership"
-                  ? "Partnership opportunity"
-                  : type === "export_buyer"
-                    ? "Commodity requirement"
-                    : "How can we help?"
-              }
-            />
-          )}
+          
+          <Field
+            id="subject"
+            label="Subject"
+            name="subject"
+            error={error("subject")}
+            placeholder={
+              type === "partnership"
+                ? "Partnership opportunity"
+                : type === "export_buyer"
+                  ? "Commodity requirement"
+                  : "How can we help?"
+            }
+          />
         </div>
       </div>
 
       {/* Requirements */}
-      {(type === "product" ||
-        type === "export_buyer") && (
+      {(type === "export_buyer") && (
         <div className="mt-12 border-t border-black/10 pt-10">
           <SectionLabel>
             Commodity requirements
@@ -367,6 +392,7 @@ export default function InquiryForm({
 
           <div className="mt-6 grid gap-x-6 gap-y-7 sm:grid-cols-2">
             <Field
+            id="product"
               label={
                 type === "export_buyer"
                   ? "Product required"
@@ -380,13 +406,17 @@ export default function InquiryForm({
             />
 
             <Field
+              id="quantity"
               label="Quantity"
               name="quantity"
+              type="text"
+              inputMode="text"
               error={error("quantity")}
               placeholder="e.g. 50 MT"
             />
 
             <Field
+              id="packaging"
               label="Packaging"
               name="packaging"
               error={error("packaging")}
@@ -394,6 +424,7 @@ export default function InquiryForm({
             />
 
             <Field
+              id="destination"
               label="Destination"
               name="destination"
               error={error("destination")}
@@ -412,8 +443,11 @@ export default function InquiryForm({
 
           <div className="mt-6 grid gap-x-6 gap-y-7 sm:grid-cols-2">
             <Field
+              id="organizationType"
               label="Organisation type"
               name="organizationType"
+              type="text"
+              inputMode="text"
               placeholder="e.g. Distributor, importer"
               error={error(
                 "organizationType"
@@ -421,6 +455,7 @@ export default function InquiryForm({
             />
 
             <Field
+              id="market"
               label="Market / region"
               name="market"
               placeholder="e.g. West Africa"
@@ -428,8 +463,12 @@ export default function InquiryForm({
             />
 
             <Field
+              id="companyWebsite"
               label="Website"
               name="companyWebsite"
+              type="url"
+              inputMode="url"
+              autoComplete="url"
               placeholder="https://..."
               error={error(
                 "companyWebsite"
@@ -437,6 +476,7 @@ export default function InquiryForm({
             />
 
             <Field
+              id="partnershipFocus"
               label="Partnership focus"
               name="partnershipFocus"
               placeholder="What would you like to explore?"
@@ -460,7 +500,9 @@ export default function InquiryForm({
             className="text-xs font-semibold uppercase tracking-[0.2em] text-black/50"
           >
             Additional information
-            <span className="ml-1 text-[#b7924a]">
+            <span aria-hidden="true" 
+              className="ml-1 text-[#b7924a]"
+            >
               *
             </span>
           </label>
@@ -470,19 +512,44 @@ export default function InquiryForm({
             name="message"
             required
             rows={7}
-            className="mt-3 w-full resize-none border border-black/10 bg-white px-5 py-4 text-sm leading-7 outline-none transition focus:border-[#b7924a]"
-            placeholder={
-              type === "product" ||
-              type === "export_buyer"
-                ? "Tell us about your commodity requirements, specifications and any other important details..."
-                : type === "partnership"
-                  ? "Tell us about your organisation, the opportunity and what you would like to explore with us..."
-                  : "Tell us how we can help..."
+            disabled={ state.status === "submitting" } 
+            aria-invalid={ !!error("message") } 
+            aria-describedby={ error("message") ? "message-error" : undefined } 
+            className={[ 
+              "mt-3", 
+              "min-h-[160px]", 
+              "w-full", 
+              "resize-y", 
+              "border", 
+              "bg-white", 
+              "px-4", 
+              "py-4", 
+              "text-base", 
+              "leading-7", 
+              "outline-none", 
+              "transition", 
+              "focus-visible:border-[#b7924a]", 
+              "focus-visible:ring-2", 
+              "focus-visible:ring-[#b7924a]/20", 
+              "disabled:cursor-not-allowed", 
+              "disabled:opacity-50", 
+              error("message") ? "border-red-400" : "border-black/10", 
+            ].join(" ")} 
+            placeholder={ 
+              type === "export_buyer" 
+              ? 
+                "Tell us about your commodity requirements, specifications and any other important details..." 
+              : type === "partnership" 
+                ? 
+                  "Tell us about your organisation, the opportunity and what you would like to explore with us..." 
+                : "Tell us how we can help..." 
             }
           />
 
           {error("message") && (
-            <p className="mt-2 text-xs text-red-600">
+            <p role="alert" 
+              id="message-error"
+              className="mt-2 text-xs text-red-600">
               {error("message")}
             </p>
           )}
@@ -509,7 +576,9 @@ export default function InquiryForm({
             : copy.button}
 
           {state.status !== "submitting" && (
-            <span className="transition-transform duration-300 group-hover:translate-x-1">
+            <span aria-hidden="true"
+              className="transition-transform duration-300 group-hover:translate-x-1"
+            >
               →
             </span>
           )}
@@ -532,49 +601,82 @@ function SectionLabel({
 }
 
 function Field({
+  id,
   label,
   name,
   type = "text",
+  inputMode,
+  autoComplete,
   required,
+  disabled,
   placeholder,
   defaultValue,
   error,
 }: {
+  id: string;
   label: string;
   name: string;
-  type?: string;
+  type?: "text" | "email" | "tel" | "url";
+  inputMode?: "text" | "email" | "tel" | "url";
+  autoComplete?: string;
   required?: boolean;
+  disabled?: boolean;
   placeholder?: string;
   defaultValue?: string;
   error?: string;
 }) {
+  const errorId = `${id}-error`;
+
   return (
     <div>
       <label
-        htmlFor={name}
+        htmlFor={id}
         className="text-xs font-semibold uppercase tracking-[0.2em] text-black/50"
       >
         {label}
 
         {required && (
-          <span className="ml-1 text-[#b7924a]">
+          <span aria-hidden="true" className="ml-1 text-[#b7924a]">
             *
           </span>
         )}
       </label>
 
       <input
-        id={name}
+        id={id}
         name={name}
         type={type}
+        inputMode={inputMode}
+        autoComplete={autoComplete}
+        disabled={disabled}
+        aria-invalid={!!error}
+        aria-describedby={error ? errorId : undefined}
         required={required}
         defaultValue={defaultValue}
         placeholder={placeholder}
-        className="mt-3 w-full border border-black/10 bg-white px-5 py-4 text-sm outline-none transition placeholder:text-black/25 focus:border-[#b7924a]"
+        className={[ 
+          "mt-3", 
+          "min-h-11", 
+          "w-full", 
+          "border", 
+          "bg-white", 
+          "px-4", 
+          "py-4", 
+          "text-base", 
+          "outline-none", 
+          "transition", 
+          "placeholder:text-black/25", 
+          "focus-visible:border-[#b7924a]", 
+          "focus-visible:ring-2", 
+          "focus-visible:ring-[#b7924a]/20", 
+          error ? "border-red-400" : "border-black/10", 
+        ].join(" ")}
       />
 
       {error && (
-        <p className="mt-2 text-xs text-red-600">
+        <p id={errorId} role="alert"
+          className="mt-2 text-xs text-red-600"
+        >
           {error}
         </p>
       )}

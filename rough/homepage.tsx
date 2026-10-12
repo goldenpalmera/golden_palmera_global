@@ -363,3 +363,608 @@ export default function Home() {
     </main>
   );
 }
+
+
+function SocialIcon({ social }: { social: SocialLink }) {
+  const Icon = SOCIAL_ICONS[social.platform];
+
+  if (!Icon) {
+    return null;
+  }
+
+  return (
+    <a
+      href={social.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={social.label ?? social.platform}
+      className="
+        flex h-9 w-9 items-center justify-center rounded
+        border border-forest-700
+        text-ivory-100/45
+        transition-colors
+        hover:border-gold-500/40 hover:text-gold-500
+        focus-visible:outline-none
+        focus-visible:ring-2 focus-visible:ring-gold-500/60
+        focus-visible:ring-offset-2
+        focus-visible:ring-offset-forest-950
+      "
+    >
+      <Icon size={15} aria-hidden="true" />
+    </a>
+  );
+}
+
+
+app/error.tsx
+"use client";
+
+import { useEffect } from "react";
+
+export default function GlobalError({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  useEffect(() => {
+    console.error("Application error:", error);
+  }, [error]);
+
+  return (
+    <main className="flex min-h-[70vh] items-center justify-center px-6 py-20">
+      <div className="mx-auto max-w-xl text-center">
+        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em]">
+          Something went wrong
+        </p>
+
+        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+          We couldn't load this page
+        </h1>
+
+        <p className="mt-4 text-base leading-7 text-muted-foreground">
+          An unexpected error occurred while loading this page. Please try
+          again.
+        </p>
+
+        <button
+          type="button"
+          onClick={() => reset()}
+          className="mt-8 inline-flex min-h-11 items-center justify-center rounded-md px-6 py-3 text-sm font-medium transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
+        >
+          Try again
+        </button>
+      </div>
+    </main>
+  );
+}
+
+
+loading.tsx
+export default function Loading() {
+  return (
+    <main
+      aria-busy="true"
+      aria-live="polite"
+      className="flex min-h-[60vh] items-center justify-center px-6 py-20"
+    >
+      <div className="flex flex-col items-center text-center">
+        <div
+          aria-hidden="true"
+          className="h-8 w-8 animate-spin rounded-full border-2 border-current border-t-transparent"
+        />
+
+        <p className="mt-4 text-sm text-muted-foreground">
+          Loading...
+        </p>
+      </div>
+    </main>
+  );
+}
+
+
+
+not-found.tsx
+import Link from "next/link";
+
+export default function NotFound() {
+  return (
+    <main className="flex min-h-[70vh] items-center justify-center px-6 py-20">
+      <div className="mx-auto max-w-xl text-center">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em]">
+          404
+        </p>
+
+        <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+          Page not found
+        </h1>
+
+        <p className="mt-4 text-base leading-7 text-muted-foreground">
+          The page you're looking for doesn't exist or may have been moved.
+        </p>
+
+        <Link
+          href="/"
+          className="mt-8 inline-flex min-h-11 items-center justify-center rounded-md px-6 py-3 text-sm font-medium transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
+        >
+          Return home
+        </Link>
+      </div>
+    </main>
+  );
+}
+
+
+app/admin/error.tsx
+
+
+
+siteguard
+│
+├── code
+├── dependencies
+├── content
+├── accessibility
+├── performance
+└── security
+
+
+src/
+├── analyzers/
+│   ├── code/
+│   ├── dependencies/
+│   ├── content/
+│   ├── accessibility/
+│   ├── performance/
+│   └── security/
+│
+├── ai/
+│   ├── content-reviewer.ts
+│   ├── code-reviewer.ts
+│   ├── accessibility-reviewer.ts
+│   └── claim-reviewer.ts
+│
+├── scanners/
+│   ├── browser.ts
+│   ├── routes.ts
+│   ├── dom.ts
+│   └── assets.ts
+│
+├── reporters/
+│   ├── console.ts
+│   ├── json.ts
+│   ├── markdown.ts
+│   └── github.ts
+│
+├── policy/
+│   ├── rules.ts
+│   └── thresholds.ts
+│
+└── cli.ts
+
+category:
+  grammar
+  clarity
+  tone
+  readability
+  cta
+  consistency
+  seo
+  claim
+  accessibility
+
+add:
+heading
+navigation
+terminology
+duplication
+factual-risk
+conversion
+
+together:
+axe-core
++
+Playwright
+
+axe → objective accessibility violations
+AI  → contextual accessibility reasoning
+
+const viewports = [
+  {
+    name: "mobile-small",
+    width: 320,
+    height: 800
+  },
+  {
+    name: "mobile",
+    width: 390,
+    height: 844
+  },
+  {
+    name: "tablet",
+    width: 768,
+    height: 1024
+  },
+  {
+    name: "desktop",
+    width: 1440,
+    height: 900
+  }
+];
+
+horizontal overflow
+elements outside viewport
+text clipping
+button size
+navigation overflow
+form usability
+images overflowing
+sticky/fixed elements
+unexpected scrollbars
+
+performance:
+Lighthouse / browser measurements
+             +
+AI interpretation
+
+LCP
+CLS
+INP
+TTFB
+total JS
+unused JS
+image sizes
+image formats
+render-blocking resources
+font loading
+network requests
+
+Then AI can explain:
+The hero image is approximately X MB and is the
+largest contributor to initial page transfer.
+
+Security:
+I'd make security two layers.
+
+Static security
+npm audit
+OSV
+Semgrep
+Gitleaks
+dependency analysis
+secret detection
+Runtime/browser
+
+Check:
+
+security headers
+HTTPS
+mixed content
+unsafe external resources
+cookie attributes
+CSP
+X-Frame-Options / frame-ancestors
+referrer policy
+permissions policy
+
+And AI can help classify findings.
+
+The unified finding model
+
+I would make everything conform to one schema.
+
+Something like:
+
+const FindingSchema = z.object({
+  id: z.string(),
+
+  engine: z.enum([
+    "code",
+    "dependency",
+    "content",
+    "accessibility",
+    "performance",
+    "security"
+  ]),
+
+  source: z.string(),
+
+  rule: z.string(),
+
+  severity: z.enum([
+    "info",
+    "low",
+    "medium",
+    "high",
+    "critical"
+  ]),
+
+  confidence: z.enum([
+    "confirmed",
+    "high",
+    "medium",
+    "low"
+  ]),
+
+  action: z.enum([
+    "safe",
+    "review",
+    "block"
+  ]),
+
+  file: z.string().optional(),
+
+  line: z.number().optional(),
+
+  page: z.string().optional(),
+
+  message: z.string(),
+
+  evidence: z.string().optional(),
+
+  suggestion: z.string().optional(),
+
+  aiGenerated: z.boolean(),
+
+  humanDecision: z.enum([
+    "pending",
+    "accepted",
+    "rejected",
+    "deferred"
+  ]).default("pending")
+});
+
+Now every engine produces the same object.
+
+Configuration:
+export default {
+  project: {
+    name: "Golden Palmera Global",
+    framework: "nextjs"
+  },
+
+  server: {
+    command: "npm run start",
+    url: "http://localhost:3000"
+  },
+
+  routes: {
+    include: [
+      "/",
+      "/about",
+      "/services",
+      "/contact",
+      "/partnership",
+      "/export-buyer"
+    ]
+  },
+
+  content: {
+    enabled: true,
+    minimumScore: 85
+  },
+
+  accessibility: {
+    enabled: true,
+    failOn: ["critical", "serious"]
+  },
+
+  performance: {
+    enabled: true,
+    mobile: true,
+    desktop: true
+  },
+
+  security: {
+    enabled: true,
+    failOn: ["critical", "high"]
+  },
+
+  code: {
+    deadCode: true,
+    dependencies: true,
+    duplicateCode: true
+  },
+
+  policy: {
+    failOn: [
+      "critical"
+    ],
+
+    requireHumanApprovalFor: [
+      "dead-code",
+      "content",
+      "ai-suggestion"
+    ]
+  },
+
+  protectedPaths: [
+    "app/**/page.tsx",
+    "app/**/layout.tsx",
+    "app/**/route.ts",
+    "middleware.ts",
+    "next.config.*"
+  ]
+};
+
+
+Brand Configuration:
+
+brand: {
+  name: "Golden Palmera Global",
+
+  spelling: "British English",
+
+  tone: [
+    "professional",
+    "confident",
+    "clear",
+    "trustworthy"
+  ],
+
+  avoid: [
+    "unnecessary jargon",
+    "unsupported claims",
+    "exaggerated guarantees",
+    "generic AI wording"
+  ],
+
+  contentRules: {
+    requireHumanReviewForClaims: true,
+    prohibitUnverifiedStatistics: true,
+    preserveProductNames: true
+  }
+}
+
+Pipeline-example:
+jobs:
+
+  ci:
+    ...
+
+  quality-gate:
+    needs: ci
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx playwright install --with-deps chromium
+
+      - run: npm run build
+
+      - name: Start application
+        run: npm run start &
+
+      - name: Run SiteGuard
+        run: npx siteguard audit --ci
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Upload quality report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: siteguard-report
+          path: |
+            .siteguard/report.json
+            .siteguard/report.md
+
+  deploy-staging:
+    needs: quality-gate
+    if: needs.quality-gate.result == 'success'
+
+    ...
+
+
+
+But there is an important CI problem
+
+You don't want the AI to randomly fail your deployment because an LLM changed its wording judgment.
+
+Therefore divide checks into:
+
+Hard gates:
+TypeScript
+ESLint
+tests
+build
+critical security
+serious accessibility
+
+Soft gates:
+content wording
+tone
+CTA suggestions
+SEO wording
+AI code observations
+
+Human gates:
+dead-code removal
+claim changes
+major copy changes
+potentially breaking configuration
+
+So:
+
+AI suggestion ≠ CI failure
+
+unless your policy explicitly makes that finding blocking.
+
+
+Human approval can be integrated into GitHub:
+
+Eventually, the tool can create a PR comment:
+
+
+Phase 1 — Codebase cleanup:
+TypeScript
+ESLint
+Knip
+dependencies
+duplicate code
+protected files
+unified findings
+terminal report
+
+No AI required yet except optional explanation.
+
+Phase 2 — Website quality:
+Playwright
+route discovery
+content extraction
+axe
+mobile viewport testing
+link testing
+form testing
+
+Phase 3 — AI reasoning:
+content review
+CTA analysis
+SEO reasoning
+claim detection
+contextual accessibility
+code finding explanation
+human review
+
+Phase 4 — CI/CD:
+quality-gate.yml
+GitHub annotations
+PR comments
+artifacts
+approval workflow
+staging gate
+
+ReadMe:
+SiteGuard does not use AI to determine whether the codebase is correct. 
+It uses deterministic analysis to establish evidence, AI to interpret ambiguous findings, 
+and human approval for changes that cannot be safely determined automatically.
+
+That is the engineering principle that makes your idea defensible and reusable.
+
+
+MVP:
+@siteguard/cli
+│
+├── TypeScript
+├── ESLint
+├── Knip
+├── dependency audit
+├── duplicate-code detection
+├── Playwright route scanner
+├── content extraction
+├── axe accessibility
+├── mobile overflow detection
+├── AI content reasoning
+├── unified Zod finding schema
+├── human-review states
+├── JSON + Markdown reports
+└── --ci exit-code policy

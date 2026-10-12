@@ -1,6 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { getFooterData } from "@/content/footer/getFooterData";
+import { Footer } from "@/components/sharedComponents/Footer";
+import { FloatingButtons } from "@/components/sharedComponents/FloatingButtons";
+import { getFloatButtonsData } from "@/content/float-button/getFloatButtonsData";
+import { 
+  Geist, 
+  Geist_Mono, 
+  DM_Sans, 
+  IBM_Plex_Mono, 
+  Playfair_Display,
+} from "next/font/google";
 import "./globals.css";
+import Header from "@/components/sharedComponents/Header"
+import '@fortawesome/fontawesome-svg-core/styles.css';
+import { config } from '@fortawesome/fontawesome-svg-core';
+
+// Prevent Font Awesome from adding its CSS automatically
+config.autoAddCss=false;
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -10,6 +26,25 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  weight: ["400", "500", "600"],
+});
+
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+});
+
+const ibmPlexMono = IBM_Plex_Mono({
+  variable: "--font-ibm-mono",
+  subsets: ["latin"],
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -36,15 +71,23 @@ export const metadata: Metadata = {
   ],
 };
 
-export default function RootLayout({ children }: Readonly<{
+export default async function RootLayout({ children }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const footerData = await getFooterData();
+  const floatButtonData = await getFloatButtonsData();
+
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className={`${playfair.variable} ${dmSans.variable} ${ibmPlexMono.variable} min-h-full flex flex-col`}>
+        <Header />
+        {children}
+        <FloatingButtons settings={floatButtonData} />
+        <Footer settings={footerData}  />
+      </body>
     </html>
   );
 }

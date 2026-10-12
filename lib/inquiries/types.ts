@@ -16,11 +16,9 @@ export const inquiryStatusSchema =
   z.enum(inquiryStatuses);
 
 export const inquiryTypes = [
-  "general",
   "product",
   "partnership",
   "export_buyer",
-  "contact",
 ] as const;
 
 export type InquiryType =
@@ -67,6 +65,7 @@ export type Inquiry = {
 
 export type InquiryInput = {
   type: InquiryType;
+  requestId: string;
 
   name: string;
   email: string;

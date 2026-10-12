@@ -47,6 +47,11 @@ model Inquiry {
   packaging    String?
   destination  String?
 
+  organizationType String?
+  market           String?
+  companyWebsite   String?
+  partnershipFocus String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

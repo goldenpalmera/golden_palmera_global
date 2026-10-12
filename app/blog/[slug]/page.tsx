@@ -1,263 +1,103 @@
-import { buildMetadata } from "@/sanity/lib/seo";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { PortableText } from "@portabletext/react";
-import type { PortableTextBlock } from "@portabletext/types";
-
-import { getSanityClient } from "@/sanity/lib/client";
+import { getBlogPostMetadata } from "@/content/blog/metadata";
+import { getRelatedBlogPosts } from "@/content/blog/related";
+import { getPost } from "@/content/blog/sanity";
+import { buildBlogArticleJsonLd } from "@/content/blog/seo";
 import {
-  POST_QUERY,
-  RELATED_BLOG_POSTS_QUERY,
-  RECENT_BLOG_POSTS_QUERY,
-} from "@/sanity/lib/queries";
-import { urlFor } from "@/sanity/lib/image";
-import { SanityImageSource } from "@sanity/image-url";
+  calculateReadingTime,
+  formatDate,
+} from "@/content/blog/utils";
+import {
+  getArticleImageUrl,
+  getAuthorImageUrl,
+} from "@/content/blog/images";
+import { 
+  FALLBACK_ARTICLE,
+  FALLBACK_BLOG_POSTS,
+  FALLBACK_IMAGE_BY_SLUG,
+} from "@/content/blog/fallbacks";
+import { RelatedArticles } from "@/components/blog/RelatedArticles";
+import { getBlogStaticParams } from "@/content/blog/staticParams";
 
-type Params = {
-  slug: string;
+type Props = {
+  params: Promise<{
+    slug: string;
+  }>;
 };
 
-type BlogPost = {
-  _id: string;
-  title: string;
-  slug: string;
-  excerpt?: string;
-  coverImage?: SanityImageSource;
+export async function generateStaticParams() {
+  const sanityParams = await getBlogStaticParams();
 
-  author?: {
-    _id?: string;
-    name?: string;
-    role?: string;
-    bio?: string;
-    image?: SanityImageSource;
-  };
+  const fallbackParams = FALLBACK_BLOG_POSTS.map((post) => ({
+    slug: post.slug,
+  }));
 
-  publishedAt?: string;
-  category?: string;
-  tags?: string[];
-  body?: PortableTextBlock[];
-  featured?: boolean;
+  const params = [
+    ...sanityParams,
+    ...fallbackParams,
+  ];
 
-  seo?: {
-    metaTitle?: string;
-    metaDescription?: string;
-    keywords?: string[];
-    ogImage?: SanityImageSource;
-  };
-};
-
-type RelatedPost = {
-  _id: string;
-  title: string;
-  slug: string;
-  excerpt?: string;
-  coverImage?: SanityImageSource;
-  category?: string;
-  publishedAt?: string;
-  author?: {
-    name?: string;
-  };
-};
-
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  "https://goldenpalmeraglobal.com";
-
-async function getPost(slug: string): Promise<BlogPost | null> {
-  const client = getSanityClient();
-  
-  return client.fetch(
-    POST_QUERY,
-    { slug },
-    {
-      next: {
-        revalidate: 60,
-      },
-    },
+  return Array.from(
+    new Map(
+      params.map((item) => [item.slug, item])
+    ).values()
   );
-}
-
-function formatDate(date?: string) {
-  if (!date) return "";
-
-  return new Intl.DateTimeFormat("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  }).format(new Date(date));
-}
-
-function calculateReadingTime(body?: PortableTextBlock[]) {
-  if (!body?.length) return 1;
-
-  const text = body
-    .map((block) => {
-      if (block?._type !== "block") return "";
-
-      return (
-        block.children
-          ?.map((child) => child.text || "")
-          .join(" ") || ""
-      );
-    })
-    .join(" ");
-
-  const words = text.trim().split(/\s+/).filter(Boolean).length;
-
-  return Math.max(1, Math.ceil(words / 200));
 }
 
 export async function generateMetadata({
   params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
-  const { slug } = await params;
-
-  const article = await getPost(slug);
-
-  if (!article) {
-    return buildMetadata({
-      fallbackTitle:
-        "Article Not Found | Golden Palmera Global",
-      fallbackDescription:
-        "The requested GPG Insights article could not be found.",
-    });
-  }
-
-  return buildMetadata({
-    fallbackTitle:
-      `${article.title} | Golden Palmera Global`,
-    fallbackDescription: article.excerpt,
-    canonical: `/blog/${article.slug}`,
-  });
+}: Props): Promise<Metadata> {
+  return getBlogPostMetadata(params);
 }
-
 
 export default async function BlogArticlePage({
   params,
-}: {
-  params: Promise<Params>;
-}) {
-  const client = getSanityClient();
-
+}: Props) {
   const { slug } = await params;
 
-  const article = await getPost(slug);
+  const sanityArticle = await getPost(slug);
+
+  const article =
+    sanityArticle ??
+    (slug === FALLBACK_ARTICLE.slug
+      ? FALLBACK_ARTICLE
+      : undefined
+    );
 
   if (!article) {
     notFound();
   }
 
-  const readingTime = calculateReadingTime(article.body);
 
-  let relatedArticles: RelatedPost[] = [];
+  const [sanityRelatedArticles] =
+  await Promise.all([
+    getRelatedBlogPosts(article),
+  ]);
 
-  if (article.category || article.tags?.length) {
-    relatedArticles = await client.fetch(
-      RELATED_BLOG_POSTS_QUERY,
-      {
-        slug: article.slug,
-        category: article.category,
-        tags: article.tags || [],
-      },
-      {
-        next: {
-          revalidate: 60,
-        },
-      },
-    );
-  }
+  const relatedArticles =
+    sanityRelatedArticles.length > 0
+      ? sanityRelatedArticles
+      : FALLBACK_BLOG_POSTS.filter(
+          (post) => post.slug !== article.slug,
+        ).slice(0, 3);
 
-  if (relatedArticles.length < 3) {
-    const fallback = await client.fetch(
-      RECENT_BLOG_POSTS_QUERY,
-      {
-        slug: article.slug,
-        category: article.category,
-        tags: article.tags || [],
-      },
-      {
-        next: {
-          revalidate: 60,
-        },
-      },
-    );
+  const readingTime = calculateReadingTime(
+    article.body,
+  );
 
-    const existingIds = new Set(
-      relatedArticles.map((item) => item._id),
-    );
+  const articleImage = 
+    getArticleImageUrl(article.coverImage) ??
+    FALLBACK_IMAGE_BY_SLUG[article.slug];
+    
+  const authorImage = getAuthorImageUrl(
+    article.author?.image,
+  );
 
-    for (const article of fallback) {
-      if (
-        relatedArticles.length >= 3 ||
-        existingIds.has(article._id)
-      ) {
-        continue;
-      }
-
-      relatedArticles.push(article);
-      existingIds.add(article._id);
-    }
-  }
-
-  relatedArticles = relatedArticles.slice(0, 3);
-
-  const articleImage = article.coverImage
-    ? urlFor(article.coverImage)
-        .width(1400)
-        .height(800)
-        .fit("crop")
-        .auto("format")
-        .url()
-    : null;
-
-  const ogImage = article.seo?.ogImage || article.coverImage;
-
-  const ogImageUrl = ogImage
-    ? urlFor(ogImage)
-        .width(1200)
-        .height(630)
-        .fit("crop")
-        .url()
-    : undefined;
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-
-    headline: article.title,
-
-    description: article.excerpt,
-
-    image: ogImageUrl
-      ? [ogImageUrl]
-      : undefined,
-
-    datePublished: article.publishedAt,
-
-    dateModified: article.publishedAt,
-
-    author: {
-      "@type": "Person",
-      name:
-        article.author?.name ||
-        "Golden Palmera Global",
-    },
-
-    publisher: {
-      "@type": "Organization",
-      name: "Golden Palmera Global",
-      url: SITE_URL,
-    },
-
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": `${SITE_URL}/blog/${article.slug}`,
-    },
-  };
+  const jsonLd = buildBlogArticleJsonLd(article);
 
   return (
     <main className="bg-[#f7f6f1] text-[#182018]">
@@ -282,16 +122,32 @@ export default async function BlogArticlePage({
           <div className="mt-16">
             <div className="flex flex-wrap items-center gap-4 text-xs uppercase tracking-[0.2em]">
               <span className="text-[#a07a3d]">
-                {article.category || "GPG Insights"}
+                {article.category ||
+                  "GPG Insights"}
               </span>
 
-              <span className="h-1 w-1 rounded-full bg-[#b8b4a8]" />
+              {article.publishedAt && (
+                <>
+                  <span
+                    aria-hidden="true"
+                    className="h-1 w-1 rounded-full bg-[#b8b4a8]"
+                  />
 
-              <span className="text-[#858b85]">
-                {formatDate(article.publishedAt)}
-              </span>
+                  <time
+                    dateTime={article.publishedAt}
+                    className="text-[#858b85]"
+                  >
+                    {formatDate(
+                      article.publishedAt,
+                    )}
+                  </time>
+                </>
+              )}
 
-              <span className="h-1 w-1 rounded-full bg-[#b8b4a8]" />
+              <span
+                aria-hidden="true"
+                className="h-1 w-1 rounded-full bg-[#b8b4a8]"
+              />
 
               <span className="text-[#858b85]">
                 {readingTime} min read
@@ -310,16 +166,13 @@ export default async function BlogArticlePage({
 
             {article.author?.name && (
               <div className="mt-10 flex items-center gap-4">
-                {article.author.image ? (
+                {authorImage ? (
                   <div className="relative h-12 w-12 overflow-hidden rounded-full">
                     <Image
-                      src={urlFor(article.author.image)
-                        .width(100)
-                        .height(100)
-                        .fit("crop")
-                        .url()}
-                      alt={article.author.name}
+                      src={authorImage}
+                      alt=""
                       fill
+                      sizes="48px"
                       className="object-cover"
                     />
                   </div>
@@ -342,32 +195,70 @@ export default async function BlogArticlePage({
         </div>
       </section>
 
-      {/* Cover image */}
-      {articleImage && (
-        <section className="px-6 pb-20 md:px-12 lg:px-20">
-          <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem]">
-            <div className="relative aspect-[16/8]">
+      {/* Cover */}
+      <section className="px-6 pb-20 md:px-12 lg:px-20">
+        <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem]">
+          <div className="relative aspect-[16/8] overflow-hidden bg-[#182018]">
+            {articleImage ? (
               <Image
                 src={articleImage}
                 alt={article.title}
                 fill
                 priority
-                sizes="100vw"
+                sizes="(max-width: 768px) 100vw, 1400px"
                 className="object-cover"
               />
-            </div>
+            ) : (
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,#a07a3d_0%,transparent_35%),linear-gradient(135deg,#182018_0%,#293329_50%,#182018_100%)]">
+                <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(255,255,255,.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.08)_1px,transparent_1px)] [background-size:48px_48px]" />
+
+                <div className="absolute bottom-10 left-10 max-w-lg md:bottom-14 md:left-14">
+                  <p className="text-xs uppercase tracking-[0.3em] text-[#d2b477]">
+                    Golden Palmera Global
+                  </p>
+
+                  <p className="mt-4 text-2xl font-semibold text-white md:text-4xl">
+                    Agriculture. Commodities. Global Trade.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* Article */}
       <article className="border-y border-[#ddd9cc] bg-white px-6 py-20 md:px-12 lg:px-20">
-        <div className="mx-auto max-w-3xl">
-          {article.body && (
-            <div className="prose prose-lg max-w-none prose-headings:text-[#182018] prose-p:text-[#5f675f] prose-p:leading-9 prose-a:text-[#a07a3d]">
+        <div className="mx-auto max-w-3xl text-justify">
+          {article.body?.length ? (
+            <div
+              className="
+                prose
+                prose-lg
+                max-w-none
+                prose-headings:font-semibold
+                prose-headings:tracking-tight
+                prose-headings:text-[#182018]
+                prose-h2:mt-14
+                prose-h2:mb-5
+                prose-h2:text-3xl
+                prose-h3:mt-10
+                prose-h3:mb-4
+                prose-h3:text-2xl
+                prose-p:text-[#5f675f]
+                prose-p:leading-8
+                prose-p:mb-7
+                prose-a:text-[#a07a3d]
+                prose-strong:text-[#182018]
+              "
+            >
               <PortableText value={article.body} />
             </div>
-          )}
+          ) : (
+            <p className="text-[#687068]">
+              This article has no published content yet.
+            </p>
+        )}
         </div>
       </article>
 
@@ -389,81 +280,10 @@ export default async function BlogArticlePage({
         </section>
       ) : null}
 
-      {/* Related Articles */}
-      {relatedArticles.length > 0 && (
-        <section className="px-6 py-24 md:px-12 lg:px-20">
-          <div className="mx-auto max-w-7xl">
-            <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
-              <div>
-                <p className="text-sm uppercase tracking-[0.25em] text-[#a07a3d]">
-                  Continue reading
-                </p>
-
-                <h2 className="mt-4 text-4xl font-semibold tracking-tight">
-                  More from GPG Insights
-                </h2>
-              </div>
-
-              <Link
-                href="/blog"
-                className="text-sm font-semibold transition-colors hover:text-[#a07a3d]"
-              >
-                View all insights →
-              </Link>
-            </div>
-
-            <div className="mt-12 grid gap-6 md:grid-cols-3">
-              {relatedArticles.map((related) => (
-                <Link
-                  key={related._id}
-                  href={`/blog/${related.slug}`}
-                  className="group overflow-hidden rounded-3xl border border-[#ddd9cc] bg-white transition-all duration-500 hover:-translate-y-2 hover:shadow-xl"
-                >
-                  {related.coverImage && (
-                    <div className="relative aspect-[3/2] overflow-hidden">
-                      <Image
-                        src={urlFor(related.coverImage)
-                          .width(700)
-                          .height(460)
-                          .fit("crop")
-                          .auto("format")
-                          .url()}
-                        alt={related.title}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 33vw"
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                    </div>
-                  )}
-
-                  <div className="p-7">
-                    <span className="text-xs uppercase tracking-[0.18em] text-[#a07a3d]">
-                      {related.category || "GPG Insights"}
-                    </span>
-
-                    <h3 className="mt-6 text-2xl font-semibold leading-tight transition-colors group-hover:text-[#a07a3d]">
-                      {related.title}
-                    </h3>
-
-                    {related.excerpt && (
-                      <p className="mt-4 leading-7 text-[#687068]">
-                        {related.excerpt}
-                      </p>
-                    )}
-
-                    <div className="mt-7 text-sm font-semibold">
-                      Read article
-                      <span className="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-1">
-                        →
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      {/* Related */}
+      <RelatedArticles
+        articles={relatedArticles}
+      />
 
       {/* CTA */}
       <section className="bg-[#182018] px-6 py-24 text-white md:px-12 lg:px-20">
@@ -474,12 +294,14 @@ export default async function BlogArticlePage({
             </p>
 
             <h2 className="mt-5 text-4xl font-semibold">
-              Building stronger agricultural trade together.
+              Building stronger agricultural trade
+              together.
             </h2>
 
             <p className="mt-5 leading-7 text-white/60">
-              Connect with Golden Palmera Global for sourcing, export,
-              commodity supply, and international trade opportunities.
+              Connect with Golden Palmera Global for
+              sourcing, export, commodity supply, and
+              international trade opportunities.
             </p>
           </div>
 

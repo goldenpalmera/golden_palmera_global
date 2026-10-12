@@ -380,3 +380,249 @@ export const product = defineType({
     },
   ],
 });
+
+For product images, aim for clean 4:3 or square photography:
+
+cocoa.jpg — cocoa beans/pods, rich brown tones
+
+sesame.jpg — sesame seeds, clean close-up
+
+cashew.jpg — cashew nuts or raw cashew
+
+hibiscus.jpg — dried hibiscus flowers
+
+File	Image to look for
+african-agriculture.jpg	Wide African farm/landscape, crops, warm morning light
+cocoa-harvest.jpg	Cocoa pods being harvested or close-up cocoa farming
+commodity-warehouse.jpg	Agricultural commodities in a modern warehouse
+export-logistics.jpg	Shipping containers, port, trucks, agricultural export logistics
+sustainable-farming.jpg	African farmer working among crops, authentic documentary feel
+global-trade.jpg	Port/shipping/trade scene with containers and cargo
+
+Target dimensions: around 2400 × 1350 px for all six. That gives you plenty of resolution for the 16:9 cards and the larger article hero.
+
+I'd avoid images with visible text, logos, watermarks, or obviously staged corporate handshakes.
+
+<FloatingButtons 
+          whatsappNumber={settings?.whatsappNumber ?? "2348000000000"}
+          calendlyUrl={process.env.NEXT_PUBLIC_CALENDLY_URL ?? "https://calendly.com/goldenpalmera"}
+        />
+
+
+
+const calendlyUrl = new URL(phoneCall.calendlyUrl);
+
+  calendlyUrl.searchParams.set("embed_type", "Inline");
+  calendlyUrl.searchParams.set("hide_gdpr_banner", "1");
+  calendlyUrl.searchParams.set("background_color", "0f2d1c");
+  calendlyUrl.searchParams.set("text_color", "f5f0e8");
+  calendlyUrl.searchParams.set("primary_color", "c9a84c");
+
+
+<iframe
+                src={calendlyUrl.toString()}
+                title="Schedule a phone call"
+                loading="lazy"
+                className="
+                  h-[500px] w-full
+                  rounded-lg
+                  border border-forest-700
+                  bg-forest-950
+                "
+              />
+
+Remove-Item -Recurse -Force .next
+Remove-Item -Recurse -Force node_modules
+Remove-Item -Force package-lock.json
+npm install
+npm run dev
+
+
+feature/error-loading-states
+feature/404
+feature/accessibility
+feature/mobile-polish
+feature/performance
+feature/security-headers
+feature/health-check
+feature/tests
+
+## end to end testing
+Homepage
+Products
+Product detail
+Request Quote
+Partnership Inquiry
+Export Buyer Inquiry
+Contact
+Admin
+
+Application
+[ ] error.tsx
+[ ] global error handling
+[ ] loading.tsx
+[ ] not-found.tsx
+[ ] proper API/server-action error handling
+
+
+Accessibility
+[ ] keyboard navigation
+[ ] focus states
+[ ] labels
+[ ] form errors
+[ ] screen-reader messaging
+[ ] alt text
+[ ] semantic HTML
+
+Mobile
+[ ] homepage
+[ ] product listing
+[ ] product detail
+[ ] quote
+[ ] inquiry
+[ ] contact
+[ ] admin
+
+Performance
+[ ] image optimization
+[ ] server/client component audit
+[ ] bundle audit
+[ ] Sanity query audit
+[ ] Redis query audit
+[ ] unnecessary JS removal
+
+Security
+[ ] security headers
+[ ] CSP
+[ ] secret audit
+[ ] server-only token audit
+[ ] input validation
+[ ] rate limiting
+[ ] admin authorization
+
+Observability
+[ ] /api/health
+[ ] deployment health verification
+[ ] useful application logging
+[ ] deployment failure handling
+
+Testing
+[ ] unit tests
+[ ] integration tests
+[ ] E2E tests
+[ ] production build test
+[ ] critical form tests
+
+Deployment
+[x] Docker
+[x] GHCR
+[x] image signing
+[x] provenance
+[x] SBOM
+[x] vulnerability scanning
+[x] non-root container
+[x] rollback
+[x] development deployment
+[x] staging deployment
+[x] production deployment
+[x] Dependabot
+[x] CodeQL
+[x] Gitleaks
+
+Create and protect production on github
+production
+ ├── Required reviewer
+ ├── Production secrets
+ └── Deployment protection
+
+Remember to change example.com to your main domain
+
+That means the actual domain configuration is currently coupled to the workflow.
+I'd move the actual URL into GitHub Environment variables.
+Development environment
+SITE_URL=https://dev.goldenpalmeraglobal.com
+
+Staging environment
+SITE_URL=https://staging.goldenpalmeraglobal.com
+
+Production environment
+SITE_URL=https://goldenpalmeraglobal.com
+
+
+A. Health check ← we're here
+B. Error/loading states
+C. 404
+D. Accessibility
+E. Mobile polish
+F. Performance
+G. Security headers
+H. Tests
+I. Environment-variable audit
+J. Final staging deployment
+K. Production release
+
+Full-page/route loading
+data heavy use skeleton
+
+The accessibility pass should cover:
+  semantic HTML
+  keyboard navigation
+  visible focus states
+  form labels/errors
+  screen-reader announcements
+  heading hierarchy
+  image alt text
+  button/link semantics
+  mobile touch targets
+  color contrast
+  aria-* usage
+  reduced-motion support
+
+  The order I'd use
+
+Pass 1 — Accessibility foundation
+
+Fix invalid HTML/input types
+Correct aria-describedby
+Add aria-invalid
+Add role="alert" / aria-live
+Improve labels
+Keyboard focus states
+Disabled/submitting states
+Honeypot remains inaccessible to normal users
+
+Pass 2 — Mobile forms
+
+Contact form
+Inquiry form
+Quote/product form
+Success states
+Validation errors
+320px / 375px / 390px / 430px layouts
+
+Pass 3 — Mobile pages
+
+Header/navigation
+Home
+Products
+Product detail
+Services
+Service detail
+Blog
+Blog article
+Contact
+Partnership
+Export buyer
+
+Pass 4 — Final accessibility/performance check
+
+Lighthouse
+keyboard-only navigation
+focus visibility
+screen-reader labels
+color contrast
+image alt text
+heading hierarchy
+reduced motion
+touch target sizing
+horizontal overflow
