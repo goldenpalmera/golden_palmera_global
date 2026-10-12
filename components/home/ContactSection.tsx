@@ -15,10 +15,11 @@ export function ContactSection({
       className="contact section"
     >
       <div
-        className="contact-circle"
+        className="contact-circle hero-circle"
         aria-hidden="true"
       >
-        <span>GPG</span>
+      <div className="circle-inner"><span className="circle-main">GPG</span></div>
+        
       </div>
 
       <div className="contact-content">

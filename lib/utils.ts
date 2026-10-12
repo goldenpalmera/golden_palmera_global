@@ -12,7 +12,7 @@ export function formatNumber(n: number): string {
 
 export const WHATSAPP_NUMBER  = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER  ?? "2348000000000";
 export const CALENDLY_URL     = process.env.NEXT_PUBLIC_CALENDLY_URL     ?? "https://calendly.com/goldenpalmera";
-export const SITE_URL         = process.env.NEXT_PUBLIC_SITE_URL         ?? "https://goldenpalmera.com";
+export const SITE_URL         = process.env.NEXT_PUBLIC_SITE_URL         ?? "https://goldenpalmeraglobal.com";
 
 export function whatsappLink(message?: string): string {
   const encoded = encodeURIComponent(message ?? "Hello, I'd like to enquire about your commodity export services.");

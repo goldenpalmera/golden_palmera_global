@@ -27,9 +27,10 @@ export async function POST(request: Request) {
       );
     }
 
-    // Parse request body
+    // Parse request body once. Request bodies are streams and can only be consumed once.
+    let body: unknown;
     try {
-      await request.json();
+      body = await request.json();
     } catch (error) {
       return NextResponse.json(
         {
@@ -42,8 +43,6 @@ export async function POST(request: Request) {
         }
       );
     }
-
-    const body = await request.json();
 
     // validate input
     const parsed = inquirySchema.safeParse(body);
