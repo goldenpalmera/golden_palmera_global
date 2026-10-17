@@ -1,5 +1,9 @@
 import { getSanityClient } from "@/sanity/lib/client";
-
+import {
+  INQUIRIES_QUERY,
+  INQUIRIES_STATS,
+  INQUIRIES_BY_ID_QUERY,
+} from "@/sanity/lib/queries/inquiries/inquiry-queries";
 import type {
   Inquiry,
   InquiryStatus,
@@ -16,73 +20,9 @@ export async function getInquiries({
   status?: InquiryStatus;
   type?: string;
 } = {}) {
-  const query = `
-    *[
-      _type == "inquiry"
-
-      && (
-        $search == ""
-        || name match $search + "*"
-        || email match $search + "*"
-        || reference match $search + "*"
-        || company match $search + "*"
-        || message match $search + "*"
-      )
-
-      && (
-        $status == ""
-        || status == $status
-      )
-
-      && (
-        $type == ""
-        || type == $type
-      )
-    ]
-
-    | order(submittedAt desc)
-
-    {
-      _id,
-      reference,
-      type,
-
-      name,
-      email,
-      phone,
-      company,
-      country,
-
-      subject,
-
-      product,
-      quantity,
-      packaging,
-      destination,
-
-      organizationType,
-      market,
-      partnershipFocus,
-      companyWebsite,
-
-      message,
-      status,
-      submittedAt,
-
-      notificationEmailStatus,
-      notificationEmailLastAttemptAt,
-      notificationEmailSentAt,
-      notificationEmailFailedAt,
-
-      confirmationEmailStatus,
-      confirmationEmailLastAttemptAt,
-      confirmationEmailSentAt,
-      confirmationEmailFailedAt
-    }
-  `;
 
   return client.fetch<Inquiry[]>(
-    query,
+    INQUIRIES_QUERY,
     {
       search: search.trim(),
       status: status || "",
@@ -99,51 +39,8 @@ export async function getInquiries({
 export async function getInquiryById(
   id: string
 ) {
-  const query = `
-    *[
-      _type == "inquiry"
-      && _id == $id
-    ][0] {
-      _id,
-      reference,
-      type,
-
-      name,
-      email,
-      phone,
-      company,
-      country,
-
-      subject,
-
-      product,
-      quantity,
-      packaging,
-      destination,
-
-      organizationType,
-      market,
-      partnershipFocus,
-      companyWebsite,
-
-      message,
-      status,
-      submittedAt,
-
-      notificationEmailStatus,
-      notificationEmailLastAttemptAt,
-      notificationEmailSentAt,
-      notificationEmailFailedAt,
-
-      confirmationEmailStatus,
-      confirmationEmailLastAttemptAt,
-      confirmationEmailSentAt,
-      confirmationEmailFailedAt
-    }
-  `;
-
   return client.fetch<Inquiry | null>(
-    query,
+    INQUIRIES_BY_ID_QUERY,
     { id },
     {
       next: {
@@ -164,36 +61,7 @@ export async function getInquiryStats() {
       resolved: number;
       rejected: number;
     }>(
-      `{
-        "total": count(*[
-          _type == "inquiry"
-        ]),
-
-        "new": count(*[
-          _type == "inquiry"
-          && status == "NEW"
-        ]),
-
-        "inProgress": count(*[
-          _type == "inquiry"
-          && status == "IN_PROGRESS"
-        ]),
-
-        "contacted": count(*[
-          _type == "inquiry"
-          && status == "CONTACTED"
-        ]),
-
-        "resolved": count(*[
-          _type == "inquiry"
-          && status == "RESOLVED"
-        ]),
-
-        "rejected": count(*[
-          _type == "inquiry"
-          && status == "REJECTED"
-        ])
-      }`,
+      INQUIRIES_STATS,
       {},
       {
         next: {

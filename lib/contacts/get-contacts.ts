@@ -1,5 +1,9 @@
 import { getSanityClient } from "@/sanity/lib/client";
-
+import { 
+  CONTACTS_INQUIRY_QUERY,
+  CONTACTS_STATS_QUERY,
+  CONTACTS_BY_ID_QUERY,
+} from "@/sanity/lib/queries/inquiries/contact-queries";
 import type {
   Contact,
   ContactStatus,
@@ -13,55 +17,10 @@ export async function getContacts({
   search?: string;
   status?: ContactStatus;
 } = {}) {
-  const query = `
-    *[
-      _type == "contact"
-
-      && (
-        $search == ""
-        || name match $search
-        || email match $search
-        || company match $search
-        || message match $search
-        || reference match $search
-      )
-
-      && (
-        $status == ""
-        || status == $status
-      )
-    ]
-
-    | order(submittedAt desc)
-
-    {
-      _id,
-      reference,
-      name,
-      email,
-      phone,
-      company,
-      country,
-      message,
-      status,
-      submittedAt,
-
-      notificationEmailStatus,
-      notificationEmailLastAttemptAt,
-      notificationEmailSentAt,
-      notificationEmailFailedAt,
-
-      confirmationEmailStatus,
-      confirmationEmailLastAttemptAt,
-      confirmationEmailSentAt,
-      confirmationEmailFailedAt
-    }
-  `;
-
   const client = getSanityClient();
 
   return client.fetch<Contact[]>(
-    query,
+    CONTACTS_INQUIRY_QUERY,
     {
       search: search.trim()
         ? `*${search.trim()}*`
@@ -77,39 +36,6 @@ export async function getContacts({
 }
 
 export async function getContactStats() {
-  const query = `
-    {
-      "new": count(*[
-        _type == "contact"
-        && status == "NEW"
-      ]),
-
-      "read": count(*[
-        _type == "contact"
-        && status == "READ"
-      ]),
-
-      "replied": count(*[
-        _type == "contact"
-        && status == "REPLIED"
-      ]),
-
-      "resolved": count(*[
-        _type == "contact"
-        && status == "RESOLVED"
-      ]),
-
-      "archived": count(*[
-        _type == "contact"
-        && status == "ARCHIVED"
-      ]),
-
-      "total": count(*[
-        _type == "contact"
-      ])
-    }
-  `;
-
   const client = getSanityClient();
 
   return client.fetch<{
@@ -120,7 +46,7 @@ export async function getContactStats() {
     archived: number;
     total: number;
   }>(
-    query,
+    CONTACTS_STATS_QUERY,
     {},
     {
       next: {
@@ -133,38 +59,10 @@ export async function getContactStats() {
 export async function getContactById(
   id: string
 ) {
-  const query = `
-    *[
-      _type == "contact"
-      && _id == $id
-    ][0]{
-      _id,
-      reference,
-      name,
-      email,
-      phone,
-      company,
-      country,
-      message,
-      status,
-      submittedAt,
-
-      notificationEmailStatus,
-      notificationEmailLastAttemptAt,
-      notificationEmailSentAt,
-      notificationEmailFailedAt,
-
-      confirmationEmailStatus,
-      confirmationEmailLastAttemptAt,
-      confirmationEmailSentAt,
-      confirmationEmailFailedAt
-    }
-  `;
-
   const client = getSanityClient();
 
   return client.fetch<Contact | null>(
-    query,
+    CONTACTS_BY_ID_QUERY,
     { id },
     {
       next: {
