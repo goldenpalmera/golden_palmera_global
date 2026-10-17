@@ -6,11 +6,6 @@ const baseInquirySchema = z.object({
     "partnership",
     "export_buyer",
   ]),
-
-  requestId: z
-    .string()
-    .trim()
-    .max(100, "Request ID is too long."),
     
   name: z
     .string()
