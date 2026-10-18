@@ -28,8 +28,10 @@ export async function POST(request: Request) {
     }
 
     // Parse request body
+    let body: unknown;
+    
     try {
-      await request.json();
+      body = await request.json();
     } catch (error) {
       return NextResponse.json(
         {
@@ -42,26 +44,32 @@ export async function POST(request: Request) {
         }
       );
     }
-
-    const body = await request.json();
-
-    // validate input
+        // validate input
     const parsed = inquirySchema.safeParse(body);
 
     if (!parsed.success) {
+      console.error(`[${requestId}] Inquiry validation failed`, {
+        issues: parsed.error.issues.map((issue) => ({
+          path: issue.path.join("."),
+          code: issue.code,
+          message: issue.message,
+        })),
+        receivedKeys:
+          body !== null &&
+          typeof body === "object" &&
+          !Array.isArray(body)
+            ? Object.keys(body)
+            : [],
+      });
+
       return NextResponse.json(
         {
           success: false,
-          message:
-            "Please check the form and correct the highlighted fields.",
-
-          fields:
-            parsed.error.flatten().fieldErrors,
+          message: "Please check the form fields and try again.",
+          fields: parsed.error.flatten().fieldErrors,
           requestId,
         },
-        {
-          status: 400,
-        }
+        { status: 400 }
       );
     }
 
@@ -89,10 +97,7 @@ export async function POST(request: Request) {
     }
 
     // Rate limit
-    const rateLimit =
-      await checkRateLimit(
-        `${ip}:${data.email}`
-      );
+    const rateLimit = await checkRateLimit(ip);
 
     if (!rateLimit.success) {
       return NextResponse.json(
@@ -147,22 +152,39 @@ export async function POST(request: Request) {
       }
     );
   } catch (error) {
-    console.error(
-      `[${requestId}] Quote API error`,
-      error
-    );
+    if (
+      error instanceof Error &&
+      error.message === "All rate-limit backends are unavailable."
+    ) {
+      console.error(
+        `[${requestId}] Rate-limit infrastructure unavailable.`
+      );
 
-    return NextResponse.json(
-      {
-        success: false,
-        message:
-          "Unable to process your enquiry right now.",
-        requestId,
-      },
-      {
-        status: 500,
-      }
-    );
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Enquiry submission are temporarily unavailable. Please try again shortly.",
+          requestId,
+        },
+        {
+          status: 503,
+          headers: {
+            "Retry-After": "60",
+          },
+        }
+      );
+    }
+    console.error(`[${requestId}] Inquiry API error`, error);
+
+    return NextResponse.json({
+      success: false,
+      message: "Unable to process your enquiry right now.",
+      requestId,
+    },
+    { 
+      status: 500 
+    });
   }
 }
 
