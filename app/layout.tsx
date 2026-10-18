@@ -74,8 +74,10 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const footerData = await getFooterData();
-  const floatButtonData = await getFloatButtonsData();
+  const [footerData, floatButtonData] = await Promise.all([
+  getFooterData(),
+  getFloatButtonsData(),
+]);
 
   return (
     <html

@@ -10,6 +10,8 @@ import { getServicesPage } from "@/content/services/sanity";
 import { getServicesMetadata } from "@/content/services/metadata";
 import { getServicesData } from "@/content/services/getServicesData";
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata(): Promise<Metadata> {
   return getServicesMetadata();
 }
