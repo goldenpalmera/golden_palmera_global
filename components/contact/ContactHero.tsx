@@ -1,14 +1,15 @@
+
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 
 type ContactPageProps = {
   eyebrow?: string;
   titleLine1?: string;
   titleLine2?: string;
   image?: string | null;
-}
+};
 
 export default function ContactHero({
   eyebrow,
@@ -16,33 +17,113 @@ export default function ContactHero({
   titleLine2,
   image,
 }: ContactPageProps) {
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
+  const sectionRef = useRef<HTMLElement>(null);
+  const glowCanvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const handleMouseMove = (event: MouseEvent) => {
-      setMouse({
-        x: event.clientX,
-        y: event.clientY,
-      });
+    const section = sectionRef.current;
+    const canvas = glowCanvasRef.current;
+
+    if (!section || !canvas) return;
+
+    const context = canvas.getContext("2d");
+    if (!context) return;
+
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    );
+    const coarsePointer = window.matchMedia("(pointer: coarse)");
+
+    if (reducedMotion.matches || coarsePointer.matches) return;
+
+    let width = 0;
+    let height = 0;
+    let pixelRatio = 1;
+
+    const resizeCanvas = () => {
+      const rect = section.getBoundingClientRect();
+
+      width = rect.width;
+      height = rect.height;
+      pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+
+      canvas.width = Math.round(width * pixelRatio);
+      canvas.height = Math.round(height * pixelRatio);
+
+      context.setTransform(
+        pixelRatio,
+        0,
+        0,
+        pixelRatio,
+        0,
+        0
+      );
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    const clearGlow = () => {
+      context.clearRect(0, 0, width, height);
+    };
+
+    const handlePointerMove = (event: PointerEvent) => {
+      const rect = section.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      clearGlow();
+
+      if (
+        x < 0 ||
+        y < 0 ||
+        x > rect.width ||
+        y > rect.height
+      ) {
+        return;
+      }
+
+      const radius = 225;
+      const gradient = context.createRadialGradient(
+        x,
+        y,
+        0,
+        x,
+        y,
+        radius
+      );
+
+      gradient.addColorStop(0, "rgba(183, 146, 74, 0.10)");
+      gradient.addColorStop(0.5, "rgba(183, 146, 74, 0.05)");
+      gradient.addColorStop(1, "rgba(183, 146, 74, 0)");
+
+      context.fillStyle = gradient;
+      context.fillRect(0, 0, width, height);
+    };
+
+    resizeCanvas();
+
+    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener("pointermove", handlePointerMove, {
+      passive: true,
+    });
+    section.addEventListener("pointerleave", clearGlow);
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("resize", resizeCanvas);
+      window.removeEventListener("pointermove", handlePointerMove);
+      section.removeEventListener("pointerleave", clearGlow);
+      clearGlow();
     };
   }, []);
 
   return (
-    <section className="relative min-h-[68vh] overflow-hidden bg-[#171717] text-white">
-      {/* Cursor glow */}
-      <div
-        className="pointer-events-none fixed z-0 h-[450px] w-[450px] rounded-full bg-[#b7924a]/10 blur-[120px] transition-transform duration-700 ease-out"
-        style={{
-          transform: `translate3d(${mouse.x - 225}px, ${
-            mouse.y - 225
-          }px, 0)`,
-        }}
+    <section
+      ref={sectionRef}
+      className="relative min-h-[68vh] overflow-hidden bg-[#171717] text-white"
+    >
+      {/* Cursor glow — rendered on canvas to avoid inline styles */}
+      <canvas
+        ref={glowCanvasRef}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-0 h-full w-full"
       />
 
       {/* Grid */}
@@ -56,19 +137,11 @@ export default function ContactHero({
       {image && (
         <div
           className="
+            contact-hero-image-clip
             pointer-events-none
-            absolute
-            inset-y-0
-            right-0
-            z-[1]
-            hidden
-            w-[58%]
-            lg:block
+            absolute inset-y-0 right-0 z-[1]
+            hidden w-[58%] lg:block
           "
-          style={{
-            clipPath:
-              "polygon(42% 0%, 100% 0%, 100% 100%, 0% 100%)",
-          }}
         >
           <Image
             src={image}
@@ -79,20 +152,14 @@ export default function ContactHero({
             className="object-cover"
           />
 
-          {/* Dark treatment */}
           <div className="absolute inset-0 bg-black/25" />
-
-          {/* Blend image into dark hero */}
           <div className="absolute inset-0 bg-gradient-to-r from-[#171717] via-[#171717]/45 to-transparent" />
-
-          {/* Subtle brand colour */}
           <div className="absolute inset-0 bg-[#173f2b]/20 mix-blend-multiply" />
         </div>
       )}
 
       {/* Content */}
       <div className="relative z-10 mx-auto flex min-h-[68vh] max-w-[1400px] flex-col justify-between px-6 py-10 md:px-10 lg:px-16 lg:py-14">
-        {/* Top navigation */}
         <div className="flex items-center justify-between">
           <span className="text-xs uppercase tracking-[0.3em] text-white/45">
             Golden Palmera Global
@@ -103,7 +170,6 @@ export default function ContactHero({
           </span>
         </div>
 
-        {/* Heading */}
         <div className="max-w-5xl pb-6 lg:max-w-[62%]">
           <p className="mb-7 text-xs uppercase tracking-[0.35em] text-[#b7924a]">
             {eyebrow}
