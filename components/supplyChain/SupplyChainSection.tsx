@@ -27,10 +27,7 @@ export function SupplyChainSection({
             <div className="absolute top-[22px] left-[5%] right-[5%] h-px bg-gold-500/30" />
 
             <div
-              className="grid gap-4"
-              style={{
-                gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))`,
-              }}
+              className="grid grid-flow-col auto-cols-fr gap-4"
             >
               {steps.map((step) => (
                 <div

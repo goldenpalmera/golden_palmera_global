@@ -1,9 +1,7 @@
-"use client";
-
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import type { SanityImageSource } from "@sanity/image-url";
 import { getHeroImageUrl } from "@/content/shared/getHeroImageUrl";
+import { MouseGlowCanvas } from "../sharedComponents/MouseGlowCanvas";
 
 type HeroImage = SanityImageSource & {
   alt?: string;
@@ -26,23 +24,6 @@ export default function ServicesHero({
   description,
   images = [],
 }: ServicesHeroProps) {
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (event: MouseEvent) => {
-      setMouse({
-        x: event.clientX,
-        y: event.clientY,
-      });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
-
   const heroImages = (images ?? [])
     .slice(0, 4)
     .map((image) => ({
@@ -59,14 +40,7 @@ export default function ServicesHero({
   return (
     <section className="relative min-h-[78vh] overflow-hidden bg-[#171717] text-white">
       {/* Ambient mouse light */}
-      <div
-        className="pointer-events-none fixed z-0 h-[500px] w-[500px] rounded-full bg-[#b7924a]/10 blur-[120px] transition-transform duration-700 ease-out"
-        style={{
-          transform: `translate3d(${mouse.x - 250}px, ${
-            mouse.y - 250
-          }px, 0)`,
-        }}
-      />
+      <MouseGlowCanvas />
 
       {/* Decorative lines */}
       <div className="absolute inset-0 opacity-[0.08]">
@@ -105,8 +79,7 @@ export default function ServicesHero({
                 src={image1.src}
                 alt={image1.alt}
                 fill
-                priority
-                sizes="31vw"
+                sizes="(min-width: 1024px) 31vw, 50vw"
                 className="object-cover"
               />
 
@@ -128,7 +101,7 @@ export default function ServicesHero({
                 src={image2.src}
                 alt={image2.alt}
                 fill
-                sizes="31vw"
+                sizes="(min-width: 1024px) 31vw, 50vw"
                 className="object-cover"
               />
 
@@ -150,7 +123,7 @@ export default function ServicesHero({
                 src={image3.src}
                 alt={image3.alt}
                 fill
-                sizes="31vw"
+                sizes="(min-width: 1024px) 31vw, 50vw"
                 className="object-cover"
               />
 
@@ -172,7 +145,7 @@ export default function ServicesHero({
                 src={image4.src}
                 alt={image4.alt}
                 fill
-                sizes="31vw"
+                sizes="(min-width: 1024px) 31vw, 50vw"
                 className="object-cover"
               />
 
@@ -260,7 +233,7 @@ export default function ServicesHero({
                   src={image1.src}
                   alt={image1.alt}
                   fill
-                  sizes="50vw"
+                  sizes="(max-width: 767px) calc(100vw - 3rem), (max-width: 1023px) calc(100vw - 5rem)"
                   className="object-cover"
                 />
               </div>
@@ -279,7 +252,7 @@ export default function ServicesHero({
                   src={image2.src}
                   alt={image2.alt}
                   fill
-                  sizes="50vw"
+                  sizes="(max-width: 767px) calc(100vw - 3rem), (max-width: 1023px) calc(100vw - 5rem)"
                   className="object-cover"
                 />
               </div>
@@ -298,7 +271,7 @@ export default function ServicesHero({
                   src={image3.src}
                   alt={image3.alt}
                   fill
-                  sizes="50vw"
+                  sizes="(max-width: 767px) calc(100vw - 3rem), (max-width: 1023px) calc(100vw - 5rem)"
                   className="object-cover"
                 />
               </div>
@@ -317,7 +290,7 @@ export default function ServicesHero({
                   src={image4.src}
                   alt={image4.alt}
                   fill
-                  sizes="50vw"
+                  sizes="(max-width: 767px) calc(100vw - 3rem), (max-width: 1023px) calc(100vw - 5rem)"
                   className="object-cover"
                 />
               </div>

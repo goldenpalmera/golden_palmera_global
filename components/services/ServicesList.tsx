@@ -7,8 +7,6 @@ type Props = {
 };
 
 export function ServicesList({ services }: Props) {
-  console.log("services >>>", services.length > 0);
-
   return (
     <section className="px-6 pb-24 md:px-10 lg:px-16 lg:pb-36">
       <div className="mx-auto max-w-[1400px]">

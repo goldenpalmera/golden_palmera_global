@@ -1,5 +1,3 @@
-"use client";
-
 const stages = [
   {
     number: "01",
