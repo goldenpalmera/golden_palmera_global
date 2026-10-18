@@ -102,8 +102,8 @@ jobs:
                         -u "${{ secrets.GHCR_USERNAME }}" \ 
                         --password-stdin 
                     chmod +x deploy.sh 
-                    ./deploy.sh \ 
-                        ghcr.io/${{ github.repository }} \ 
-                        ${{ inputs.image_tag }} \ 
-                        https://${{ inputs.environment }}.example.com \ 
-                        https://${{ inputs.environment }}.example.com
+                    ./deploy.sh \
+                        "ghcr.io/${{ github.repository }}" \
+                        "${{ inputs.image_tag }}" \
+                        "https://${{ inputs.environment }}.goldenpalmeraglobal.com/api/health" \
+                        "https://${{ inputs.environment }}.goldenpalmeraglobal.com"
