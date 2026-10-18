@@ -40,8 +40,10 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN --mount=type=secret,id=SANITY_API_TOKEN \
     --mount=type=secret,id=ADMIN_EMAIL \
+    --mount=type=secret,id=DATABASE_URL \
     export ADMIN_EMAIL="$(cat /run/secrets/ADMIN_EMAIL)" && \
     export SANITY_API_TOKEN="$(cat /run/secrets/SANITY_API_TOKEN)" && \
+    export DATABASE_URL="$(cat /run/secrets/DATABASE_URL)" && \
     npm run build
 
 
