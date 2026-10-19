@@ -16,7 +16,7 @@ vi.mock("@upstash/ratelimit", () => {
   class MockRatelimit {
     static slidingWindow = mocks.slidingWindow;
     limit = mocks.limit;
-    constructor(_options: unknown) {}
+    constructor() {}
   }
 
   return { Ratelimit: MockRatelimit };
@@ -24,7 +24,7 @@ vi.mock("@upstash/ratelimit", () => {
 
 vi.mock("@upstash/redis", () => ({
   Redis: class MockRedis {
-    constructor(_options: unknown) {}
+    constructor() {}
   },
 }));
 
@@ -58,8 +58,17 @@ describe("checkRateLimit", () => {
     mocks.findMany.mockResolvedValue([]);
     mocks.create.mockResolvedValue({});
 
+    type MockTransactionClient = {
+      $queryRaw: typeof mocks.queryRaw;
+      rateLimitEvent: {
+        deleteMany: typeof mocks.deleteMany;
+        findMany: typeof mocks.findMany;
+        create: typeof mocks.create;
+      };
+    };
+
     mocks.transaction.mockImplementation(
-      async (callback: (tx: any) => Promise<unknown>) =>
+      async (callback: (tx: MockTransactionClient) => Promise<unknown>) =>
         callback({
           $queryRaw: mocks.queryRaw,
           rateLimitEvent: {
