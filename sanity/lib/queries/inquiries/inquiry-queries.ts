@@ -145,3 +145,30 @@ export const INQUIRIES_BY_ID_QUERY = defineQuery(
     }
   `
 );
+
+export const RETRY_EMAIL_QUERY = defineQuery(
+  `*[
+      _type == $type
+      && _id == $id
+    ][0]{
+      _id,
+      _type,
+      reference,
+      name,
+      email,
+      phone,
+      company,
+      country,
+      product,
+      quantity,
+      packaging,
+      destination,
+      message,
+      organizationType,
+      market,
+      companyWebsite,
+      partnershipFocus,
+      subject
+    }
+  `
+)
