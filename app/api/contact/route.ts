@@ -44,8 +44,9 @@ export async function POST(request: Request) {
       );
     }
 
-    // Parse request body once. Request bodies are streams and can only be consumed once.
+    // Parse request body
     let body: unknown;
+    
     try {
       body = await request.json();
     } catch (error) {
@@ -65,6 +66,20 @@ export async function POST(request: Request) {
     const parsed = contactSchema.safeParse(body);
 
     if (!parsed.success) {
+      console.error(`[${requestId}] Contact validation failed`, {
+        issues: parsed.error.issues.map((issue) => ({
+          path: issue.path.join("."),
+          code: issue.code,
+          message: issue.message,
+        })),
+        receivedKeys:
+          body !== null &&
+          typeof body === "object" &&
+          !Array.isArray(body)
+            ? Object.keys(body)
+            : [],
+      });
+
       return NextResponse.json(
         {
           success: false,
@@ -106,10 +121,7 @@ export async function POST(request: Request) {
     }
 
     // Rate limit
-    const rateLimit =
-      await checkRateLimit(
-        `${ip}:${data.email}`
-      );
+    const rateLimit = await checkRateLimit(ip);
 
     if (!rateLimit.success) {
       return NextResponse.json(
@@ -138,8 +150,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          message:
-            result.error,
+          message: result.error,
           requestId,
         },
         {
@@ -164,8 +175,31 @@ export async function POST(request: Request) {
       }
     );
   } catch (error) {
+     if (
+      error instanceof Error &&
+      error.message === "All rate-limit backends are unavailable."
+    ) {
+      console.error(
+        `[${requestId}] Rate-limit infrastructure unavailable.`
+      );
+
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Enquiry submission are temporarily unavailable. Please try again shortly.",
+          requestId,
+        },
+        {
+          status: 503,
+          headers: {
+            "Retry-After": "60",
+          },
+        }
+      );
+    }
     console.error(
-      `[${requestId}] Quote API error`,
+      `[${requestId}] Contact API error`,
       error
     );
 
@@ -182,4 +216,3 @@ export async function POST(request: Request) {
     );
   }
 }
-

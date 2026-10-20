@@ -65,7 +65,6 @@ export type Inquiry = {
 
 export type InquiryInput = {
   type: InquiryType;
-  requestId: string;
 
   name: string;
   email: string;
@@ -86,4 +85,28 @@ export type InquiryInput = {
   companyWebsite?: string;
 
   message: string;
+};
+
+export type InquiryEmailData = {
+  reference: string;
+  name: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  country?: string;
+
+  product?: string;
+  quantity?: string;
+  packaging?: string;
+  destination?: string;
+
+  subject?: string;
+
+  organizationType?: string;
+  market?: string;
+  companyWebsite?: string;
+  partnershipFocus?: string;
+
+  message: string;
+  type: string;
 };

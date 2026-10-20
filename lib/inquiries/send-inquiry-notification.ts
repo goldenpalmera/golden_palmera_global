@@ -1,4 +1,7 @@
+import "server-only";
+
 import { Resend } from "resend";
+import { InquiryEmailData } from "./types";
 
 let resend: Resend | null = null;
 
@@ -25,30 +28,6 @@ const notificationEmail =
 const fromEmail =
   process.env.RESEND_FROM_EMAIL ||
   "onboarding@resend.dev";
-
-type InquiryEmailData = {
-  reference: string;
-  name: string;
-  email: string;
-  phone?: string;
-  company?: string;
-  country?: string;
-
-  product?: string;
-  quantity?: string;
-  packaging?: string;
-  destination?: string;
-
-  subject?: string;
-
-  organizationType?: string;
-  market?: string;
-  companyWebsite?: string;
-  partnershipFocus?: string;
-
-  message: string;
-  type: string;
-};
 
 function escapeHtml(value: string) {
   return value

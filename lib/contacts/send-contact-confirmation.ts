@@ -1,3 +1,5 @@
+import "server-only";
+
 import { Resend } from "resend";
 
 let resend: Resend | null = null;

@@ -59,3 +59,13 @@ model Inquiry {
   @@index([type])
   @@index([createdAt])
 }
+
+
+model RateLimitEvent {
+  id        String   @id @default(cuid())
+  keyHash   String
+  createdAt DateTime @default(now())
+
+  @@index([keyHash, createdAt])
+  @@index([createdAt])
+}

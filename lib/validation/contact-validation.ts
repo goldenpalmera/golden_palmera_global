@@ -49,7 +49,7 @@ export const contactSchema = z.object({
 
   website: z
     .string()
-    .max(0)
+    .max(500)
     .optional()
     .or(z.literal("")),
 });

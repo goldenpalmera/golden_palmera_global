@@ -3,6 +3,7 @@ import ContactStats from "@/components/admin/ContactStats";
 import ContactFilters from "@/components/admin/ContactFilters";
 import { getContacts, getContactStats } from "@/lib/contacts/get-contacts";
 import type { ContactStatus } from "@/lib/contacts/types";
+import { requireAdmin } from "@/lib/auth/require-admin";
 
 type Props = {
   searchParams: Promise<{
@@ -14,6 +15,8 @@ type Props = {
 export default async function AdminContactsPage({
   searchParams,
 }: Props) {
+  await requireAdmin();
+  
   const params = await searchParams;
 
   const search = params.search ?? "";

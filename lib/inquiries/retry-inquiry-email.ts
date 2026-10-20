@@ -3,9 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { getSanityClient } from "@/sanity/lib/client";
-
 import { sendInquiryNotification } from "./send-inquiry-notification";
 import { sendCustomerConfirmation } from "./send-customer-email";
+import { INQUIRIES_BY_ID_QUERY } from "@/sanity/lib/queries/inquiries/inquiry-queries";
+import { Inquiry } from "./types";
+
 
 export type InquiryEmailType =
   | "notification"
@@ -27,54 +29,8 @@ export async function retryInquiryEmail(
   const client = getSanityClient();
   
   const inquiry =
-    await client.fetch<{
-      _id: string;
-      reference: string;
-      type: string;
-      name: string;
-      email: string;
-      phone?: string;
-      company?: string;
-      country?: string;
-      product?: string;
-      quantity?: string;
-      packaging?: string;
-      destination?: string;
-      message?: string;
-      organizationType?: string;
-      market?: string;
-      companyWebsite?: string;
-      partnershipFocus?: string;
-      subject?: string;
-
-      notificationEmailStatus?: string;
-      confirmationEmailStatus?: string;
-    } | null>(
-      `*[
-        _type == "inquiry"
-        && _id == $id
-      ][0]{
-        _id,
-        reference,
-        type,
-        name,
-        email,
-        phone,
-        company,
-        country,
-        product,
-        quantity,
-        packaging,
-        destination,
-        message,
-        organizationType,
-        market,
-        companyWebsite,
-        partnershipFocus,
-        subject,
-        notificationEmailStatus,
-        confirmationEmailStatus
-      }`,
+    await client.fetch<Inquiry | null>(
+      INQUIRIES_BY_ID_QUERY,
       { id }
     );
 

@@ -148,7 +148,7 @@ export default function InquiryForm({
 
       const result = await response.json();
 
-      if (!response.ok || result.status === "error") {
+      if (!response.ok || !result.success) {
         setState({
           status: "error",
           message:
@@ -296,13 +296,6 @@ export default function InquiryForm({
           </div>
         )}
 
-        {/** Hidden type field */}
-        <input
-          type="hidden"
-          name="type"
-          value={type}
-        />
-
       {/* Contact details */}
       <div className="mt-10">
         <SectionLabel>
@@ -361,7 +354,6 @@ export default function InquiryForm({
             label="Country"
             name="country"
             autoComplete="country-name"
-            disabled
             error={error("country")}
             placeholder="Country"
           />

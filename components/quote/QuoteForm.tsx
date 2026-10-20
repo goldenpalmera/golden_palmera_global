@@ -95,7 +95,7 @@ export default function QuoteForm({
 
       const result = await response.json();
 
-      if (!response.ok || result.status === "error") {
+      if (!response.ok || !result.success) {
         setState({
           status: "error",
           message: result.message || "Unable to submit your enquiry.",
@@ -129,7 +129,7 @@ export default function QuoteForm({
 
   if (state.status === "success") {
     return (
-      <div role="status" araia-live="polite"
+      <div role="status" aria-live="polite"
         className=" rounded-3xl border border-emerald-200 bg-emerald-50 p-8 text-center">
         <div aria-hidden="true"
           className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-600 text-2xl text-white">
@@ -272,6 +272,7 @@ export default function QuoteForm({
           autoComplete="country"
           placeholder="Country"
           required
+          disabled={state.status === "submitting"}
           error={error("country")}
         />
 
@@ -287,7 +288,6 @@ export default function QuoteForm({
           required
           error={error("product")}
         />
-
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2">
@@ -314,6 +314,7 @@ export default function QuoteForm({
             id="packaging"
             name="packaging"
             aria-invalid={ !!state.errors?.packaging?.[0] }
+            disabled={state.status === "submitting"}
             className="
               h-12
               w-full
@@ -385,6 +386,7 @@ export default function QuoteForm({
           name="message"
           rows={5}
           required
+          disabled={state.status === "submitting"}
           aria-invalid={
             !!state.errors?.message?.[0]
           }
@@ -398,6 +400,7 @@ export default function QuoteForm({
             bg-white
             p-4
             text-sm
+            text-zinc-900
             outline-none
             transition
             focus:border-emerald-600
@@ -408,22 +411,6 @@ export default function QuoteForm({
 
         <FieldError
           message={error("message")}
-        />
-      </div>
-
-      <div className="absolute -left-[9999px] h-0 w-0 overflow-hidden"
-        aria-hidden="true"
-      >
-        <label htmlFor="website">
-          Website
-        </label>
-
-        <input
-          id="website"
-          name="website"
-          type="text"
-          tabIndex={-1}
-          autoComplete="off"
         />
       </div>
 
