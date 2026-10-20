@@ -44,7 +44,8 @@ export async function POST(request: Request) {
         }
       );
     }
-        // validate input
+
+    // validate input
     const parsed = inquirySchema.safeParse(body);
 
     if (!parsed.success) {
