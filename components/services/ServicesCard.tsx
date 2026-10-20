@@ -1,6 +1,3 @@
-"use client";
-
-import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -23,48 +20,14 @@ export default function ServiceCard({
   slug,
   image,
 }: ServiceCardProps) {
-  const cardRef = useRef<HTMLElement>(null);
 
   const hasContent =
     Boolean(description?.trim()) || items.length > 0;
 
-  const handleMouseMove = (
-    event: React.MouseEvent<HTMLElement>
-  ) => {
-    const card = cardRef.current;
-    if (!card) return;
-
-    const rect = card.getBoundingClientRect();
-
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-
-    const rotateX = (y / rect.height - 0.5) * -3;
-    const rotateY = (x / rect.width - 0.5) * 3;
-
-    card.style.transform = `
-      perspective(1000px)
-      rotateX(${rotateX}deg)
-      rotateY(${rotateY}deg)
-      translateY(-4px)
-    `;
-  };
-
-  const handleMouseLeave = () => {
-    const card = cardRef.current;
-    if (!card) return;
-
-    card.style.transform =
-      "perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)";
-  };
-
   return (
     <Link href={`/services/${slug}`} className="block h-full">
       <article
-        ref={cardRef}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        className="group relative min-h-[520px] overflow-hidden border border-black/10 bg-[#f5f1e8] transition-transform duration-300 ease-out"
+        className="group relative min-h-[520px] overflow-hidden border border-black/10 bg-[#f5f1e8] transition-transform duration-300 ease-out hover:-translate-y-1"
       >
         {/* Image */}
         {image ? (
@@ -110,7 +73,10 @@ export default function ServiceCard({
         )}
 
         {/* Mouse glow */}
-        <div className="pointer-events-none absolute -right-20 -top-20 h-40 w-40 rounded-full bg-[#b7924a]/10 blur-3xl transition-opacity duration-500 group-hover:opacity-100" />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-20 -top-20 h-40 w-40 rounded-full bg-[#b7924a]/10 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100 motion-reduce:transition-none"
+        />
 
         <div className="relative flex min-h-[264px] flex-col p-7 md:p-9">
           <div className="mt-auto">

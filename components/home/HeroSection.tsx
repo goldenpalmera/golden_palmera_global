@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 import { urlFor } from "@/sanity/lib/image";
-import { useEffect, useState } from "react";
 import {
   CircleCheck,
   MessageCircle,
@@ -26,31 +26,120 @@ const CREDENTIALS = [
 export function HeroSection({
   content,
 }: HeroSectionProps) {
-  const [mouse, setMouse] = useState({
-    x: 0,
-    y: 0,
-  });
+
+  const glowCanvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    // Avoid running mouse tracking on touch devices.
-    if (window.matchMedia("(pointer: coarse)").matches) {
+    const canvas = glowCanvasRef.current;
+    const context = canvas?.getContext("2d");
+
+    if (!canvas || !context) return;
+
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    );
+    const coarsePointer = window.matchMedia(
+      "(pointer: coarse)"
+    );
+
+    if (reducedMotion.matches || coarsePointer.matches) {
       return;
     }
 
-    const handleMove = (event: MouseEvent) => {
-      setMouse({
-        x: event.clientX,
-        y: event.clientY,
-      });
+    let width = 0;
+    let height = 0;
+    let animationFrame = 0;
+    let visible = false;
+
+    const target = { x: 0, y: 0 };
+    const current = { x: 0, y: 0 };
+
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      width = window.innerWidth;
+      height = window.innerHeight;
+
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+
+      context.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
-    window.addEventListener("mousemove", handleMove);
+    const handlePointerMove = (event: PointerEvent) => {
+      if (event.pointerType !== "mouse") return;
+
+      target.x = event.clientX;
+      target.y = event.clientY;
+      visible = true;
+
+      if (!animationFrame) {
+        animationFrame = requestAnimationFrame(draw);
+      }
+    };
+
+    const handlePointerLeave = () => {
+      visible = false;
+
+      if (!animationFrame) {
+        animationFrame = requestAnimationFrame(draw);
+      }
+    };
+
+    const draw = () => {
+      animationFrame = 0;
+
+      current.x += (target.x - current.x) * 0.14;
+      current.y += (target.y - current.y) * 0.14;
+
+      context.clearRect(0, 0, width, height);
+
+      if (visible) {
+        const radius = 240;
+        const gradient = context.createRadialGradient(
+          current.x,
+          current.y,
+          0,
+          current.x,
+          current.y,
+          radius
+        );
+
+        gradient.addColorStop(0, "rgba(201, 168, 76, 0.18)");
+        gradient.addColorStop(0.3, "rgba(201, 168, 76, 0.09)");
+        gradient.addColorStop(0.65, "rgba(201, 168, 76, 0.025)");
+        gradient.addColorStop(1, "rgba(201, 168, 76, 0)");
+
+        context.fillStyle = gradient;
+        context.fillRect(0, 0, width, height);
+      }
+
+      const distance = Math.hypot(
+        target.x - current.x,
+        target.y - current.y
+      );
+
+      if (visible && distance > 0.5) {
+        animationFrame = requestAnimationFrame(draw);
+      }
+    };
+
+    resize();
+
+    window.addEventListener("resize", resize);
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerleave", handlePointerLeave);
 
     return () => {
-      window.removeEventListener(
-        "mousemove",
-        handleMove
-      );
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerleave", handlePointerLeave);
+
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+      }
+
+      context.clearRect(0, 0, width, height);
     };
   }, []);
 
@@ -97,16 +186,10 @@ export function HeroSection({
           MOUSE LIGHT
           ========================================= */}
 
-      <div
+      <canvas
+        ref={glowCanvasRef}
         className="mouse-glow"
         aria-hidden="true"
-        style={{
-          transform: `translate3d(
-            ${mouse.x - 180}px,
-            ${mouse.y - 180}px,
-            0
-          )`,
-        }}
       />
 
       {/* =========================================

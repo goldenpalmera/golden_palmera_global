@@ -57,8 +57,6 @@ export default async function ProductPage({
     notFound();
   }
 
-  console.log("prod >>>")
-
   const relatedProducts =
     sanityRelatedProducts.length > 0
       ? sanityRelatedProducts
