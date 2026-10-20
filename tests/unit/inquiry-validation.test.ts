@@ -1,6 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { inquirySchema } from "@/lib/validation/inquiry-validation";
 
+
+function withoutField<T extends object, K extends keyof T>(
+  value: T,
+  key: K,
+): Omit<T, K> {
+  const copy = { ...value };
+  delete copy[key];
+  return copy;
+}
+
 describe("inquirySchema", () => {
   const validProductInquiry = {
     type: "product",
@@ -50,24 +60,21 @@ describe("inquirySchema", () => {
     });
 
     it("requires a product", () => {
-      const { product: _product, ...inquiry } = validProductInquiry;
-
+      const inquiry = withoutField(validProductInquiry, "product");
       const result = inquirySchema.safeParse(inquiry);
 
       expect(result.success).toBe(false);
     });
 
     it("requires a quantity", () => {
-      const { quantity: _quantity, ...inquiry } = validProductInquiry;
-
+      const inquiry = withoutField(validProductInquiry, "quantity");
       const result = inquirySchema.safeParse(inquiry);
 
       expect(result.success).toBe(false);
     });
 
     it("requires a destination", () => {
-      const { destination: _destination, ...inquiry } = validProductInquiry;
-
+      const inquiry = withoutField(validProductInquiry, "destination");
       const result = inquirySchema.safeParse(inquiry);
 
       expect(result.success).toBe(false);
@@ -82,8 +89,7 @@ describe("inquirySchema", () => {
     });
 
     it("requires a product", () => {
-      const { product: _product, ...inquiry } = validExportBuyerInquiry;
-
+      const inquiry = withoutField(validExportBuyerInquiry, "product");
       const result = inquirySchema.safeParse(inquiry);
 
       expect(result.success).toBe(false);
@@ -98,11 +104,7 @@ describe("inquirySchema", () => {
     });
 
     it("requires a partnership focus", () => {
-      const {
-        partnershipFocus: _partnershipFocus,
-        ...inquiry
-      } = validPartnershipInquiry;
-
+      const inquiry = withoutField(validPartnershipInquiry, "partnershipFocus");
       const result = inquirySchema.safeParse(inquiry);
 
       expect(result.success).toBe(false);

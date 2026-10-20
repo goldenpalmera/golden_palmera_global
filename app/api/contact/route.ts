@@ -49,7 +49,7 @@ export async function POST(request: Request) {
     
     try {
       body = await request.json();
-    } catch (error) {
+    } catch {
       return NextResponse.json(
         {
           success: false,

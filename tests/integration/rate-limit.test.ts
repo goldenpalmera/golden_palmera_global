@@ -27,7 +27,7 @@ vi.mock("@upstash/ratelimit", () => ({
 
 vi.mock("@upstash/redis", () => ({
   Redis: class MockRedis {
-    constructor(_options: unknown) {}
+    constructor() {}
   },
 }));
 
