@@ -1,38 +1,78 @@
-name: Deploy Staging 
 
-on: 
-    push: 
-        branches: 
-            - staging
-            
-permissions: 
-    contents: read 
-    packages: read 
-    
-jobs: 
-    deploy: 
-        uses: ./.github/workflows/deploy.yml 
-        with: 
-            environment: staging 
-            image_tag: sha-${{ github.sha }} 
-            
-        secrets: 
-            HOST: ${{ secrets.STAGING_HOST }} 
-            USER: ${{ secrets.STAGING_USER }} 
-            SSH_KEY: ${{ secrets.STAGING_SSH_KEY }} 
-            GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }} 
-            GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }} 
-            
-            
-    notify: 
-        needs: deploy 
-        if: always() 
-        
-        uses: ./.github/workflows/notifications.yml 
-        with: 
-            status: ${{ needs.deploy.result }} 
-            environment: Staging 
-            title: Staging Deployment 
-            message: Staging deployment completed. 
-            
-        secrets: inherit
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - staging
+
+permissions:
+  contents: read
+  packages: read
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: staging
+      image_tag: sha-${{ github.sha }}
+      base_url: https://staging.goldenpalmeraglobal.com
+      health_url: https://staging.goldenpalmeraglobal.com/api/health
+    secrets:
+      HOST: ${{ secrets.STAGING_HOST }}
+      USER: ${{ secrets.STAGING_USER }}
+      SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
+      GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
+      GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
+
+  smoke-test:
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check staging health
+        env:
+          HEALTH_URL: https://staging.goldenpalmeraglobal.com/api/health
+          BASE_URL: https://staging.goldenpalmeraglobal.com
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          for attempt in {1..12}; do
+            if curl --fail --silent --show-error \
+              --max-time 10 "$HEALTH_URL" > /dev/null; then
+              echo "Health endpoint passed."
+              break
+            fi
+
+            if [[ "$attempt" -eq 12 ]]; then
+              echo "::error::Staging health check failed."
+              exit 1
+            fi
+
+            sleep 5
+          done
+
+          curl --fail --silent --show-error \
+            --max-time 15 "$BASE_URL" > /dev/null
+
+          echo "Staging smoke tests passed."
+
+  notify:
+    needs:
+      - deploy
+      - smoke-test
+    if: always()
+    uses: ./.github/workflows/notifications.yml
+    with:
+      status: >-
+        ${{ (needs.deploy.result == 'success' && needs.smoke-test.result == 'success') && 'success' || 'failure' }}
+      environment: Staging
+      title: Staging Deployment
+      message: Staging deployment and health checks finished.
+    secrets: inherit

@@ -1,20 +1,91 @@
-version: 2 
+version: 2
 
-updates: 
-  - package-ecosystem: "npm" 
-    directory: "/" 
-    schedule: 
-      interval: weekly 
-    open-pull-requests-limit: 10 
-    
-  - package-ecosystem: "github-actions" 
-    directory: "/" 
-    schedule: 
-      interval: weekly 
-    open-pull-requests-limit: 10 
-    
-  - package-ecosystem: "docker" 
-    directory: "/" 
-    schedule: 
-      interval: weekly 
+updates:
+  # JavaScript / TypeScript dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    target-branch: "develop"
+
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Africa/Lagos"
+
     open-pull-requests-limit: 10
+
+    labels:
+      - "dependencies"
+      - "nextjs"
+
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+
+    groups:
+      # High risk: always review framework and database changes manually
+      critical:
+        patterns:
+          - "next"
+          - "react"
+          - "react-dom"
+          - "@prisma/*"
+          - "prisma"
+          - "next-auth"
+          - "next-sanity"
+
+      # Medium risk: require all configured checks to pass
+      tooling:
+        patterns:
+          - "typescript"
+          - "vitest"
+          - "@playwright/*"
+          - "tailwindcss"
+          - "@tailwindcss/*"
+          - "@types/*"
+        update-types:
+          - "minor"
+          - "patch"
+
+      # Lower risk: candidates for auto-merge after validation
+      safe-patches:
+        patterns:
+          - "clsx"
+          - "tailwind-merge"
+          - "lucide-react"
+          - "@fortawesome/*"
+          - "zod"
+        update-types:
+          - "patch"
+          - "minor"
+
+  # GitHub Actions dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "develop"
+
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Africa/Lagos"
+
+    open-pull-requests-limit: 5
+
+    groups:
+      actions:
+        patterns:
+          - "*"
+
+  # Docker base images and dependencies
+  - package-ecosystem: "docker"
+    directory: "/"
+    target-branch: "develop"
+
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Africa/Lagos"
+
+    open-pull-requests-limit: 3

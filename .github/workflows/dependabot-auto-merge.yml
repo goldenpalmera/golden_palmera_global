@@ -1,0 +1,86 @@
+name: Dependabot Auto-Merge
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+    branches:
+      - develop
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  validate-and-merge:
+    if: >-
+      github.actor == 'dependabot[bot]' &&
+      github.event.pull_request.draft == false
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout pull request
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm run type-check
+
+      - name: Run tests if configured
+        run: npm run test --if-present
+
+      - name: Production build
+        run: npm run build
+        env:
+          DATABASE_URL: "postgresql://fake:fake@localhost:5432/fake?schema=public"
+          NEXTAUTH_SECRET: "fake-build-only-secret"
+          NEXTAUTH_URL: "http://localhost:3000"
+
+      - name: Enable auto-merge for approved groups
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ "$PR_TITLE" =~ [Ss]afe-patches ]]; then
+            echo "Approved candidate: safe-patches"
+          elif [[ "$PR_TITLE" =~ [Tt]ooling ]]; then
+            echo "Approved candidate: tooling"
+          else
+            echo "Not an approved auto-merge group."
+            echo "Manual review is required for: $PR_TITLE"
+            exit 0
+          fi
+
+          gh pr merge "$PR_NUMBER" --auto --squash
+
+      - name: Explain manual review
+        if: >-
+          success() &&
+          !contains(github.event.pull_request.title, 'safe-patches') &&
+          !contains(github.event.pull_request.title, 'tooling')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr comment "$PR_NUMBER" --body \
+            "Manual review required: this update is outside the approved auto-merge groups. Run the relevant checks and review the changes before merging."
