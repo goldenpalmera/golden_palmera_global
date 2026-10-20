@@ -629,3 +629,6 @@ horizontal overflow
 
 
 FIX --> CSS BRAND SEAL DUPLICATE
+
+generate a secret
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"

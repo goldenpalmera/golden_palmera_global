@@ -970,5 +970,6 @@ MVP:
 └── --ci exit-code policy
 
 duplicate or unused css
-nextjs use client
+comments and structure profssionally for recuiters
+nextjs use client and server only
 <Link></Link> and <a></a> appropate use
