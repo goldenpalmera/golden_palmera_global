@@ -23,8 +23,8 @@ jobs:
       HOST: ${{ secrets.DEV_HOST }}
       USER: ${{ secrets.DEV_USER }}
       SSH_KEY: ${{ secrets.DEV_SSH_KEY }}
-      GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
-      GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
+      GHCR_USERNAME: ${{ github.actor }}
+      GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   notify:
     needs: deploy
