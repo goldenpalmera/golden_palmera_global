@@ -11,10 +11,6 @@ permissions:
   packages: read
   id-token: write
 
-concurrency:
-  group: deploy-development
-  cancel-in-progress: false
-
 jobs:
   deploy:
     uses: ./.github/workflows/deploy.yml
