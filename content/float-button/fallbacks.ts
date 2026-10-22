@@ -5,7 +5,7 @@ export const FALLBACK_FLOATING_BUTTONS: FloatingButtonsData = {
 
   whatsapp: {
     enabled: true,
-    number: "2348012345678",
+    number: "2349039303660",
     message:
       "Hello, I'd like to enquire about your commodity export services.",
     label: "WhatsApp Trade Desk",
@@ -13,7 +13,7 @@ export const FALLBACK_FLOATING_BUTTONS: FloatingButtonsData = {
 
   phoneCall: {
     enabled: true,
-    calendlyUrl: "https://calendly.com/your-demo-account/30min",
+    calendlyUrl: "https://calendly.com/goldenpalmeraglobal/30min",
     label: "Book a Phone Call",
     title: "Book a Trade Consultation",
     description:
