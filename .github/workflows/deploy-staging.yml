@@ -1,38 +1,91 @@
-name: Deploy Staging 
+name: Deploy to Staging
 
-on: 
-    push: 
-        branches: 
-            - staging cd
-            
-permissions: 
-    contents: read 
-    packages: read 
-    
-jobs: 
-    deploy: 
-        uses: ./.github/workflows/deploy.yml 
-        with: 
-            environment: staging 
-            image_tag: sha-${{ github.sha }} 
-            
-        secrets: 
-            HOST: ${{ secrets.STAGING_HOST }} 
-            USER: ${{ secrets.STAGING_USER }} 
-            SSH_KEY: ${{ secrets.STAGING_SSH_KEY }} 
-            GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }} 
-            GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }} 
-            
-            
-    notify: 
-        needs: deploy 
-        if: always() 
-        
-        uses: ./.github/workflows/notifications.yml 
-        with: 
-            status: ${{ needs.deploy.result }} 
-            environment: Staging 
-            title: Staging Deployment 
-            message: Staging deployment completed. 
-            
-        secrets: inherit
+on:
+  workflow_run:
+    workflows:
+      - Docker
+    types:
+      - completed
+    branches:
+      - staging
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  deploy:
+    name: Deploy to Staging VPS / OCI
+    if: >-
+      ${{
+        vars.ENABLE_VPS_DEPLOYMENT == 'true' &&
+        github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.head_branch == 'staging' &&
+        github.event.workflow_run.conclusion == 'success'
+      }}
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: staging
+      image_tag: sha-${{ github.event.workflow_run.head_sha }}
+      base_url: https://staging.goldenpalmeraglobal.com
+      health_url: https://staging.goldenpalmeraglobal.com/api/health
+    secrets:
+      HOST: ${{ secrets.STAGING_HOST }}
+      USER: ${{ secrets.STAGING_USER }}
+      SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
+      GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
+      GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
+
+  smoke-test:
+    name: Verify Staging
+    needs: deploy
+    if: ${{ needs.deploy.result == 'success' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check staging health and homepage
+        shell: bash
+        env:
+          HEALTH_URL: https://staging.goldenpalmeraglobal.com/api/health
+          BASE_URL: https://staging.goldenpalmeraglobal.com
+        run: |
+          set -euo pipefail
+
+          healthy=false
+
+          for attempt in {1..12}; do
+            if curl --fail --silent --show-error \
+              --max-time 10 "$HEALTH_URL" > /dev/null; then
+              healthy=true
+              break
+            fi
+
+            if [[ "$attempt" -lt 12 ]]; then
+              sleep 5
+            fi
+          done
+
+          if [[ "$healthy" != "true" ]]; then
+            echo "::error::Staging health check failed."
+            exit 1
+          fi
+
+          curl --fail --silent --show-error \
+            --max-time 15 "$BASE_URL" > /dev/null
+
+          echo "Staging health and homepage checks passed."
+
+  notify:
+    name: Notify Staging Result
+    needs:
+      - deploy
+      - smoke-test
+    if: ${{ always() }}
+    uses: ./.github/workflows/notifications.yml
+    with:
+      status: >-
+        ${{ (needs.deploy.result == 'success' && needs.smoke-test.result == 'success') && 'success' || ((needs.deploy.result == 'skipped' && needs.smoke-test.result == 'skipped') && 'skipped' || 'failure') }}
+      environment: Staging
+      title: Staging Deployment
+      message: Staging deployment workflow finished. Check the Actions run for deployment and smoke-test results.
+    secrets: inherit

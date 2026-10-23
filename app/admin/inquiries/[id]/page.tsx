@@ -301,21 +301,6 @@ export default async function InquiryDetailPage({
           </section>
         )}
 
-        {inquiry.type === "contact" && (
-          <section className="mt-6 rounded-2xl border border-zinc-200 bg-white p-6">
-            <h2 className="text-lg font-semibold text-zinc-900">
-              Contact Enquiry
-            </h2>
-
-            <div className="mt-6">
-              <Info
-                label="Subject"
-                value={inquiry.subject}
-              />
-            </div>
-          </section>
-        )}
-
         <section className="mt-6 rounded-2xl border border-zinc-200 bg-white p-6">
           <h2 className="text-lg font-semibold text-zinc-900">
             Additional Requirements

@@ -1,37 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
 import { getSanityClient } from "@/sanity/lib/client";
 import { type ContactStatus }  from "@/lib/contacts/types"
-
 import ContactStatusForm from "./ContactStatusForm";
 import EmailDelivery from "@/components/admin/EmailDelivery";
-
-const contactQuery = `*[
-  _type == "contact"
-  && _id == $id
-][0] {
-  _id,
-  reference,
-  name,
-  email,
-  phone,
-  company,
-  country,
-  message,
-  status,
-  submittedAt,
-
-  notificationEmailStatus,
-  notificationEmailLastAttemptAt,
-  notificationEmailSentAt,
-  notificationEmailFailedAt,
-
-  confirmationEmailStatus,
-  confirmationEmailLastAttemptAt,
-  confirmationEmailSentAt,
-  confirmationEmailFailedAt
-}`;
+import { requireAdmin } from "@/lib/auth/require-admin";
+import { CONTACTS_BY_ID_QUERY } from "@/sanity/lib/queries/inquiries/contact-queries";
 
 const statusStyles: Record<ContactStatus, string> = {
   'NEW': "border-blue-500 text-blue-500",
@@ -46,12 +20,14 @@ export default async function ContactDetailsPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await requireAdmin();
+
   const { id } = await params;
 
   const client = getSanityClient();
 
   const contact = await client.fetch(
-    contactQuery,
+    CONTACTS_BY_ID_QUERY,
     { id },
     {
       next: {

@@ -6,40 +6,53 @@
     "dev": "next dev",
     "lint": "eslint",
     "type-check": "prisma generate && tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
     "build": "prisma generate && next build",
     "start": "next start",
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^7.3.1",
+    "@fortawesome/free-brands-svg-icons": "^7.3.1",
+    "@fortawesome/free-solid-svg-icons": "^7.3.1",
+    "@fortawesome/react-fontawesome": "^3.5.0",
     "@portabletext/react": "^8.0.1",
     "@portabletext/types": "^4.0.2",
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
+    "@radix-ui/react-dialog": "^1.1.23",
     "@sanity/image-url": "^2.1.1",
     "@sanity/vision": "^6.11.0",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.38.2",
-    "next": "16.3.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.41.0",
+    "next": "^16.4.2",
     "next-auth": "^5.0.0-beta.32",
     "next-sanity": "^13.3.3",
     "pg": "^8.23.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "resend": "^6.22.0",
-    "styled-components": "^6.5.3",
+    "tailwind-merge": "^3.6.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.3.1",
+    "eslint-config-next": "^16.4.2",
     "prisma": "^7.10.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.2.4"
   },
   "overrides": {
     "deepmerge-ts": "^8.0.1",
@@ -57,5 +70,4 @@
       "@sanity/workbench": "0.1.0-alpha.45"
     }
   }
-
 }

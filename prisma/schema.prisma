@@ -47,10 +47,25 @@ model Inquiry {
   packaging    String?
   destination  String?
 
+  organizationType String?
+  market           String?
+  companyWebsite   String?
+  partnershipFocus String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([status])
   @@index([type])
+  @@index([createdAt])
+}
+
+
+model RateLimitEvent {
+  id        String   @id @default(cuid())
+  keyHash   String
+  createdAt DateTime @default(now())
+
+  @@index([keyHash, createdAt])
   @@index([createdAt])
 }

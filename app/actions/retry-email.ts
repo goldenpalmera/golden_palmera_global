@@ -1,31 +1,28 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { getSanityClient } from "@/sanity/lib/client";
-
 import {
   sendContactNotification,
 } from "@/lib/contacts/send-contact-notification";
-
 import {
   sendContactConfirmation,
 } from "@/lib/contacts/send-contact-confirmation";
-
 import {
   sendInquiryNotification,
 } from "@/lib/inquiries/send-inquiry-notification";
-
 import {
   sendCustomerConfirmation,
 } from "@/lib/inquiries/send-customer-email";
-
 import type {
   EmailType,
+  RetryEmail,
 } from "@/lib/email/types";
-import { success } from "zod";
-import { error } from "console";
+import { 
+  RETRY_EMAIL_QUERY,
+} from "@/sanity/lib/queries/inquiries/inquiry-queries";
+
 
 type DocumentType =
   | "contact"
@@ -69,54 +66,8 @@ export async function retryEmail(
    * LOAD DOCUMENT
    */
   const client = getSanityClient();
-
-  const document = await client.fetch<{
-    _id: string;
-    _type: string;
-
-    reference: string;
-    name: string;
-    email: string;
-
-    phone?: string;
-    company?: string;
-    country?: string;
-    product?: string;
-    quantity?: string;
-    packaging?: string;
-    destination?: string;
-    message?: string;
-
-    organizationType?: string;
-    market?: string;
-    companyWebsite?: string;
-    partnershipFocus?: string;
-    subject?: string;
-    type: string
-  } | null>(
-    `*[
-      _type == $type
-      && _id == $id
-    ][0]{
-      _id,
-      _type,
-      reference,
-      name,
-      email,
-      phone,
-      company,
-      country,
-      product,
-      quantity,
-      packaging,
-      destination,
-      message,
-      organizationType,
-      market,
-      companyWebsite,
-      partnershipFocus,
-      subject
-    }`,
+  const document = await client.fetch<RetryEmail | null>(
+    RETRY_EMAIL_QUERY,
     {
       type: documentType,
       id,
@@ -203,10 +154,7 @@ export async function retryEmail(
     /*
      * MARK SENT
      */
-
-    const sentAt =
-      new Date().toISOString();
-
+    const sentAt = new Date().toISOString();
     await client
       .patch(id)
       .set({
@@ -218,14 +166,8 @@ export async function retryEmail(
     /*
      * REVALIDATE
      */
-
-    revalidatePath(
-      `/admin/${documentType}s/${id}`
-    );
-
-    revalidatePath(
-      `/admin/${documentType}s`
-    );
+    revalidatePath(`/admin/${documentType}s/${id}`);
+    revalidatePath(`/admin/${documentType}s`);
 
     return {
       success: true as const,
@@ -243,9 +185,7 @@ export async function retryEmail(
     /*
      * MARK FAILED
      */
-
     const failedAt = new Date().toISOString();
-
     await client
       .patch(id)
       .set({

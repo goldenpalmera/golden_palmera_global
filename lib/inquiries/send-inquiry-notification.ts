@@ -1,4 +1,7 @@
+import "server-only";
+
 import { Resend } from "resend";
+import { InquiryEmailData } from "./types";
 
 let resend: Resend | null = null;
 
@@ -18,37 +21,21 @@ function getResend(): Resend {
   return resend;
 }
 
+function getRequiredEnv(name: string): string {
+  const value = process.env[name]?.trim();
+
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+
+  return value;
+}
+
 const notificationEmail =
-  process.env.INQUIRY_NOTIFICATION_EMAIL ||
-  "goldenpalmeraglobal@gmail.com";
+  getRequiredEnv("INQUIRY_NOTIFICATION_EMAIL");
 
 const fromEmail =
-  process.env.RESEND_FROM_EMAIL ||
-  "onboarding@resend.dev";
-
-type InquiryEmailData = {
-  reference: string;
-  name: string;
-  email: string;
-  phone?: string;
-  company?: string;
-  country?: string;
-
-  product?: string;
-  quantity?: string;
-  packaging?: string;
-  destination?: string;
-
-  subject?: string;
-
-  organizationType?: string;
-  market?: string;
-  companyWebsite?: string;
-  partnershipFocus?: string;
-
-  message: string;
-  type: string;
-};
+  getRequiredEnv("RESEND_FROM_EMAIL");
 
 function escapeHtml(value: string) {
   return value

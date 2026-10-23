@@ -4,28 +4,7 @@ import { getSanityClient } from "@/sanity/lib/client";
 import { CreateInquiryResult } from "../type";
 import { sendCustomerConfirmation } from "./send-customer-email";
 import { sendInquiryNotification } from "./send-inquiry-notification";
-
-type InquiryInput = {
-  name: string;
-  email: string;
-  phone?: string;
-  company?: string;
-  country?: string;
-
-  product?: string;
-  quantity?: string;
-  packaging?: string;
-  destination?: string;
-
-  message: string;
-  type: string;
-
-  organizationType?: string;
-  market?: string;
-  companyWebsite?: string;
-  partnershipFocus?: string;
-  subject?: string;
-};
+import { InquiryInput } from "./types";
 
 type InquiryContext = {
   requestId: string;
@@ -50,6 +29,8 @@ export async function createInquiry(
   const reference = generateReference();
   const submittedAt = new Date().toISOString();
 
+  let notificationFailed = false;
+  let confirmationFailed = false;
   let createdInquiry;
 
   /*
@@ -62,6 +43,7 @@ export async function createInquiry(
 
       reference,
       type: data.type,
+      requestId: context.requestId,
       status: "NEW",
 
       name: data.name,
@@ -161,14 +143,17 @@ export async function createInquiry(
       type: data.type,
     });
 
+    const notificationEmailSentAt = new Date().toISOString();
+
     await client
       .patch(createdInquiry._id)
       .set({
         notificationEmailStatus: "sent",
-        notificationEmailSentAt: attemptedAt
+        notificationEmailSentAt: notificationEmailSentAt
       })
       .commit();
   } catch (error) {
+    notificationFailed = true;
     console.error(
       `[${context.requestId}] Inquiry notification email failed:`,
       error
@@ -211,14 +196,17 @@ export async function createInquiry(
       email: data.email,
     });
 
+    const confirmationEmailSentAt = new Date().toISOString();
+
     await client
       .patch(createdInquiry._id)
       .set({
         confirmationEmailStatus: "sent",
-        confirmationEmailSentAt: attemptedAt,
+        confirmationEmailSentAt: confirmationEmailSentAt,
       })
       .commit();
   } catch (error) {
+    confirmationFailed = true;
     console.error(
       `[${context.requestId}] Inquiry confirmation email failed:`,
       error
@@ -246,5 +234,7 @@ export async function createInquiry(
     reference,
     message:
       "Your enquiry has been received.",
+    emailWarning:
+      notificationFailed || confirmationFailed,
   };
 }

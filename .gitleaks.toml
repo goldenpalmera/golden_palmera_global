@@ -1,0 +1,10 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Allow Sanity Portable Text keys in approach fallback content"
+condition = "AND"
+paths = ['''content/approach/fallback\.ts''']
+ruleIDs = ["generic-api-key"]
+regexTarget = "line"
+regexes = ['''_key:\s*"[A-Za-z0-9_-]+"''']

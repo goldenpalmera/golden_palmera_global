@@ -16,11 +16,9 @@ export const inquiryStatusSchema =
   z.enum(inquiryStatuses);
 
 export const inquiryTypes = [
-  "general",
   "product",
   "partnership",
   "export_buyer",
-  "contact",
 ] as const;
 
 export type InquiryType =
@@ -87,4 +85,28 @@ export type InquiryInput = {
   companyWebsite?: string;
 
   message: string;
+};
+
+export type InquiryEmailData = {
+  reference: string;
+  name: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  country?: string;
+
+  product?: string;
+  quantity?: string;
+  packaging?: string;
+  destination?: string;
+
+  subject?: string;
+
+  organizationType?: string;
+  market?: string;
+  companyWebsite?: string;
+  partnershipFocus?: string;
+
+  message: string;
+  type: string;
 };

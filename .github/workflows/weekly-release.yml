@@ -1,0 +1,86 @@
+name: Weekly Release develop to main
+
+on:
+  schedule:
+    # Friday, 10:00 Africa/Lagos = 09:00 UTC
+    - cron: "0 9 * * 5"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  create-release-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check develop for unreleased commits
+        id: check
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git fetch origin main develop
+
+          AHEAD=$(git rev-list --count origin/main..origin/develop)
+
+          echo "ahead=$AHEAD" >> "$GITHUB_OUTPUT"
+          echo "Develop has $AHEAD commits not in main."
+
+      - name: Create release pull request
+        if: steps.check.outputs.ahead != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          EXISTING=$(gh pr list \
+            --base main \
+            --head develop \
+            --state open \
+            --json number \
+            --jq 'length')
+
+          if [[ "$EXISTING" -gt 0 ]]; then
+            echo "A develop-to-main release PR already exists."
+            exit 0
+          fi
+
+          CHANGELOG=$(git log origin/main..origin/develop \
+            --pretty='- %s (%h)' | head -20)
+
+          gh pr create \
+            --base main \
+            --head develop \
+            --title "Release: $(date -u +'%Y-%m-%d') - weekly release" \
+            --body "$(cat <<EOF
+          ## Weekly Release
+
+          This pull request proposes merging \`develop\` into \`main\`.
+
+          ### Included changes
+          $CHANGELOG
+
+          ### Release checklist
+          - [ ] CI checks pass
+          - [ ] Production build passes
+          - [ ] Unit and integration tests pass
+          - [ ] Staging smoke tests pass
+          - [ ] Prisma migrations reviewed, if applicable
+          - [ ] Security and dependency changes reviewed
+          - [ ] Rollback plan confirmed
+
+          This pull request was generated automatically.
+          EOF
+          )"
+
+      - name: No release required
+        if: steps.check.outputs.ahead == '0'
+        run: echo "Develop has no unreleased commits."
