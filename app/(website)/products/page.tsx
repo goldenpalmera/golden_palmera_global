@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import PageHero from "../../components/sharedComponents/PageHero";
+import PageHero from "../../../components/sharedComponents/PageHero";
 import { getProductsData } from "@/content/products/getProductsData";
 import { getProductsPage } from "@/content/products/getProductsPage";
 import { mapProductsPage } from "@/content/products/sanity"

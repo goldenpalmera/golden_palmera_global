@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import PageHero from "../../components/sharedComponents/PageHero";
+import PageHero from "@/components/sharedComponents/PageHero";
 import { SupplyChainSection } from "@/components/home";
 import {
   getFeaturedLeader,

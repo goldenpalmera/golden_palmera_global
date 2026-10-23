@@ -24,12 +24,9 @@ const securityHeaders = [
   },
 ];
 
-
-
 const nextConfig: NextConfig = {
-  /* config options here */
   output: "standalone",
-  
+
   async headers() {
     return [
       {
@@ -43,7 +40,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "cdn.sanity.io"
+        hostname: "cdn.sanity.io",
       },
     ],
   },
