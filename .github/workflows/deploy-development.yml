@@ -1,37 +1,50 @@
-name: Deploy to Development 
+name: Deploy to Development
 
-on: 
-    push: 
-        branches: 
-            - develop 
-            
-permissions: 
-    contents: read 
-    packages: read 
-    
-jobs: 
-    deploy: 
-        uses: ./.github/workflows/deploy.yml 
-        with: 
-            environment: development 
-            image_tag: sha-${{ github.sha }} 
-            
-        secrets: 
-            HOST: ${{ secrets.DEV_HOST }} 
-            USER: ${{ secrets.DEV_USER }} 
-            SSH_KEY: ${{ secrets.DEV_SSH_KEY }} 
-            GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }} 
-            GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }} 
-            
-            
-    notify: 
-        needs: deploy 
-        if: always() 
-        uses: ./.github/workflows/notifications.yml 
-        with: 
-            status: ${{ needs.deploy.result }} 
-            environment: Development 
-            title: Development Deployment 
-            message: Development deployment completed. 
-            
-        secrets: inherit
+on:
+  workflow_run:
+    workflows:
+      - Docker
+    types:
+      - completed
+    branches:
+      - develop
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: read
+  id-token: write
+
+jobs:
+  deploy:
+    name: Deploy to VPS / OCI
+    if: >-
+      ${{
+        vars.ENABLE_VPS_DEPLOYMENT == 'true' &&
+        github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.head_branch == 'develop' &&
+        github.event.workflow_run.conclusion == 'success'
+      }}
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: development
+      image_tag: sha-${{ github.event.workflow_run.head_sha }}
+      base_url: https://development.goldenpalmeraglobal.com
+      health_url: https://development.goldenpalmeraglobal.com/api/health
+    secrets:
+      HOST: ${{ secrets.DEV_HOST }}
+      USER: ${{ secrets.DEV_USER }}
+      SSH_KEY: ${{ secrets.DEV_SSH_KEY }}
+      GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
+      GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
+
+  notify:
+    needs: deploy
+    if: always()
+    uses: ./.github/workflows/notifications.yml
+    with:
+      status: ${{ needs.deploy.result }}
+      environment: Development
+      title: Development Deployment
+      message: Development deployment workflow finished.
+    secrets: inherit
