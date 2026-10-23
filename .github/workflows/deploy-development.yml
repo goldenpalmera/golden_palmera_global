@@ -1,30 +1,40 @@
-
 name: Deploy to Development
 
 on:
-  push:
+  workflow_run:
+    workflows:
+      - Docker
+    types:
+      - completed
     branches:
       - develop
 
 permissions:
   contents: read
   packages: read
-  id-token: write
 
 jobs:
   deploy:
+    name: Deploy to VPS / OCI
+    if: >-
+      ${{
+        vars.ENABLE_VPS_DEPLOYMENT == 'true' &&
+        github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.head_branch == 'develop' &&
+        github.event.workflow_run.conclusion == 'success'
+      }}
     uses: ./.github/workflows/deploy.yml
     with:
       environment: development
-      image_tag: sha-${{ github.sha }}
+      image_tag: sha-${{ github.event.workflow_run.head_sha }}
       base_url: https://development.goldenpalmeraglobal.com
       health_url: https://development.goldenpalmeraglobal.com/api/health
     secrets:
       HOST: ${{ secrets.DEV_HOST }}
       USER: ${{ secrets.DEV_USER }}
       SSH_KEY: ${{ secrets.DEV_SSH_KEY }}
-      GHCR_USERNAME: ${{ github.actor }}
-      GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
+      GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
 
   notify:
     needs: deploy
