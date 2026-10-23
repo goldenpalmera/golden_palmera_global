@@ -57,6 +57,7 @@
   "overrides": {
     "deepmerge-ts": "^8.0.1",
     "smol-toml": "^1.8.0",
+    "source-map-js": "^1.2.2",
     "@vercel/frameworks": {
       "js-yaml": "^4.1.0"
     },
