@@ -1,25 +1,32 @@
 name: Deploy to Staging
 
 on:
-  push:
+  workflow_run:
+    workflows:
+      - Docker
+    types:
+      - completed
     branches:
       - staging
 
 permissions:
   contents: read
   packages: read
-  id-token: write
-
-concurrency:
-  group: deploy-staging
-  cancel-in-progress: false
 
 jobs:
   deploy:
+    name: Deploy to Staging VPS / OCI
+    if: >-
+      ${{
+        vars.ENABLE_VPS_DEPLOYMENT == 'true' &&
+        github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.head_branch == 'staging' &&
+        github.event.workflow_run.conclusion == 'success'
+      }}
     uses: ./.github/workflows/deploy.yml
     with:
       environment: staging
-      image_tag: sha-${{ github.sha }}
+      image_tag: sha-${{ github.event.workflow_run.head_sha }}
       base_url: https://staging.goldenpalmeraglobal.com
       health_url: https://staging.goldenpalmeraglobal.com/api/health
     secrets:
@@ -30,49 +37,55 @@ jobs:
       GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
 
   smoke-test:
+    name: Verify Staging
     needs: deploy
-    runs-on: ubuntu-latest
+    if: ${{ needs.deploy.result == 'success' }}
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
-
     steps:
-      - name: Check staging health
+      - name: Check staging health and homepage
+        shell: bash
         env:
           HEALTH_URL: https://staging.goldenpalmeraglobal.com/api/health
           BASE_URL: https://staging.goldenpalmeraglobal.com
-        shell: bash
         run: |
           set -euo pipefail
+
+          healthy=false
 
           for attempt in {1..12}; do
             if curl --fail --silent --show-error \
               --max-time 10 "$HEALTH_URL" > /dev/null; then
-              echo "Health endpoint passed."
+              healthy=true
               break
             fi
 
-            if [[ "$attempt" -eq 12 ]]; then
-              echo "::error::Staging health check failed."
-              exit 1
+            if [[ "$attempt" -lt 12 ]]; then
+              sleep 5
             fi
-
-            sleep 5
           done
+
+          if [[ "$healthy" != "true" ]]; then
+            echo "::error::Staging health check failed."
+            exit 1
+          fi
 
           curl --fail --silent --show-error \
             --max-time 15 "$BASE_URL" > /dev/null
 
-          echo "Staging smoke tests passed."
+          echo "Staging health and homepage checks passed."
 
   notify:
+    name: Notify Staging Result
     needs:
       - deploy
       - smoke-test
-    if: always()
+    if: ${{ always() }}
     uses: ./.github/workflows/notifications.yml
     with:
       status: >-
-        ${{ (needs.deploy.result == 'success' && needs.smoke-test.result == 'success') && 'success' || 'failure' }}
+        ${{ (needs.deploy.result == 'success' && needs.smoke-test.result == 'success') && 'success' || ((needs.deploy.result == 'skipped' && needs.smoke-test.result == 'skipped') && 'skipped' || 'failure') }}
       environment: Staging
       title: Staging Deployment
-      message: Staging deployment and health checks finished.
+      message: Staging deployment workflow finished. Check the Actions run for deployment and smoke-test results.
     secrets: inherit
