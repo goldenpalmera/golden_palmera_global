@@ -9,7 +9,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "build": "prisma generate && next build",
+    "build": "prisma generate && next build --webpack",
     "start": "next start",
     "postinstall": "prisma generate"
   },
@@ -57,6 +57,7 @@
   "overrides": {
     "deepmerge-ts": "^8.0.1",
     "smol-toml": "^1.8.0",
+    "source-map-js": "^1.2.2",
     "@vercel/frameworks": {
       "js-yaml": "^4.1.0"
     },
