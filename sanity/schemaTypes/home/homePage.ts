@@ -335,7 +335,7 @@ export const homePage = defineType({
           name: "email",
           title: "Email",
           type: "string",
-          initialValue: "info@goldenpalmera.com",
+          initialValue: "info@goldenpalmeraglobal.com",
         }),
       ],
     }),

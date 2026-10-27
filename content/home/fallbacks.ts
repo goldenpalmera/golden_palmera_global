@@ -136,7 +136,7 @@ export const HOME_FALLBACKS: HomePageContent = {
     headingAccent: "commodity further.",
     description:
       "Whether you are an international buyer, agricultural supplier, cooperative or strategic partner, we would like to hear from you.",
-    email: "info@goldenpalmera.com",
+    email: "info@goldenpalmeraglobal.com",
   },
 };
 
