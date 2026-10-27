@@ -82,16 +82,13 @@ export default async function RootLayout({ children }: Readonly<{
 ]);
 
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+    <div
+      className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${dmSans.variable} ${ibmPlexMono.variable} h-full min-h-full antialiased flex flex-col`}
     >
-      <body className={`${playfair.variable} ${dmSans.variable} ${ibmPlexMono.variable} min-h-full flex flex-col`}>
-        <Header />
-        {children}
-        <FloatingButtons settings={floatButtonData} />
-        <Footer settings={footerData}  />
-      </body>
-    </html>
+      <Header />
+      {children}
+      <FloatingButtons settings={floatButtonData} />
+      <Footer settings={footerData} />
+    </div>
   );
 }

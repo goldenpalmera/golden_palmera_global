@@ -10,6 +10,13 @@ export const metadata: Metadata = {
   },
   description:
     "Golden Palmera Global sources, processes and exports quality agricultural commodities from Africa to global markets.",
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
@@ -19,7 +26,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="min-h-full">
+        {children}
+      </body>
     </html>
   );
 }
