@@ -90,7 +90,7 @@ export const FOOTER_COLS: FooterData["columns"] = [
 export const DEFAULT_SOCIAL_LINKS: FooterData["socialLinks"] = [
   {
     platform: "linkedin",
-    url: "https://www.linkedin.com/",
+    url: "https://www.linkedin.com/company/golden-palmera-global/",
     label: "LinkedIn",
   },
 ];
@@ -108,5 +108,5 @@ export const DEFAULTS = {
   bottomMessage:
     "Committed to traceable, farmer-fair agricultural sourcing.",
   copyrightYear: 2026,
-  cacNumber: "2233355",
+  cacNumber: "RC 9538830",
 };
