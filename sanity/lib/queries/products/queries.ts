@@ -129,22 +129,26 @@ export const PRODUCTS_PAGE_QUERY = defineQuery(`
   *[_type == "productsPage"][0] {
     title,
 
-    heroEyebrow,
-    heroTitle,
-    heroDescription,
-    heroImage,
+    hero {
+      eyebrow,
+      title,
+      description,
+      image
+    },
 
-    portfolioEyebrow,
-    portfolioTitle,
-    portfolioDescription,
+    portfolio {
+      eyebrow,
+      title,
+      description
+    },
 
     supplyChain {
       eyebrow,
       title,
       description,
 
-      steps[]->{
-        _id,
+      steps[] {
+        _key,
         number,
         title,
         description
@@ -162,9 +166,12 @@ export const PRODUCTS_PAGE_QUERY = defineQuery(`
         externalUrl,
         newTab
       }
-    }
+    },
+
+    seo
   }
 `);
+
 
 export const PRODUCTS_PAGE_SEO_QUERY = defineQuery(`
   *[_type == "productsPage"][0] {
