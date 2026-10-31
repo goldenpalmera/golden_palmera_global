@@ -74,7 +74,7 @@ export function mapProductsPage(
 
     hero: {
       eyebrow:
-        page?.hero.eyebrow ??
+        page?.hero?.eyebrow ??
         FALLBACK.hero.eyebrow,
 
       title:
