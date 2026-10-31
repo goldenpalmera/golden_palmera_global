@@ -13,60 +13,77 @@ export const productsPage = defineType({
       initialValue: "Our Commodities",
     }),
 
+    // HERO SECTION
     defineField({
-      name: "heroEyebrow",
-      title: "Hero Eyebrow",
-      type: "string",
-      initialValue: "Our Commodities",
+      name: "hero",
+      title: "Hero Section",
+      type: "object",
+      fields: [
+        defineField({
+          name: "eyebrow",
+          title: "Eyebrow",
+          type: "string",
+          initialValue: "Our Commodities",
+        }),
+
+        defineField({
+          name: "title",
+          title: "Title",
+          type: "string",
+          initialValue: "Quality agricultural products from Africa.",
+        }),
+
+        defineField({
+          name: "description",
+          title: "Description",
+          type: "text",
+          rows: 4,
+        }),
+
+        defineField({
+          name: "image",
+          title: "Hero Image",
+          type: "image",
+          options: {
+            hotspot: true,
+          },
+          description:
+            "Main image displayed in the Products page hero.",
+          validation: (Rule) => Rule.required(),
+        }),
+      ],
     }),
 
+    // PORTFOLIO SECTION
     defineField({
-      name: "heroTitle",
-      title: "Hero Title",
-      type: "string",
-      initialValue: "Quality agricultural products from Africa.",
+      name: "portfolio",
+      title: "Product Portfolio",
+      type: "object",
+      fields: [
+        defineField({
+          name: "eyebrow",
+          title: "Eyebrow",
+          type: "string",
+          initialValue: "Our product portfolio",
+        }),
+
+        defineField({
+          name: "title",
+          title: "Title",
+          type: "string",
+          initialValue: "Commodities with global potential",
+        }),
+
+        defineField({
+          name: "description",
+          title: "Description",
+          type: "text",
+          rows: 4,
+        }),
+      ],
     }),
 
-    defineField({
-      name: "heroDescription",
-      title: "Hero Description",
-      type: "text",
-      rows: 4,
-    }),
-
-    defineField({
-      name: "heroImage",
-      title: "Hero Image",
-      type: "image",
-      options: {
-        hotspot: true,
-      },
-      description:
-        "Main image displayed on the Contact page hero.",
-      validation: (Rule) => Rule.required(),
-    }),
-
-    defineField({
-      name: "portfolioEyebrow",
-      title: "Portfolio Eyebrow",
-      type: "string",
-      initialValue: "Our product portfolio",
-    }),
-
-    defineField({
-      name: "portfolioTitle",
-      title: "Portfolio Title",
-      type: "string",
-      initialValue: "Commodities with global potential",
-    }),
-
-    defineField({
-      name: "portfolioDescription",
-      title: "Portfolio Description",
-      type: "text",
-      rows: 4,
-    }),
-
+    // SUPPLY CHAIN SECTION
     defineField({
       name: "supplyChain",
       title: "Supply Chain",
@@ -127,12 +144,14 @@ export const productsPage = defineType({
       ],
     }),
 
+    // CALL TO ACTION
     defineField({
       name: "cta",
       title: "Call to Action",
       type: "pageCta",
     }),
 
+    // SEO
     defineField({
       name: "seo",
       title: "SEO",
