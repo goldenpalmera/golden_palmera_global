@@ -1,4 +1,3 @@
-
 "use client";
 
 import Image from "next/image";
@@ -117,49 +116,48 @@ export default function ContactHero({
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-[68vh] overflow-hidden bg-[#171717] text-white"
+      className="relative isolate min-h-[68vh] overflow-hidden bg-[#171717] text-white"
     >
-      {/* Cursor glow — rendered on canvas to avoid inline styles */}
-      <canvas
-        ref={glowCanvasRef}
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-0 h-full w-full"
-      />
-
-      {/* Grid */}
-      <div className="absolute inset-0 z-0 opacity-[0.07]">
-        <div className="absolute left-[20%] top-0 h-full w-px bg-white" />
-        <div className="absolute left-[50%] top-0 h-full w-px bg-white" />
-        <div className="absolute left-[80%] top-0 h-full w-px bg-white" />
-      </div>
-
-      {/* Diagonal image */}
+      {/* Full background image */}
       {image && (
-        <div
-          className="
-            contact-hero-image-clip
-            pointer-events-none
-            absolute inset-y-0 right-0 z-[1]
-            hidden w-[58%] lg:block
-          "
-        >
+        <div className="absolute inset-0 -z-10">
           <Image
             src={image}
             alt=""
             fill
             priority
-            sizes="58vw"
-            className="object-cover"
+            sizes="100vw"
+            className="object-cover object-center"
           />
 
-          <div className="absolute inset-0 bg-black/25" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#171717] via-[#171717]/45 to-transparent" />
+          {/* Dark image treatment */}
+          <div className="absolute inset-0 bg-black/50" />
+
+          {/* Gradient for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#171717]/95 via-[#171717]/75 to-[#171717]/40" />
+
+          {/* Subtle green brand tone */}
           <div className="absolute inset-0 bg-[#173f2b]/20 mix-blend-multiply" />
         </div>
       )}
 
+      {/* Cursor glow */}
+      <canvas
+        ref={glowCanvasRef}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-[1] h-full w-full"
+      />
+
+      {/* Grid */}
+      <div className="pointer-events-none absolute inset-0 z-[1] opacity-[0.07]">
+        <div className="absolute left-[20%] top-0 h-full w-px bg-white" />
+        <div className="absolute left-[50%] top-0 h-full w-px bg-white" />
+        <div className="absolute left-[80%] top-0 h-full w-px bg-white" />
+      </div>
+
       {/* Content */}
       <div className="relative z-10 mx-auto flex min-h-[68vh] max-w-[1400px] flex-col justify-between px-6 py-10 md:px-10 lg:px-16 lg:py-14">
+
         <div className="flex items-center justify-between">
           <span className="text-xs uppercase tracking-[0.3em] text-white/45">
             Golden Palmera Global
@@ -178,25 +176,13 @@ export default function ContactHero({
           <h1 className="text-[clamp(4rem,10vw,9.5rem)] font-medium leading-[0.84] tracking-[-0.07em]">
             {titleLine1}
             <br />
-            <span className="text-white/35">{titleLine2}</span>
+            <span className="text-white/35">
+              {titleLine2}
+            </span>
           </h1>
         </div>
+
       </div>
-
-      {/* Mobile image */}
-      {image && (
-        <div className="relative z-10 mx-6 mb-8 aspect-[16/9] overflow-hidden rounded-3xl md:mx-10 lg:hidden">
-          <Image
-            src={image}
-            alt="Golden Palmera Global"
-            fill
-            sizes="100vw"
-            className="object-cover"
-          />
-
-          <div className="absolute inset-0 bg-gradient-to-t from-[#171717]/50 to-transparent" />
-        </div>
-      )}
     </section>
   );
 }

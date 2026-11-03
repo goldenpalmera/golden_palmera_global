@@ -27,80 +27,53 @@ export default async function ExportBuyerPage() {
     <main className="bg-[#f8f6f0] text-[#171717]">
     
       {/* Hero */}
-      <section className="relative overflow-hidden bg-zinc-950 text-white">
-        {/* Ambient glow */}
-        <div className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-emerald-900/20 blur-3xl" />
+      <section className="relative isolate overflow-hidden bg-zinc-950 text-white">
 
-        <div className="relative min-h-[680px]">
-          {/* Diagonal hero image */}
-          {heroImage && (
-            <div
-              className="
-                pointer-events-none
-                absolute
-                inset-y-0
-                right-0
-                hidden
-                w-[56%]
-                lg:block
-              "
-              style={{
-                clipPath:
-                  "polygon(38% 0%, 100% 0%, 100% 100%, 0% 100%)",
-              }}
-            >
-              <Image
-                src={heroImage}
-                alt="Agricultural commodities prepared for international export"
-                fill
-                priority
-                className="absolute inset-0 h-full w-full object-cover"
-              />
+        {/* Full background hero image */}
+        {heroImage && (
+          <div className="absolute inset-0 -z-10">
+            <Image
+              src={heroImage}
+              alt="Agricultural commodities prepared for international export"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-center"
+            />
 
-              {/* Dark image treatment */}
-              <div className="absolute inset-0 bg-black/20" />
+            {/* Dark image treatment */}
+            <div className="absolute inset-0 bg-black/45" />
 
-              {/* Fade image into the text */}
-              <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/35 to-transparent" />
+            {/* Fade for text readability */}
+            <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/95 via-zinc-950/75 to-zinc-950/40" />
 
-              {/* Subtle green tone */}
-              <div className="absolute inset-0 bg-[#173f2b]/20 mix-blend-multiply" />
-            </div>
-          )}
-
-          {/* Content */}
-          <div className="relative z-10 mx-auto flex min-h-[680px] max-w-[1400px] items-center px-6 md:px-10 lg:px-16">
-            <div className="max-w-3xl py-28 lg:w-[58%]">
-              <p className="text-xs uppercase tracking-[0.3em] text-[#d6b45c]">
-                { page?.heroEyebrow }
-              </p>
-
-              <h1 className="mt-6 max-w-5xl text-5xl font-medium leading-[0.92] tracking-[-0.06em] md:text-7xl lg:text-8xl">
-                { page?.heroTitleLine1 }
-                <br />
-                { page?.heroTitleLine2 }
-              </h1>
-
-              <p className="mt-8 max-w-2xl text-lg leading-8 text-white/60">
-                { page?.heroDescription }
-              </p>
-            </div>
+            {/* Subtle green tone */}
+            <div className="absolute inset-0 bg-[#173f2b]/20 mix-blend-multiply" />
           </div>
+        )}
 
-          {/* Mobile image */}
-          {heroImage && (
-            <div className="relative mx-6 mb-10 aspect-[16/9] overflow-hidden rounded-3xl md:mx-10 lg:hidden">
-              <Image
-                src={heroImage}
-                alt="Agricultural commodities prepared for international export"
-                fill
-                sizes="100vw"
-                className="h-full w-full object-cover"
-              />
+        {/* Ambient glow */}
+        <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-emerald-900/20 blur-3xl" />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/50 to-transparent" />
-            </div>
-          )}
+        {/* Content */}
+        <div className="relative z-10 mx-auto flex min-h-[680px] max-w-[1400px] items-center px-6 md:px-10 lg:px-16">
+          <div className="max-w-3xl py-28 lg:w-[58%]">
+
+            <p className="text-xs uppercase tracking-[0.3em] text-[#d6b45c]">
+              {page?.heroEyebrow}
+            </p>
+
+            <h1 className="mt-6 max-w-5xl text-5xl font-medium leading-[0.92] tracking-[-0.06em] md:text-7xl lg:text-8xl">
+              {page?.heroTitleLine1}
+              <br />
+              {page?.heroTitleLine2}
+            </h1>
+
+            <p className="mt-8 max-w-2xl text-lg leading-8 text-white/70">
+              {page?.heroDescription}
+            </p>
+
+          </div>
         </div>
       </section>
 

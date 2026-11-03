@@ -90,17 +90,42 @@ export default async function BlogPage({
     <main className="bg-[#f7f6f1] text-[#182018]">
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-[#f7f6f1]">
+      <section className="relative isolate overflow-hidden bg-[#f7f6f1]">
         <div className="relative min-h-[680px]">
-          {/* Decorative background */}
-          <div className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-[#a07a3d]/10 blur-3xl" />
 
+          {/* Full background hero image */}
+          {heroImage && (
+            <div className="absolute inset-0 -z-10">
+              <Image
+                src={heroImage}
+                alt="Agricultural commodities and global trade"
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover object-center"
+              />
+
+              {/* Image colour treatment */}
+              <div className="absolute inset-0 bg-[#f7f6f1]/65" />
+
+              {/* Cream fade for content readability */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#f7f6f1]/95 via-[#f7f6f1]/75 to-[#f7f6f1]/35" />
+
+              {/* Subtle green overlay */}
+              <div className="absolute inset-0 bg-[#173f2b]/5 mix-blend-multiply" />
+            </div>
+          )}
+
+          {/* Decorative background */}
+          <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-[#a07a3d]/10 blur-3xl" />
+
+          {/* Content */}
           <div className="mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
             <div className="relative z-10 flex min-h-[680px] items-center">
-              {/* Content */}
               <div className="w-full max-w-3xl py-32 lg:w-[58%] lg:py-36">
+
                 <p className="mb-6 text-sm font-medium uppercase tracking-[0.25em] text-[#a07a3d]">
-                  {hero?.heroEyebrow ||`GPG Insights`}
+                  {hero?.heroEyebrow || "GPG Insights"}
                 </p>
 
                 <h1 className="text-5xl font-semibold leading-[1.02] tracking-tight text-[#182018] md:text-6xl lg:text-7xl">
@@ -114,7 +139,7 @@ export default async function BlogPage({
                 </h1>
 
                 <p className="mt-8 max-w-2xl text-lg leading-8 text-[#5d655d] md:text-xl">
-                  { hero?.heroDescription || `Perspectives on agricultural commodities,
+                  {hero?.heroDescription || `Perspectives on agricultural commodities,
                   African supply chains, export markets,
                   sustainability, and international trade.`}
                 </p>
@@ -149,62 +174,11 @@ export default async function BlogPage({
                     Search
                   </button>
                 </form>
+
               </div>
             </div>
           </div>
 
-          {/* Desktop diagonal image */}
-          {heroImage && (
-          <div
-            className="
-              pointer-events-none
-              absolute
-              right-0
-              top-0
-              hidden
-              h-full
-              w-[52%]
-              lg:block
-            "
-            style={{
-              clipPath:
-                "polygon(38% 0%, 100% 0%, 100% 100%, 0% 100%)",
-            }}
-          >
-            <Image
-              src={heroImage}
-              alt="Agricultural commodities and global trade"
-              fill
-              priority
-              sizes="52vw"
-              className="object-cover"
-            />
-
-            {/* Image colour treatment */}
-            <div className="absolute inset-0 bg-[#182018]/15" />
-
-            {/* Fade image into page */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#f7f6f1]/95 via-[#f7f6f1]/20 to-transparent" />
-
-            {/* Subtle green overlay */}
-            <div className="absolute inset-0 bg-[#173f2b]/10 mix-blend-multiply" />
-          </div>
-          )}
-
-          {/* Mobile image */}
-          {heroImage && (
-          <div className="relative mx-6 mb-12 aspect-[16/9] overflow-hidden rounded-3xl md:mx-12 lg:hidden">
-            <Image
-              src={heroImage}
-              alt="Agricultural commodities and global trade"
-              fill
-              sizes="100vw"
-              className="object-cover"
-            />
-
-            <div className="absolute inset-0 bg-gradient-to-t from-[#182018]/40 to-transparent" />
-          </div>
-          )}
         </div>
       </section>
 

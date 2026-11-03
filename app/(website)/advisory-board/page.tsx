@@ -40,44 +40,31 @@ export default async function AdvisoryBoardPage() {
 
   return (
     <main className="bg-[#f7f6f1] text-[#182018]">
+    
       {/* HERO */}
-      <section className="relative overflow-hidden bg-[#f7f6f1]">
+      <section className="relative isolate overflow-hidden bg-[#f7f6f1]">
         <div className="relative min-h-[680px]">
 
-          {/* Desktop hero image */}
+          {/* Full background hero image */}
           {heroImageUrl && (
-            <div
-              className="
-                pointer-events-none
-                absolute
-                inset-y-0
-                right-0
-                hidden
-                w-[52%]
-                lg:block
-              "
-              style={{
-                clipPath:
-                  "polygon(38% 0%, 100% 0%, 100% 100%, 0% 100%)",
-              }}
-            >
+            <div className="absolute inset-0 -z-10">
               <Image
                 src={heroImageUrl}
                 alt=""
                 fill
                 priority
-                sizes="52vw"
-                className="object-cover"
+                sizes="100vw"
+                className="object-cover object-center"
               />
 
-              {/* Image treatment */}
-              <div className="absolute inset-0 bg-[#182018]/15" />
+              {/* Soft image treatment */}
+              <div className="absolute inset-0 bg-[#f7f6f1]/65" />
 
-              {/* Fade into page */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#f7f6f1]/95 via-[#f7f6f1]/20 to-transparent" />
+              {/* Cream fade for text readability */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#f7f6f1]/95 via-[#f7f6f1]/75 to-[#f7f6f1]/35" />
 
               {/* Subtle brand tone */}
-              <div className="absolute inset-0 bg-[#173f2b]/10 mix-blend-multiply" />
+              <div className="absolute inset-0 bg-[#173f2b]/5 mix-blend-multiply" />
             </div>
           )}
 
@@ -100,22 +87,6 @@ export default async function AdvisoryBoardPage() {
 
               </div>
             </div>
-
-            {/* Mobile hero image */}
-            {heroImageUrl && (
-              <div className="relative mx-0 mb-12 aspect-[16/9] overflow-hidden rounded-3xl lg:hidden">
-                <Image
-                  src={heroImageUrl}
-                  alt=""
-                  fill
-                  priority
-                  sizes="100vw"
-                  className="object-cover"
-                />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-[#182018]/45 to-transparent" />
-              </div>
-            )}
           </div>
 
           {/* Decorative glow */}
@@ -124,7 +95,7 @@ export default async function AdvisoryBoardPage() {
         </div>
       </section>
 
-         {/* STATS */}
+      {/* STATS */}
       <section className="border-b border-gold-500/10 bg-forest-900">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 gap-6 text-center sm:grid-cols-4">
