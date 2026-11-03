@@ -25,8 +25,33 @@ export default async function PartnershipPage() {
   );
   return (
     <main className="bg-[#f8f6f0] text-[#171717]">
+      
       {/* Hero */}
       <section className="relative isolate overflow-hidden bg-[#173f2b] px-6 py-24 text-white md:px-10 lg:min-h-[620px] lg:px-16 lg:py-14">
+
+        {/* Full background hero image */}
+        {heroImage && (
+          <div className="absolute inset-0 -z-10">
+            <Image
+              src={heroImage}
+              alt="Partnership with Africans premium agriculture international trade house"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-center"
+            />
+
+            {/* Green brand tint */}
+            <div className="absolute inset-0 bg-[#173f2b]/65" />
+
+            {/* Fade for text readability */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#173f2b]/95 via-[#173f2b]/75 to-[#173f2b]/40" />
+
+            {/* Subtle gold tone */}
+            <div className="absolute inset-0 bg-[#b78628]/5 mix-blend-screen" />
+          </div>
+        )}
+
         {/* Background grid */}
         <div
           aria-hidden="true"
@@ -48,87 +73,29 @@ export default async function PartnershipPage() {
           className="pointer-events-none absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-white/5 blur-3xl"
         />
 
-        {/* Diagonal image */}
-        {heroImage && (
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 hidden lg:block"
-          >
-            <div
-              className="
-                absolute
-                -right-[6%]
-                -top-[10%]
-                h-[125%]
-                w-[58%]
-                overflow-hidden
-              "
-              style={{
-                clipPath:
-                  "polygon(32% 0%, 100% 0%, 70% 100%, 0% 100%)",
-              }}
-            >
-              <Image
-                src={heroImage}
-                alt="Partnership with Africans premium agriculture international trade house"
-                fill
-                priority
-                sizes="58vw"
-                className="object-cover object-center"
-              />
-
-              {/* Green brand tint */}
-              <div className="absolute inset-0 bg-[#173f2b]/25" />
-
-              {/* Fade image into the text */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#173f2b]/85 via-[#173f2b]/30 to-transparent" />
-
-              {/* Very subtle gold tone */}
-              <div className="absolute inset-0 bg-[#b78628]/5 mix-blend-screen" />
-            </div>
-          </div>
-          )}
-
         {/* Content */}
         <div className="relative z-10 mx-auto max-w-[1400px]">
-          <div className="mt-10 max-w-6xl lg:min-h-[470px] lg:flex lg:flex-col lg:justify-center">
+          <div className="mt-10 flex min-h-[470px] max-w-6xl flex-col justify-center">
+
             <p className="text-xs uppercase tracking-[0.35em] text-[#d6b45c]">
-               { page?.heroEyebrow }
+              {page?.heroEyebrow}
             </p>
 
             <h1 className="mt-7 max-w-5xl text-[clamp(4rem,9vw,8.5rem)] font-medium leading-[0.85] tracking-[-0.07em]">
-              { page?.heroTitleLine1 }
+              {page?.heroTitleLine1}
               <br />
               <span className="text-gold-500">
-                { page?.heroTitleAccent }
+                {page?.heroTitleAccent}
               </span>
             </h1>
 
-            <p className="mt-10 max-w-2xl text-lg leading-8 text-white/60 md:text-xl">
-              { page?.heroDescription }
+            <p className="mt-10 max-w-2xl text-lg leading-8 text-white/70 md:text-xl">
+              {page?.heroDescription}
             </p>
+
           </div>
-
-          {/* Mobile image */}
-          {heroImage && (
-            <div className="relative mt-12 aspect-[16/9] overflow-hidden rounded-2xl border border-white/10 lg:hidden">
-              <Image
-                src={heroImage}
-                alt="Partnership with Africans premium agriculture international trade house"
-                fill
-                priority
-                sizes="100vw"
-                className="object-cover"
-              />
-
-              <div className="absolute inset-0 bg-[#173f2b]/20" />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-[#173f2b]/50 to-transparent" />
-            </div>
-          )}
         </div>
       </section>
-
 
       {/* Partnership section */}
       <section className="px-6 py-24 md:px-10 lg:px-16 lg:py-36">

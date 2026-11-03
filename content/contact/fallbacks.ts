@@ -27,7 +27,7 @@ export const FALLBACK_EXPORT_BUYER: ExportBuyerPage = {
     {
       number:"02",
       title:"We review your requirements",
-      text:"Our team assesses sourcing, specifications and availability.",
+      text:",Our team assesses sourcing, specifications and availability."
     },
     {
       number:"03",
