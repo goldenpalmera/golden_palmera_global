@@ -40,60 +40,61 @@ export default async function AdvisoryBoardPage() {
 
   return (
     <main className="bg-[#f7f6f1] text-[#182018]">
-    
-      {/* HERO */}
-      <section className="relative isolate overflow-hidden bg-[#f7f6f1]">
-        <div className="relative min-h-[680px]">
+      
+    {/* HERO */}
+    <section className="relative isolate overflow-hidden bg-[#f7f6f1]">
+      <div className="relative min-h-[680px]">
 
-          {/* Full background hero image */}
-          {heroImageUrl && (
-            <div className="absolute inset-0 -z-10">
-              <Image
-                src={heroImageUrl}
-                alt=""
-                fill
-                priority
-                sizes="100vw"
-                className="object-cover object-center"
-              />
+        {/* Full background hero image */}
+        {heroImageUrl && (
+          <div className="absolute inset-0 -z-10">
+            <Image
+              src={heroImageUrl}
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-center"
+            />
 
-              {/* Soft image treatment */}
-              <div className="absolute inset-0 bg-[#f7f6f1]/65" />
+            {/* Subtle cream tint */}
+            <div className="absolute inset-0 bg-[#f7f6f1]/15" />
 
-              {/* Cream fade for text readability */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#f7f6f1]/95 via-[#f7f6f1]/75 to-[#f7f6f1]/35" />
+            {/* Gentle cream gradient for text readability */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#f7f6f1]/75 via-[#f7f6f1]/40 to-transparent" />
 
-              {/* Subtle brand tone */}
-              <div className="absolute inset-0 bg-[#173f2b]/5 mix-blend-multiply" />
-            </div>
-          )}
+            {/* Soft vignette */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-white/10" />
+          </div>
+        )}
 
-          {/* Content */}
-          <div className="mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
-            <div className="relative z-10 flex min-h-[680px] items-center">
-              <div className="w-full max-w-3xl py-32 lg:w-[58%] lg:py-36">
+        {/* Content */}
+        <div className="mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
+          <div className="relative z-10 flex min-h-[680px] items-center">
+            <div className="w-full max-w-3xl py-32 lg:w-[58%] lg:py-36">
 
-                <p className="mb-6 text-sm font-medium uppercase tracking-[0.25em] text-[#a07a3d]">
-                  {page.heroEyebrow}
-                </p>
+              <p className="mb-6 text-sm font-medium uppercase tracking-[0.25em] text-[#a07a3d]">
+                {page.heroEyebrow}
+              </p>
 
-                <h1 className="text-5xl font-semibold leading-[1.05] tracking-tight text-[#182018] md:text-7xl">
-                  {page.heroTitle}
-                </h1>
+              <h1 className="text-5xl font-semibold leading-[1.05] tracking-tight text-[#182018] md:text-7xl">
+                {page.heroTitle}
+              </h1>
 
-                <p className="mt-8 max-w-2xl text-lg leading-8 text-[#5d655d] md:text-xl">
-                  {page.heroDescription}
-                </p>
+              <p className="mt-8 max-w-2xl text-lg leading-8 text-[#5d655d] md:text-xl">
+                {page.heroDescription}
+              </p>
 
-              </div>
             </div>
           </div>
-
-          {/* Decorative glow */}
-          <div className="pointer-events-none absolute -right-24 top-20 h-72 w-72 rounded-full bg-[#d7c49a]/20 blur-3xl" />
-
         </div>
-      </section>
+
+        {/* Decorative glow */}
+        <div className="pointer-events-none absolute -right-24 top-20 h-72 w-72 rounded-full bg-[#d7c49a]/15 blur-3xl" />
+
+      </div>
+    </section>
+
 
       {/* STATS */}
       <section className="border-b border-gold-500/10 bg-forest-900">

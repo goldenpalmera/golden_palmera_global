@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import type { SanityImageSource } from "@sanity/image-url";
 import { getHeroImageUrl } from "@/content/shared/getHeroImageUrl";
@@ -32,21 +33,21 @@ export default function PageHero({
             className="object-cover object-center"
           />
 
-          {/* Dark brand overlay */}
-          <div className="absolute inset-0 bg-[#173f2b]/65" />
+          {/* Subtle brand tint */}
+          <div className="absolute inset-0 bg-[#173f2b]/25" />
 
-          {/* Gradient for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#173f2b]/90 via-[#173f2b]/65 to-[#173f2b]/35" />
+          {/* Gentle gradient for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#173f2b]/65 via-[#173f2b]/30 to-transparent" />
 
-          {/* Subtle gold tone */}
-          <div className="absolute inset-0 bg-[#b78628]/5 mix-blend-screen" />
+          {/* Subtle vignette */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/10" />
         </div>
       )}
 
       {/* Background glow */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-[#b78628]/20 blur-3xl"
+        className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-[#b78628]/15 blur-3xl"
       />
 
       <div
@@ -67,7 +68,7 @@ export default function PageHero({
           </h1>
 
           {description && (
-            <p className="mt-6 max-w-2xl text-base leading-8 text-white/80 sm:text-lg">
+            <p className="mt-6 max-w-2xl text-base leading-8 text-white/85 sm:text-lg">
               {description}
             </p>
           )}

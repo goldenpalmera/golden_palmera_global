@@ -44,84 +44,59 @@ export default async function RequestQuotePage({
 
   return (
     <main className="min-h-screen bg-[#f7f8f4]">
+  
       {/* Hero */}
-      <section className="relative overflow-hidden bg-zinc-950 text-white">
-        <div className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-emerald-900/20 blur-3xl" />
+      <section className="relative isolate overflow-hidden bg-zinc-950 text-white">
 
-        <div className="relative min-h-[680px]">
+        {/* Full background hero image - Desktop and Mobile */}
+        {heroImage && (
+          <div className="absolute inset-0 -z-10">
+            <Image
+              src={heroImage}
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-center"
+            />
 
-          {/* Desktop diagonal image */}
-          {heroImage && (
-            <div
-              className="
-                pointer-events-none
-                absolute
-                inset-y-0
-                right-0
-                hidden
-                w-[56%]
-                lg:block
-              "
-              style={{
-                clipPath:
-                  "polygon(38% 0%, 100% 0%, 100% 100%, 0% 100%)",
-              }}
-            >
-              <Image
-                src={heroImage}
-                alt=""
-                fill
-                priority
-                sizes="56vw"
-                className="object-cover"
-              />
+            {/* Subtle dark tint */}
+            <div className="absolute inset-0 bg-black/20" />
 
-              <div className="absolute inset-0 bg-black/20" />
+            {/* Gentle gradient for text readability */}
+            <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/75 via-zinc-950/35 to-transparent" />
 
-              <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/35 to-transparent" />
-
-              <div className="absolute inset-0 bg-[#173f2b]/20 mix-blend-multiply" />
-            </div>
-          )}
-
-          {/* Content */}
-          <div className="relative z-10 mx-auto flex min-h-[680px] max-w-[1400px] items-center px-6 md:px-10 lg:px-16">
-            <div className="max-w-3xl py-28 lg:w-[58%]">
-
-              <p className="text-xs uppercase tracking-[0.3em] text-[#d6b45c]">
-                {page?.heroEyebrow}
-              </p>
-
-              <h1 className="mt-6 max-w-5xl text-5xl font-medium leading-[0.92] tracking-[-0.06em] md:text-7xl lg:text-8xl">
-                {page?.heroTitle}
-                <br />
-                <span className="text-emerald-400">
-                  {page?.heroTitleAccent}
-                </span>
-              </h1>
-
-              <p className="mt-8 max-w-2xl text-lg leading-8 text-white/60 md:text-xl">
-                {page?.heroDescription}
-              </p>
-
-            </div>
+            {/* Soft vignette */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/15" />
           </div>
+        )}
 
-          {/* Mobile image */}
-          {heroImage && (
-            <div className="relative mx-6 mb-10 aspect-[16/9] overflow-hidden rounded-3xl md:mx-10 lg:hidden">
-              <Image
-                src={heroImage}
-                alt=""
-                fill
-                sizes="100vw"
-                className="object-cover"
-              />
+        {/* Ambient glow */}
+        <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-emerald-900/15 blur-3xl" />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/50 to-transparent" />
-            </div>
-          )}
+        {/* Content */}
+        <div className="relative z-10 mx-auto flex min-h-[680px] max-w-[1400px] items-center px-6 md:px-10 lg:px-16">
+          <div className="max-w-3xl py-28 lg:w-[58%]">
+
+            <p className="text-xs uppercase tracking-[0.3em] text-[#d6b45c]">
+              {page?.heroEyebrow}
+            </p>
+
+            <h1 className="mt-6 max-w-5xl text-5xl font-medium leading-[0.92] tracking-[-0.06em] md:text-7xl lg:text-8xl">
+              {page?.heroTitle}
+              <br />
+              <span className="text-emerald-400">
+                {page?.heroTitleAccent}
+              </span>
+            </h1>
+
+            <p className="mt-8 max-w-2xl text-lg leading-8 text-white/85 md:text-xl">
+              {page?.heroDescription}
+            </p>
+
+          </div>
         </div>
+
       </section>
 
       {/* Form */}

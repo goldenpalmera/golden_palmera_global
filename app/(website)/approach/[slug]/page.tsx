@@ -66,44 +66,31 @@ export default async function ApproachDetailPage({
   return (
     <main className="bg-[#f7f6f1] text-[#182018]">
 
-      {/**Hero */}
-      <section className="relative overflow-hidden bg-[#f7f6f1]">
+    
+      {/** Hero */}
+      <section className="relative isolate overflow-hidden bg-[#f7f6f1]">
         <div className="relative min-h-[680px]">
 
-          {/* Desktop hero image */}
+          {/* Full background hero image - Desktop and Mobile */}
           {coverImageUrl && (
-            <div
-              className="
-                pointer-events-none
-                absolute
-                inset-y-0
-                right-0
-                hidden
-                w-[52%]
-                lg:block
-              "
-              style={{
-                clipPath:
-                  "polygon(38% 0%, 100% 0%, 100% 100%, 0% 100%)",
-              }}
-            >
+            <div className="absolute inset-0 -z-10">
               <Image
                 src={coverImageUrl}
                 alt=""
                 fill
                 priority
-                sizes="52vw"
-                className="object-cover"
+                sizes="100vw"
+                className="object-cover object-center"
               />
 
-              {/* Dark treatment */}
-              <div className="absolute inset-0 bg-[#182018]/15" />
+              {/* Subtle cream tint */}
+              <div className="absolute inset-0 bg-[#f7f6f1]/15" />
 
-              {/* Fade into content */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#f7f6f1]/95 via-[#f7f6f1]/20 to-transparent" />
+              {/* Gentle cream gradient for text readability */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#f7f6f1]/75 via-[#f7f6f1]/40 to-transparent" />
 
-              {/* Brand tone */}
-              <div className="absolute inset-0 bg-[#173f2b]/10 mix-blend-multiply" />
+              {/* Soft vignette */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-white/10" />
             </div>
           )}
 
@@ -115,7 +102,7 @@ export default async function ApproachDetailPage({
                 {/* Back */}
                 <Link
                   href="/#approach"
-                  className="mb-12 inline-flex items-center gap-2 text-sm font-medium text-[#8a8b83] transition-colors hover:text-[#6f716a]"
+                  className="mb-12 inline-flex items-center gap-2 text-sm font-medium text-[#686d64] transition-colors hover:text-[#173f2b]"
                 >
                   <ArrowLeft size={17} strokeWidth={2} />
                   Back to Home
@@ -129,7 +116,7 @@ export default async function ApproachDetailPage({
                   Our Approach
                 </p>
 
-                <h1 className="mt-5 text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl">
+                <h1 className="mt-5 text-5xl font-semibold leading-[1.05] tracking-tight text-[#182018] md:text-7xl">
                   {approach.title}
                 </h1>
 
@@ -140,28 +127,14 @@ export default async function ApproachDetailPage({
                 )}
               </div>
             </div>
-
-            {/* Mobile image */}
-            {coverImageUrl && (
-              <div className="relative mx-0 mb-12 aspect-[16/9] overflow-hidden rounded-3xl lg:hidden">
-                <Image
-                  src={coverImageUrl}
-                  alt=""
-                  fill
-                  priority
-                  sizes="100vw"
-                  className="object-cover"
-                />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-[#182018]/45 to-transparent" />
-              </div>
-            )}
           </div>
 
           {/* Decorative glow */}
-          <div className="pointer-events-none absolute -right-24 top-20 h-72 w-72 rounded-full bg-[#d7c49a]/20 blur-3xl" />
+          <div className="pointer-events-none absolute -right-24 top-20 h-72 w-72 rounded-full bg-[#d7c49a]/15 blur-3xl" />
+
         </div>
       </section>
+
 
       <section className="bg-white px-6 py-20 md:px-12 lg:px-20">
         <article className="mx-auto max-w-3xl">

@@ -26,6 +26,7 @@ export default async function PartnershipPage() {
   return (
     <main className="bg-[#f8f6f0] text-[#171717]">
       
+
       {/* Hero */}
       <section className="relative isolate overflow-hidden bg-[#173f2b] px-6 py-24 text-white md:px-10 lg:min-h-[620px] lg:px-16 lg:py-14">
 
@@ -41,14 +42,14 @@ export default async function PartnershipPage() {
               className="object-cover object-center"
             />
 
-            {/* Green brand tint */}
-            <div className="absolute inset-0 bg-[#173f2b]/65" />
+            {/* Subtle forest tint */}
+            <div className="absolute inset-0 bg-[#173f2b]/25" />
 
-            {/* Fade for text readability */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#173f2b]/95 via-[#173f2b]/75 to-[#173f2b]/40" />
+            {/* Gentle gradient for text readability */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#173f2b]/65 via-[#173f2b]/30 to-transparent" />
 
-            {/* Subtle gold tone */}
-            <div className="absolute inset-0 bg-[#b78628]/5 mix-blend-screen" />
+            {/* Soft vignette */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/10" />
           </div>
         )}
 
@@ -65,7 +66,7 @@ export default async function PartnershipPage() {
         {/* Background glow */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -right-40 -top-40 h-[32rem] w-[32rem] rounded-full bg-[#b78628]/20 blur-3xl"
+          className="pointer-events-none absolute -right-40 -top-40 h-[32rem] w-[32rem] rounded-full bg-[#b78628]/15 blur-3xl"
         />
 
         <div
@@ -89,7 +90,7 @@ export default async function PartnershipPage() {
               </span>
             </h1>
 
-            <p className="mt-10 max-w-2xl text-lg leading-8 text-white/70 md:text-xl">
+            <p className="mt-10 max-w-2xl text-lg leading-8 text-white/85 md:text-xl">
               {page?.heroDescription}
             </p>
 
