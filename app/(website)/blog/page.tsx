@@ -105,14 +105,14 @@ export default async function BlogPage({
                 className="object-cover object-center"
               />
 
-              {/* Image colour treatment */}
-              <div className="absolute inset-0 bg-[#f7f6f1]/65" />
+              {/* Subtle cream tint */}
+              <div className="absolute inset-0 bg-[#f7f6f1]/15" />
 
-              {/* Cream fade for content readability */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#f7f6f1]/95 via-[#f7f6f1]/75 to-[#f7f6f1]/35" />
+              {/* Gentle cream gradient for content readability */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#f7f6f1]/75 via-[#f7f6f1]/40 to-transparent" />
 
-              {/* Subtle green overlay */}
-              <div className="absolute inset-0 bg-[#173f2b]/5 mix-blend-multiply" />
+              {/* Soft vignette */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-white/10" />
             </div>
           )}
 
@@ -181,6 +181,7 @@ export default async function BlogPage({
 
         </div>
       </section>
+
 
       {/* Articles */}
       <section className="px-6 pb-20 md:px-12 lg:px-20">

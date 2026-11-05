@@ -26,56 +26,57 @@ export default async function ExportBuyerPage() {
   return (
     <main className="bg-[#f8f6f0] text-[#171717]">
     
-      {/* Hero */}
-      <section className="relative isolate overflow-hidden bg-zinc-950 text-white">
+    {/* Hero */}
+    <section className="relative isolate overflow-hidden bg-zinc-950 text-white">
 
-        {/* Full background hero image */}
-        {heroImage && (
-          <div className="absolute inset-0 -z-10">
-            <Image
-              src={heroImage}
-              alt="Agricultural commodities prepared for international export"
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover object-center"
-            />
+      {/* Full background hero image */}
+      {heroImage && (
+        <div className="absolute inset-0 -z-10">
+          <Image
+            src={heroImage}
+            alt="Agricultural commodities prepared for international export"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center"
+          />
 
-            {/* Dark image treatment */}
-            <div className="absolute inset-0 bg-black/45" />
+          {/* Subtle dark tint */}
+          <div className="absolute inset-0 bg-black/20" />
 
-            {/* Fade for text readability */}
-            <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/95 via-zinc-950/75 to-zinc-950/40" />
+          {/* Gentle gradient for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/75 via-zinc-950/35 to-transparent" />
 
-            {/* Subtle green tone */}
-            <div className="absolute inset-0 bg-[#173f2b]/20 mix-blend-multiply" />
-          </div>
-        )}
-
-        {/* Ambient glow */}
-        <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-emerald-900/20 blur-3xl" />
-
-        {/* Content */}
-        <div className="relative z-10 mx-auto flex min-h-[680px] max-w-[1400px] items-center px-6 md:px-10 lg:px-16">
-          <div className="max-w-3xl py-28 lg:w-[58%]">
-
-            <p className="text-xs uppercase tracking-[0.3em] text-[#d6b45c]">
-              {page?.heroEyebrow}
-            </p>
-
-            <h1 className="mt-6 max-w-5xl text-5xl font-medium leading-[0.92] tracking-[-0.06em] md:text-7xl lg:text-8xl">
-              {page?.heroTitleLine1}
-              <br />
-              {page?.heroTitleLine2}
-            </h1>
-
-            <p className="mt-8 max-w-2xl text-lg leading-8 text-white/70">
-              {page?.heroDescription}
-            </p>
-
-          </div>
+          {/* Soft vignette */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/15" />
         </div>
-      </section>
+      )}
+
+      {/* Ambient glow */}
+      <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-emerald-900/15 blur-3xl" />
+
+      {/* Content */}
+      <div className="relative z-10 mx-auto flex min-h-[680px] max-w-[1400px] items-center px-6 md:px-10 lg:px-16">
+        <div className="max-w-3xl py-28 lg:w-[58%]">
+
+          <p className="text-xs uppercase tracking-[0.3em] text-[#d6b45c]">
+            {page?.heroEyebrow}
+          </p>
+
+          <h1 className="mt-6 max-w-5xl text-5xl font-medium leading-[0.92] tracking-[-0.06em] md:text-7xl lg:text-8xl">
+            {page?.heroTitleLine1}
+            <br />
+            {page?.heroTitleLine2}
+          </h1>
+
+          <p className="mt-8 max-w-2xl text-lg leading-8 text-white/85">
+            {page?.heroDescription}
+          </p>
+
+        </div>
+      </div>
+    </section>
+
 
       {/* Main */}
       <section className="px-6 py-20 md:px-10 lg:px-16 lg:py-32">

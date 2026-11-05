@@ -130,14 +130,14 @@ export default function ContactHero({
             className="object-cover object-center"
           />
 
-          {/* Dark image treatment */}
-          <div className="absolute inset-0 bg-black/50" />
+          {/* Subtle dark tint */}
+          <div className="absolute inset-0 bg-black/20" />
 
-          {/* Gradient for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#171717]/95 via-[#171717]/75 to-[#171717]/40" />
+          {/* Gentle gradient for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#171717]/75 via-[#171717]/35 to-transparent" />
 
-          {/* Subtle green brand tone */}
-          <div className="absolute inset-0 bg-[#173f2b]/20 mix-blend-multiply" />
+          {/* Soft vignette */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/15" />
         </div>
       )}
 
@@ -159,7 +159,7 @@ export default function ContactHero({
       <div className="relative z-10 mx-auto flex min-h-[68vh] max-w-[1400px] flex-col justify-between px-6 py-10 md:px-10 lg:px-16 lg:py-14">
 
         <div className="flex items-center justify-between">
-          <span className="text-xs uppercase tracking-[0.3em] text-white/45">
+          <span className="text-xs uppercase tracking-[0.3em] text-white/65">
             Golden Palmera Global
           </span>
 
@@ -176,7 +176,7 @@ export default function ContactHero({
           <h1 className="text-[clamp(4rem,10vw,9.5rem)] font-medium leading-[0.84] tracking-[-0.07em]">
             {titleLine1}
             <br />
-            <span className="text-white/35">
+            <span className="text-white/55">
               {titleLine2}
             </span>
           </h1>

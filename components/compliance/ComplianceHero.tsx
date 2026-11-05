@@ -37,14 +37,14 @@ export function ComplianceHero({
             className="object-cover object-center"
           />
 
-          {/* Forest tint */}
-          <div className="absolute inset-0 bg-forest-900/65" />
+          {/* Subtle forest tint */}
+          <div className="absolute inset-0 bg-forest-900/25" />
 
-          {/* Gradient for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-forest-900/95 via-forest-900/75 to-forest-900/40" />
+          {/* Gentle gradient for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-forest-900/65 via-forest-900/30 to-transparent" />
 
-          {/* Subtle gold atmosphere */}
-          <div className="absolute inset-0 bg-gold-500/5 mix-blend-screen" />
+          {/* Soft vignette */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/10" />
         </div>
       )}
 
@@ -64,7 +64,7 @@ export function ComplianceHero({
         <div className="flex min-h-[390px] max-w-4xl flex-col justify-center">
 
           {eyebrow && (
-            <p className="mb-6 text-sm font-medium uppercase tracking-[0.25em] text-[#a07a3d]">
+            <p className="mb-6 text-sm font-medium uppercase tracking-[0.25em] text-[#d6b45c]">
               {eyebrow}
             </p>
           )}
@@ -76,7 +76,7 @@ export function ComplianceHero({
           )}
 
           {description && (
-            <p className="mt-8 max-w-3xl text-lg leading-8 text-ivory-100/80 md:text-xl">
+            <p className="mt-8 max-w-3xl text-lg leading-8 text-ivory-100/85 md:text-xl">
               {description}
             </p>
           )}
