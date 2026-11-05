@@ -71,17 +71,29 @@ export const FOOTER_COLS: FooterData["columns"] = [
     heading: "Contact",
     links: [
       {
+        label: "contact",
+        href: "/contact",
+      },
+      {
         label: "Request Quotation",
         href: "/contact",
       },
       {
+        label: "Export Buyer",
+        href: "/contact/export-buyer",
+      },
+      {
+        label: "Partnership",
+        href: "/contact/partnership",
+      },
+      {
         label: "WhatsApp Trade Desk",
-        href: "https://wa.me/2348000000000",
+        href: "https://wa.me/2349039303660",
         external: true,
       },
       {
         label: "Book a Phone Call",
-        href: "https://calendly.com/your-demo-account/30min",
+        href: "https://calendly.com/goldenpalmeraglobal/30min",
       },
     ],
   },

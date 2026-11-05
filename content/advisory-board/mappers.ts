@@ -34,6 +34,11 @@ export function mapAdvisoryBoardPage(
       page?.heroDescription ??
       ADVISORY_BOARD_FALLBACK.heroDescription!,
 
+    heroImage:
+      page?.heroImage ??
+      ADVISORY_BOARD_FALLBACK.heroImage ??
+      null,
+
 		stats:
 			page?.stats?.length
 				? page.stats
