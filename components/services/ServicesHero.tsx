@@ -95,17 +95,14 @@ export default function ServicesHero({
             )}
           </div>
 
-          {/* Dark image treatment */}
-          <div className="absolute inset-0 bg-black/40" />
+          {/* Subtle dark tint */}
+          <div className="absolute inset-0 bg-black/20" />
 
-          {/* Content readability overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#171717]/95 via-[#171717]/75 to-[#171717]/50" />
+          {/* Gentle gradient for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#171717]/75 via-[#171717]/35 to-[#171717]/15" />
 
-          {/* Bottom gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#171717]/65 via-transparent to-[#171717]/25" />
-
-          {/* Subtle green brand tone */}
-          <div className="absolute inset-0 bg-[#173f2b]/15 mix-blend-multiply" />
+          {/* Soft bottom vignette */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#171717]/40 via-transparent to-[#171717]/15" />
         </div>
       )}
 
@@ -123,24 +120,24 @@ export default function ServicesHero({
       <div className="relative z-10 mx-auto flex min-h-[78vh] max-w-[1400px] flex-col justify-between px-6 py-10 md:px-10 lg:px-16 lg:py-14">
 
         <div className="flex items-center justify-between">
-          <span className="text-xs uppercase tracking-[0.3em] text-white/45">
+          <span className="text-xs uppercase tracking-[0.3em] text-white/65">
             Golden Palmera Global
           </span>
 
-          <span className="font-mono text-xs text-[#b7924a]">
+          <span className="font-mono text-xs text-[#d6b45c]">
             SERVICES / 01
           </span>
         </div>
 
         <div className="max-w-6xl pb-8">
-          <p className="mb-7 text-xs uppercase tracking-[0.35em] text-[#b7924a]">
+          <p className="mb-7 text-xs uppercase tracking-[0.35em] text-[#d6b45c]">
             {eyebrow ?? "From source to global market"}
           </p>
 
           <h1 className="max-w-5xl text-[clamp(4rem,10vw,9.5rem)] font-medium leading-[0.84] tracking-[-0.07em]">
             {title1 || "Moving"}
             <br />
-            <span className="text-white/35">
+            <span className="text-white/55">
               {title2 || "agriculture"}
             </span>
             <br />
@@ -148,14 +145,14 @@ export default function ServicesHero({
           </h1>
 
           <div className="mt-10 flex max-w-2xl flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <p className="max-w-xl text-base leading-7 text-white/70 md:text-lg">
+            <p className="max-w-xl text-base leading-7 text-white/85 md:text-lg">
               {description ??
                 "We connect agricultural producers, processors and international markets through reliable sourcing, value addition, quality management and export services."}
             </p>
 
-            <div className="shrink-0 font-mono text-xs uppercase tracking-[0.2em] text-white/50">
+            <div className="shrink-0 font-mono text-xs uppercase tracking-[0.2em] text-white/65">
               Scroll to explore
-              <span className="ml-3 text-[#b7924a]">
+              <span className="ml-3 text-[#d6b45c]">
                 ↓
               </span>
             </div>

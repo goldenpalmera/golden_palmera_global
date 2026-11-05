@@ -32,10 +32,7 @@ export function ServiceHero({ service }: Props) {
         className="pointer-events-none absolute right-[-10%] top-[-30%] z-0 h-[600px] w-[600px] rounded-full border border-white/10"
       />
 
-      {/* =====================================================
-          BACKGROUND IMAGES - DESKTOP AND MOBILE
-          ===================================================== */}
-
+      {/* Background images */}
       {serviceImages.length > 0 && (
         <div
           aria-hidden="true"
@@ -120,30 +117,27 @@ export function ServiceHero({ service }: Props) {
               </div>
             )}
 
-            {/* Overall dark green treatment */}
-            <div className="absolute inset-0 bg-[#173f2b]/55" />
+            {/* Subtle forest tint */}
+            <div className="absolute inset-0 bg-[#173f2b]/25" />
 
-            {/* Stronger text-side gradient */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#173f2b]/95 via-[#173f2b]/75 to-[#173f2b]/35" />
+            {/* Gentle gradient for text readability */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#173f2b]/65 via-[#173f2b]/30 to-transparent" />
 
-            {/* Bottom contrast */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#173f2b]/65 via-transparent to-[#173f2b]/30" />
+            {/* Soft bottom vignette */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#173f2b]/40 via-transparent to-[#173f2b]/10" />
 
           </div>
         </div>
       )}
 
-      {/* =====================================================
-          CONTENT - ALWAYS ABOVE IMAGES
-          ===================================================== */}
-
+      {/* Content */}
       <div className="relative z-10 mx-auto flex min-h-[68vh] max-w-[1400px] flex-col px-6 py-10 md:px-10 lg:px-16 lg:py-14">
 
         {/* Navigation */}
         <div>
           <Link
             href="/services"
-            className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-white/70 transition-colors hover:text-white"
+            className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-white/85 transition-colors hover:text-white"
           >
             <span aria-hidden="true">←</span>
             Back to services
@@ -169,7 +163,7 @@ export function ServiceHero({ service }: Props) {
             </h1>
 
             {service.shortDescription && (
-              <p className="mt-10 max-w-3xl text-xl leading-relaxed text-white/75 md:text-2xl">
+              <p className="mt-10 max-w-3xl text-xl leading-relaxed text-white/85 md:text-2xl">
                 {service.shortDescription}
               </p>
             )}
