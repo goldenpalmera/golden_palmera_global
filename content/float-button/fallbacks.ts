@@ -13,7 +13,7 @@ export const FALLBACK_FLOATING_BUTTONS: FloatingButtonsData = {
 
   phoneCall: {
     enabled: true,
-    calendlyUrl: "https://calendly.com/your-demo-account/30min",
+    calendlyUrl: "https://calendly.com/goldenpalmeraglobal/30min",
     label: "Book a Phone Call",
     title: "Book a Trade Consultation",
     description:
