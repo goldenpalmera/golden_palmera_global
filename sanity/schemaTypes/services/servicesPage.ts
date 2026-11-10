@@ -1,5 +1,3 @@
-// sanity/schemaTypes/servicesPage.ts
-
 import { defineField, defineType } from "sanity";
 
 export const servicesPage = defineType({
@@ -12,14 +10,14 @@ export const servicesPage = defineType({
       name: "title",
       title: "Page Title",
       type: "string",
-      initialValue: "What We Do",
+      initialValue: "Moving agriculture Forward.",
     }),
 
     defineField({
       name: "heroEyebrow",
       title: "Hero Eyebrow",
       type: "string",
-      initialValue: "What We Do",
+      initialValue: "From source to global market",
     }),
 
     defineField({
@@ -27,7 +25,7 @@ export const servicesPage = defineType({
       title: "Hero Title 1",
       type: "string",
       initialValue:
-        "Building better agricultural supply chains.",
+        "Moving",
     }),
 
     defineField({
@@ -35,7 +33,7 @@ export const servicesPage = defineType({
       title: "Hero Title 2",
       type: "string",
       initialValue:
-        "Building better agricultural supply chains.",
+        "agriculture",
     }),
 
     defineField({
@@ -43,7 +41,7 @@ export const servicesPage = defineType({
       title: "Hero Title 3",
       type: "string",
       initialValue:
-        "Building better agricultural supply chains.",
+        "forward",
     }),
 
     defineField({
