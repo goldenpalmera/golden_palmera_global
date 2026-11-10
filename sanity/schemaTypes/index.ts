@@ -14,7 +14,7 @@ import { partnershipPage } from "./contact/partnership";
 import { aboutPage } from "./about/aboutPage";
 import { teamMember } from "./about/team";
 import { service } from './services/service';
-import { servicesPage } from './services/servicesSeo';
+import { servicesPage } from './services/servicesPage';
 import { advisoryBoardPage } from "./advisory-board/advisoryBoardPage";
 import { advisoryBoardCta } from "./objects/pageCta";
 import { eudrMilestone } from "./objects/eudrMilestone";

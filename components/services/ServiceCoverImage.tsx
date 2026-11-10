@@ -1,7 +1,4 @@
 import Image from "next/image";
-import {
-  FALLBACK_SERVICE_IMAGES,
-} from "@/content/services/fallbacks";
 import type { ServicePageData } from "@/content/services/types";
 import { getServiceImageUrl } from "@/content/services/images";
 
@@ -10,9 +7,7 @@ type Props = {
 };
 
 export function ServiceCoverImage({ service }: Props) {
-  // const imageUrl = service.coverImage?.asset?.url ??
-  const imageUrl = getServiceImageUrl(service.coverImage) ??
-    FALLBACK_SERVICE_IMAGES[service.slug];
+  const imageUrl = getServiceImageUrl(service.coverImage);
 
   return (
     <section className="px-6 py-8 md:px-10 lg:px-16 lg:py-12">

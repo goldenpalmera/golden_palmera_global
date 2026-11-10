@@ -1,6 +1,6 @@
 import ServiceCard from "@/components/services/ServicesCard";
-
 import type { Service } from "@/content/services/types";
+import { getServiceImageUrl } from "@/content/services/images";
 
 type Props = {
   services: Service[];
@@ -27,6 +27,7 @@ export function ServicesList({ services }: Props) {
                 description={service.shortDescription ?? ""}
                 items={service.items ?? []}
                 slug={service.slug}
+                image={getServiceImageUrl(service?.coverImage)}
               />
             ))}
           </div>
