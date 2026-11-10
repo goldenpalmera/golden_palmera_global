@@ -8,7 +8,7 @@ type ServiceCardProps = {
   description?: string;
   items?: string[];
   slug: string;
-  image?: string;
+  image: string | null;
 };
 
 export default function ServiceCard({
