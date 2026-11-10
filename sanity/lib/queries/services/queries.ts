@@ -12,6 +12,7 @@ export const SERVICES_QUERY = defineQuery(`
     category,
     "slug": slug.current,
     shortDescription,
+    items,
 
     coverImage {
       asset-> {
