@@ -1,4 +1,3 @@
-import type { PortableTextBlock } from "@portabletext/types";
 
 type FallbackApproach = {
   _id: string;
