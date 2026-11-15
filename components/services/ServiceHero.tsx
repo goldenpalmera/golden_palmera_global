@@ -21,7 +21,7 @@ export function ServiceHero({ service }: Props) {
 
   const [image1, image2, image3, image4] = serviceImages;
 
-  const imageSizes = "(min-width: 1024px) 31vw, 50vw";
+  // const imageSizes = "(min-width: 1024px) 31vw, 50vw";
 
   return (
     <section className="relative isolate min-h-[68svh] overflow-hidden bg-[#173f2b] text-[#f8f6f0]">

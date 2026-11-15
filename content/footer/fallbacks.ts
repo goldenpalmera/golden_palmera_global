@@ -5,24 +5,24 @@ export const FOOTER_COLS: FooterData["columns"] = [
     heading: "Products",
     links: [
       {
-        label: "Crude Palm Oil",
-        href: "/products/crude-palm-oil",
+        label: "Red Palm Oil",
+        href: "/products/where-to-buy-quality-red-palm-oil-from-africa",
       },
       {
         label: "Sesame Seeds",
-        href: "/products/sesame-seeds",
+        href: "/products/where-to-source-export-sesame-seeds-from-africa",
       },
       {
-        label: "Cashew Kernels",
-        href: "/products/cashew-kernels",
+        label: "Cashew Nuts",
+        href: "/products/where-to-buy-african-raw-cashew-nuts-for-export",
       },
       {
         label: "Shea Butter",
-        href: "/products/shea-butter",
+        href: "/products/where-to-source-natural-african-shea-butter-for-export",
       },
       {
         label: "Cocoa Beans",
-        href: "/products/cocoa-beans",
+        href: "/products/where-to-source-quality-african-cocoa-beans-for-export",
       },
       {
         label: "View All",
