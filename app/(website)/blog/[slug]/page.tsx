@@ -173,7 +173,7 @@ export default async function BlogArticlePage({
                       alt=""
                       fill
                       sizes="48px"
-                      className="object-cover"
+                      className="page-hero-image object-cover"
                     />
                   </div>
                 ) : null}
@@ -206,7 +206,7 @@ export default async function BlogArticlePage({
                 fill
                 priority
                 sizes="(max-width: 768px) 100vw, 1400px"
-                className="object-cover"
+                className="page-hero-image object-cover"
               />
             ) : (
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,#a07a3d_0%,transparent_35%),linear-gradient(135deg,#182018_0%,#293329_50%,#182018_100%)]">
