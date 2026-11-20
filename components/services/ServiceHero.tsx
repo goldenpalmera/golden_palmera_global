@@ -52,7 +52,7 @@ export function ServiceHero({ service }: Props) {
                 fill
                 priority
                 sizes="50vw"
-                className="object-cover"
+                className="page-hero-image object-cover"
               />
             </div>
           )}
@@ -69,7 +69,7 @@ export function ServiceHero({ service }: Props) {
                 alt=""
                 fill
                 sizes="50vw"
-                className="object-cover"
+                className="page-hero-image object-cover"
               />
             </div>
           )}
@@ -86,7 +86,7 @@ export function ServiceHero({ service }: Props) {
                 alt=""
                 fill
                 sizes="50vw"
-                className="object-cover"
+                className="page-hero-image object-cover"
               />
             </div>
           )}
@@ -103,7 +103,7 @@ export function ServiceHero({ service }: Props) {
                 alt=""
                 fill
                 sizes="50vw"
-                className="object-cover"
+                className="page-hero-image object-cover"
               />
             </div>
           )}
