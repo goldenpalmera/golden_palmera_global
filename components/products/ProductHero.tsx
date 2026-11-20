@@ -64,7 +64,7 @@ export function ProductHero({ product }: Props) {
                   fill
                   priority
                   sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover"
+                  className="page-hero-image object-cover"
                 />
               ) : (
                 <ProductPlaceholder />

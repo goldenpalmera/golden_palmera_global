@@ -1,4 +1,3 @@
-
 import Image from "next/image";
 import type { SanityImageSource } from "@sanity/image-url";
 import { getHeroImageUrl } from "@/content/shared/getHeroImageUrl";
@@ -23,24 +22,25 @@ export default function PageHero({
 
       {/* Background image */}
       {imageUrl && (
-        <div className="absolute inset-0 -z-10">
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+
           <Image
             src={imageUrl}
             alt=""
             fill
             priority
             sizes="100vw"
-            className="object-cover object-center"
+            className="page-hero-image object-cover object-center"
           />
 
           {/* Subtle brand tint */}
-          <div className="absolute inset-0 bg-[#173f2b]/25" />
+          <div className="page-hero-overlay absolute inset-0 bg-[#173f2b]/25" />
 
-          {/* Gentle gradient for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#173f2b]/65 via-[#173f2b]/30 to-transparent" />
+          {/* Gradient for text readability */}
+          <div className="page-hero-overlay absolute inset-0 bg-gradient-to-r from-[#173f2b]/65 via-[#173f2b]/30 to-transparent" />
 
           {/* Subtle vignette */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/10" />
+          <div className="page-hero-overlay absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/10" />
         </div>
       )}
 

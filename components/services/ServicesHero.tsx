@@ -52,7 +52,7 @@ export default function ServicesHero({
                   fill
                   priority
                   sizes="50vw"
-                  className="object-cover"
+                  className="page-hero-image object-cover"
                 />
               </div>
             )}
@@ -65,7 +65,7 @@ export default function ServicesHero({
                   fill
                   priority
                   sizes="50vw"
-                  className="object-cover"
+                  className="page-hero-image object-cover"
                 />
               </div>
             )}
@@ -77,7 +77,7 @@ export default function ServicesHero({
                   alt={image3.alt}
                   fill
                   sizes="50vw"
-                  className="object-cover"
+                  className="page-hero-image object-cover"
                 />
               </div>
             )}
@@ -89,7 +89,7 @@ export default function ServicesHero({
                   alt={image4.alt}
                   fill
                   sizes="50vw"
-                  className="object-cover"
+                  className="page-hero-image object-cover"
                 />
               </div>
             )}

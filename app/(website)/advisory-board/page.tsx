@@ -54,7 +54,7 @@ export default async function AdvisoryBoardPage() {
               fill
               priority
               sizes="100vw"
-              className="object-cover object-center"
+              className="page-hero-image object-cover object-center"
             />
 
             {/* Subtle cream tint */}

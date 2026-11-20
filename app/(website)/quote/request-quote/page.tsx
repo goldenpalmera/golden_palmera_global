@@ -57,7 +57,7 @@ export default async function RequestQuotePage({
               fill
               priority
               sizes="100vw"
-              className="object-cover object-center"
+              className="page-hero-image object-cover object-center"
             />
 
             {/* Subtle dark tint */}

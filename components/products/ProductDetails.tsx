@@ -76,27 +76,35 @@ export function ProductDetails({ product }: Props) {
             </h3>
 
             {product.description ? (
-              <div className="prose prose-base mt-8 max-w-none
-                prose-p:text-[#46554a]
+              <div className="
+                prose prose-base mt-8 max-w-none
+                !text-[#46554a]
+
+                prose-p:!text-[#46554a]
                 prose-p:text-[15px]
                 prose-p:leading-[2]
                 prose-p:mb-6
+
+                prose-headings:!text-[#173f2b]
                 prose-headings:font-semibold
                 prose-headings:tracking-tight
-                prose-headings:text-[#173f2b]
                 prose-headings:mt-10
                 prose-headings:mb-4
-                prose-strong:text-[#173f2b]
+
+                prose-strong:!text-[#173f2b]
                 prose-strong:font-semibold
-                prose-li:text-[#46554a]
+
+                prose-li:!text-[#46554a]
                 prose-li:text-[15px]
                 prose-li:leading-8
                 prose-li:my-2
-                prose-a:text-[#8c6d35]
+
+                prose-a:!text-[#8c6d35]
                 prose-a:font-medium
                 prose-a:underline
-                prose-blockquote:border-l-[#b78628]
-                prose-blockquote:text-[#46554a]
+
+                prose-blockquote:!border-l-[#b78628]
+                prose-blockquote:!text-[#46554a]
               ">
                 <PortableText value={product.description} />
               </div>

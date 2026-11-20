@@ -58,6 +58,12 @@
 
   /* Borders */
   --border-light: #d9d5ca;
+
+  /* Product and light-section typography */
+  --product-text-primary: #173f2b;
+  --product-text-secondary: #46554a;
+  --product-text-muted: #657068;
+  --product-text-accent: #8c6d35;
 }
 
 
@@ -762,6 +768,48 @@ a {
   background: rgba(201, 168, 76, 0.6);
 }
 
+/* =========================================================
+   PAGE HERO IMAGE REVEAL
+   Cinematic background image entrance
+   ========================================================= */
+
+.page-hero-image {
+  transform: scale(1.12);
+  opacity: 0;
+  animation: pageHeroImageReveal 1.6s
+    cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes pageHeroImageReveal {
+  0% {
+    opacity: 0;
+    transform: scale(1.12);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1.025);
+  }
+}
+
+/* Overlay entrance */
+.page-hero-overlay {
+  opacity: 0;
+  animation: pageHeroOverlayReveal 1.4s ease-out 0.25s forwards;
+}
+
+@keyframes pageHeroOverlayReveal {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+
 
 /* =========================================================
    SCROLL INDICATOR
@@ -1280,13 +1328,6 @@ a {
   clip-path: polygon(42% 0%, 100% 0%, 100% 100%, 0% 100%);
 }
 
-@media (pointer: coarse), (prefers-reduced-motion: reduce) {
-  .contact-hero-image-clip {
-    /* Keep the diagonal image; only the cursor effect is disabled. */
-  }
-}
-
-
 .contact-circle {
   width: 390px;
   height: 390px;
@@ -1575,6 +1616,18 @@ a {
 
   .hero-brand-seal {
     transform: none;
+  }
+
+  .page-hero-image {
+    animation: none;
+    opacity: 1;
+    transform: scale(1.025);
+    will-change: auto;
+  }
+
+  .page-hero-overlay {
+    animation: none;
+    opacity: 1;
   }
 }
 

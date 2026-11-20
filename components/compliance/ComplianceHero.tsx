@@ -34,7 +34,7 @@ export function ComplianceHero({
             fill
             priority
             sizes="100vw"
-            className="object-cover object-center"
+            className="page-hero-image object-cover object-center"
           />
 
           {/* Subtle forest tint */}
